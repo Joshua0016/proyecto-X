@@ -1,4 +1,5 @@
-#Funcionalidades principales
+# Proyecto x
+## Funcionalidades principales
 + Gestión de miembros (fichas, fotos, familia, historial de asistencia).
 - Gestión de eventos y comunicaciones (misas, conferencias, notificaciones por email/SMS).
 + Donaciones / Funcionalidades principales:
