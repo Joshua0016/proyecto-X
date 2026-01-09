@@ -20,3 +20,7 @@
 + Auditoría (log de operaciones).
 - Paneles (dashboards) para finanzas, asistencia y actividades.
 + Integración opcional: pasarela de pagos, email transactional, backup.
+
+## Ramas: main, develop, feature...
+trabajar en la rama feature durante el desarrollo
+
