@@ -40,21 +40,21 @@ export default function LandingPage() {
 
             <div className=" w-[90%] mx-auto my-[300px] flex justify-around">
                 <div>
-                    <h1 className="text-[18px] text-center text-black sm:text-[32px] md:text-[42px] lg:text-[48px]">Asamblea de Dios <br /> casa de oración</h1>
-                    <p className="text-[14px] text-center sm:text-[16px] md:text-[18px] lg:text-[24px] xl:text-2xl">lore impous lore lore lore lore lore <br />lor lore lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lore </p>
+                    <h1 className="text-[20px] text-center text-black sm:text-[32px] md:text-[42px] lg:text-[48px]">Asamblea de Dios <br /> casa de oración</h1>
+                    <p className=" text-center sm:text-[16px] md:text-[18px] lg:text-[24px] ">lore impous lore lore lore lore lore <br />lor lore lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lore </p>
 
                 </div>
 
                 <img src="mosaico.png" className="w-50 sm:w-75 md:w-85 lg:w-120 xl:w-200"></img>
             </div>
 
-            <div className="w-[80%] mx-auto my-[300px] bg-stone-100 relative rounded-[24px] p-[32px]">
+            <div className="w-[80%] mx-auto my-[300px] relative rounded-[24px] p-[32px]" style={{ backgroundColor: "#FAF1E8" }}>
 
                 <h1 className="absolute top-[-100px] text-[24px] md:text-4xl lg:text-5xl xl:text-6xl xl:top-[-100px]">Nuestros</h1>
                 <h1 className="absolute top-[-45px] text-[32px] font-bold md:text-5xl lg:text-6xl xl:text-7xl">Pastores</h1>
 
                 <div className="  xl:flex items-center xl:justify-around">
-                    <div className="text-center text-[14px] md:text-[22px] lg:text-[18px] xl:text-2xl">
+                    <div className="text-center md:text-[18px] lg:text-[24px]">
                         <p>lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lorel ore impous impus pmsu impuus <br />imspu impsou msopus yo erstuve aqui</p>
                         <p>lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lorel ore impous impus pmsu impuus <br />imspu impsou msopus yo erstuve aqui</p>
                         <p>lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lorel ore impous impus pmsu impuus <br />imspu impsou msopus yo erstuve aqui</p>
@@ -64,7 +64,40 @@ export default function LandingPage() {
                 </div>
             </div>
 
-            <footer className="bg-gray-300 ">footer</footer>
+            <footer className="bg-stone-400 mt-[300px] p-[10px]  " style={{ backgroundColor: "#CCCCCC" }}>
+
+
+                <div className="flex flex-col gap-[25px] pt-[100px] sm:flex-row sm:justify-around md:text-[18px] lg:text-[24px] ">
+                    <div className="text-center ">
+                        <h1 className="font-bold ]">Reach us</h1>
+                        <p>809-522-6543</p>
+                        <p>lreimpsum@gmail.com</p>
+                    </div>
+
+                    <div className="text-center">
+                        <h1 className="font-bold ">Reach us</h1>
+                        <p>reach us</p>
+                        <p>reach us</p>
+                        <p>reach us</p>
+                    </div>
+
+                    <div className="text-center ">
+                        <h1 className="font-bold ">Resources</h1>
+                        <p>Next Steps</p>
+                        <p>Events</p>
+                        <p>Blog</p>
+                    </div>
+                </div>
+
+
+
+
+
+                <hr className="mt-[100px]"></hr>
+                <p>Copy right</p>
+                <p>Todos los derechos reservados</p>
+
+            </footer>
 
         </>
     )
