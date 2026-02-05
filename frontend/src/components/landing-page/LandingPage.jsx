@@ -1,8 +1,13 @@
 import { Routes, Route, Link } from "react-router-dom"
-import logo from "../assets/logo.svg";
+import logo from "../../assets/logo.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css"
 import { Autoplay } from "swiper/modules"
+import slide1 from "./assets/slide1.png"
+import slide2 from "./assets/slide2.png"
+import mosaico from "./assets/mosaico.png"
+import pastores from "./assets/pastores.jpg"
+
 
 export default function LandingPage() {
 
@@ -33,8 +38,8 @@ export default function LandingPage() {
             </header>
 
             <Swiper className="h-[430-px]" loop={true} autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }} modules={[Autoplay]}  >
-                <SwiperSlide><img src="slide1.png" className="w-full "></img></SwiperSlide>
-                <SwiperSlide><img src="slide2.png" className="w-full "></img></SwiperSlide>
+                <SwiperSlide><img src={slide1} className="w-full "></img></SwiperSlide>
+                <SwiperSlide><img src={slide2} className="w-full "></img></SwiperSlide>
 
             </Swiper>
 
@@ -45,13 +50,13 @@ export default function LandingPage() {
 
                 </div>
 
-                <img src="mosaico.png" className="w-50 sm:w-75 md:w-85 lg:w-120 xl:w-200"></img>
+                <img src={mosaico} className="w-50 sm:w-75 md:w-85 lg:w-120 xl:w-200"></img>
             </div>
 
             <div className="w-[80%] mx-auto my-[300px] relative rounded-[24px] p-[32px]" style={{ backgroundColor: "#FAF1E8" }}>
 
-                <h1 className="absolute top-[-100px] text-[24px] md:text-4xl lg:text-5xl xl:text-6xl xl:top-[-100px]">Nuestros</h1>
-                <h1 className="absolute top-[-45px] text-[32px] font-bold md:text-5xl lg:text-6xl xl:text-7xl">Pastores</h1>
+                <h1 className="absolute top-[-50px] text-[24px] md:text-4xl lg:text-5xl xl:text-6xl xl:top-[-100px]">Nuestros</h1>
+                <h1 className="absolute top-[-30px] text-[32px] font-bold md:text-5xl lg:text-6xl xl:text-7xl">Pastores</h1>
 
                 <div className="  xl:flex items-center xl:justify-around">
                     <div className="text-center md:text-[18px] lg:text-[24px]">
@@ -60,7 +65,7 @@ export default function LandingPage() {
                         <p>lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lorel ore impous impus pmsu impuus <br />imspu impsou msopus yo erstuve aqui</p>
                         <p>lore lore lore lore lore lore lore <br />lore lore lore lore lore lore lorel ore impous impus pmsu impuus <br />imspu impsou msopus yo erstuve aqui</p>
                     </div>
-                    <img src="pastores.jpg" className="w-110 rounded-2xl my-[20px] sm:mx-auto xl:mx-0"></img>
+                    <img src={pastores} className="w-110 rounded-2xl my-[20px] sm:mx-auto xl:mx-0"></img>
                 </div>
             </div>
 
