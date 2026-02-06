@@ -1,21 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Backend.Models
+namespace Backend.Models;
+
+public partial class Usuario
 {
-    public class Usuario
-    {
-        [Key]
-        public int IdUsuario { get; set; }
+    public int IdUsuario { get; set; }
 
-        [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = null!;
 
-        public int IdRol { get; set; }
+    public string Password { get; set; } = null!;
 
-        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+    public int IdRol { get; set; }
 
-        [ForeignKey("IdRol")]
-        public virtual Rol? Rol { get; set; } = null;
-    }
+    public DateTime FechaCreacion { get; set; }
+
+    public virtual ICollection<AsientoContable> AsientoContables { get; set; } = new List<AsientoContable>();
+
+    public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
+
+    public virtual Rol IdRolNavigation { get; set; } = null!;
+
+    public virtual ICollection<LogAuditorium> LogAuditoria { get; set; } = new List<LogAuditorium>();
+
+    public virtual ICollection<Miembro> Miembros { get; set; } = new List<Miembro>();
 }

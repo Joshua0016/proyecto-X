@@ -1,18 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Backend.Models
+namespace Backend.Models;
+
+public partial class Rol
 {
-    public class Rol
-    {
-        [Key]
-        public int IdRol { get; set; }
+    public int IdRol { get; set; }
 
-        [Required, StringLength(100)]
-        public string Nombre { get; set; } = string.Empty;
+    public string Nombre { get; set; } = null!;
 
-        public string? Descripcion { get; set; }
+    public string? Descripcion { get; set; }
 
-        public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
-
-    }
+    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }
