@@ -3,8 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|c:\\users\\lenovo\\source\\repos\\proyecto-x\\solutionapi\\backend\\backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|solutionrelative:backend\\backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|c:\\users\\lenovo\\source\\repos\\proyecto-x\\solutionapi\\backend\\data\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|solutionrelative:backend\\data\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|c:\\users\\lenovo\\source\\repos\\proyecto-x\\solutionapi\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|c:\\users\\lenovo\\source\\repos\\proyecto-x\\solutionapi\\backend\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|solutionrelative:backend\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|c:\\users\\lenovo\\source\\repos\\proyecto-x\\solutionapi\\backend\\models\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{521DDA93-9A87-4A75-9897-C1C9241CEDBB}|Backend\\Backend.csproj|solutionrelative:backend\\models\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,21 +26,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Backend",
-              "DocumentMoniker": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Backend.csproj",
-              "RelativeDocumentMoniker": "Backend\\Backend.csproj",
-              "ToolTip": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Backend.csproj",
-              "RelativeToolTip": "Backend\\Backend.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-31T03:00:10.255Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
@@ -36,6 +35,59 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\appsettings.json",
+              "RelativeDocumentMoniker": "Backend\\appsettings.json",
+              "ToolTip": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\appsettings.json",
+              "RelativeToolTip": "Backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-03T02:48:53.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Data\\DbContext.cs",
+              "RelativeDocumentMoniker": "Backend\\Data\\DbContext.cs",
+              "ToolTip": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Data\\DbContext.cs",
+              "RelativeToolTip": "Backend\\Data\\DbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T02:41:03.255Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Models\\Usuario.cs",
+              "RelativeToolTip": "Backend\\Models\\Usuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T02:30:51.357Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Rol.cs",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Models\\Rol.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\Rol.cs",
+              "ToolTip": "C:\\Users\\Lenovo\\source\\repos\\proyecto-X\\SolutionApi\\Backend\\Models\\Rol.cs",
+              "RelativeToolTip": "Backend\\Models\\Rol.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T02:28:27.621Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
             }
           ]
         }
