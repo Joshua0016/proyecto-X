@@ -35,7 +35,7 @@ namespace Backend.Services
             //verifica contraseña
             //remplaza por verficacion con hashing
 
-            if (user.Password != request.Password) return null;
+            if (user.password != request.Password) return null;
 
             var jwtKey = _config["jwt:Key"];
             var jwtIssuer = _config["jwt:Issuer"];
@@ -47,12 +47,12 @@ namespace Backend.Services
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.IdUsuario.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.IdUsuario.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.id_usuario.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.email),
+                new Claim(ClaimTypes.NameIdentifier, user.id_usuario.ToString())
             };
 
-            var roleName = user.IdRolNavigation?.Nombre;
+            var roleName = user.id_rolNavigation?.nombre;
             if (!string.IsNullOrEmpty(roleName)) claims.Add(new Claim(ClaimTypes.Role, roleName));
 
             var expiresInMinutes = 60;
@@ -73,7 +73,7 @@ namespace Backend.Services
             {
                 Token = tokenString,
                 ExpiresAt = expiresAt,
-                Username = user.Email,
+                Username = user.email,
                 Roles = string.IsNullOrEmpty(roleName) ? Array.Empty<string>() : new[] { roleName }
             };
 

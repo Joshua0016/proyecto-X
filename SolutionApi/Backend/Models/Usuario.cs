@@ -3,25 +3,19 @@ using System.Collections.Generic;
 
 namespace Backend.Models;
 
-public partial class Usuario
+public partial class usuario
 {
-    public int IdUsuario { get; set; }
+    public int id_usuario { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string email { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string password { get; set; } = null!;
 
-    public int IdRol { get; set; }
+    public int id_rol { get; set; }
 
-    public DateTime FechaCreacion { get; set; }
+    public DateTimeOffset fecha_creacion { get; set; }
 
-    public virtual ICollection<AsientoContable> AsientoContables { get; set; } = new List<AsientoContable>();
+    public virtual rol id_rolNavigation { get; set; } = null!;
 
-    public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
-
-    public virtual Rol IdRolNavigation { get; set; } = null!;
-
-    public virtual ICollection<LogAuditorium> LogAuditoria { get; set; } = new List<LogAuditorium>();
-
-    public virtual ICollection<Miembro> Miembros { get; set; } = new List<Miembro>();
+    public virtual ICollection<log_auditorium> log_auditoria { get; set; } = new List<log_auditorium>();
 }

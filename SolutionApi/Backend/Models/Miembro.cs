@@ -25,5 +25,5 @@ public partial class Miembro
 
     public virtual Familium IdFamiliaNavigation { get; set; } = null!;
 
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual usuario IdUsuarioNavigation { get; set; } = null!;
 }
