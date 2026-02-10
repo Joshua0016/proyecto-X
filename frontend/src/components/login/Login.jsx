@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import paloma from "./assets/paloma.png"
 import login from "../../api/login"
@@ -7,8 +7,19 @@ export default function Login() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
     const [textbutton, setTextButton] = useState("Sign up")
+    //check hook
+    const [rememberMe, setRemember] = useState(false);
+
+    useEffect(() => {
+        const rememberMe = localStorage.getItem("rememberUser");
+        if (rememberMe != null) {
+            setUserName(rememberMe);
+            setRemember(true);
+        }
+    }, [])
+
+
 
     const handdlebutton = async () => {
         setTextButton("loading...");
@@ -16,6 +27,12 @@ export default function Login() {
         try {
             let succes = await login(userName, password);
             if (succes) {
+                if (rememberMe) {
+                    localStorage.setItem("rememberUser", userName);
+                }
+                else {
+                    localStorage.removeItem("rememberUser");
+                }
                 setTextButton("success full")
                 navigate("/home");
             } else {
@@ -45,12 +62,12 @@ export default function Login() {
                 {/*input check and link PENDIENTE REALIZAR IMPLEMENTACIONES PARA CHECK Y LINK*/}
                 <div className="w-[80%] mx-auto flex mt-[10px] relative">
 
-                    <input type="checkbox"></input><p className="px-1 md:text-[20px]">Remember</p>
+                    <input type="checkbox" checked={rememberMe} onChange={(e) => setRemember(e.target.checked)}></input><p className="px-1 md:text-[20px]">Remember user</p>
                     <a className="absolute right-0 underline text-blue-600 md:text-[20px]">Forgot password</a>
                 </div>
                 {/*button*/}
                 <div className="w-[80%] mx-auto">
-                    <button onClick={handdlebutton} className="w-[100%] h-[40px] mt-[50px] bg-blue-500 rounded-[4px] text-white">{textbutton}</button>
+                    <button onClick={handdlebutton} className="w-[100%] h-[40px] mt-[50px] bg-blue-500 rounded-[4px] text-white cursor-pointer">{textbutton}</button>
                 </div>
                 {/*logo*/}
                 <div className="w-[80%] mx-auto">
