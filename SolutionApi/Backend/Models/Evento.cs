@@ -21,5 +21,5 @@ public partial class Evento
 
     public virtual ICollection<Asistencium> Asistencia { get; set; } = new List<Asistencium>();
 
-    public virtual Usuario? IdUsuarioOrganizadorNavigation { get; set; }
+    public virtual usuario? IdUsuarioOrganizadorNavigation { get; set; }
 }

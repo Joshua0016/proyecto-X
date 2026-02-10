@@ -7,7 +7,7 @@ public partial class LogAuditorium
 {
     public int IdLog { get; set; }
 
-    public DateTime? Timestamp { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
 
     public int IdUsuario { get; set; }
 
@@ -19,5 +19,7 @@ public partial class LogAuditorium
 
     public string IpOrigen { get; set; } = null!;
 
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual usuario IdUsuarioNavigation { get; set; } = null!;
+
+
 }

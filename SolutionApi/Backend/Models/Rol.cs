@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Backend.Models;
 
-public partial class Rol
+public partial class rol
 {
-    public int IdRol { get; set; }
+    public int id_rol { get; set; }
 
-    public string Nombre { get; set; } = null!;
+    public string nombre { get; set; } = null!;
 
-    public string? Descripcion { get; set; }
+    public string? descripcion { get; set; }
 
-    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public virtual ICollection<usuario> usuarios { get; set; } = new List<usuario>();
 }

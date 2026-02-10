@@ -12,6 +12,6 @@ namespace Backend.DTOs
         [Required]
         public string Password { get; set; } = string.Empty;
 
-        public bool RememberMe { get; set; } = false;
+        //public bool RememberMe { get; set; } = false;
     }
 }

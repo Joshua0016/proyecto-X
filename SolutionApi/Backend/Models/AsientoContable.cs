@@ -19,7 +19,7 @@ public partial class AsientoContable
 
     public virtual ICollection<FacturaGasto> FacturaGastos { get; set; } = new List<FacturaGasto>();
 
-    public virtual Usuario IdUsuarioRegistradorNavigation { get; set; } = null!;
+    public virtual usuario IdUsuarioRegistradorNavigation { get; set; } = null!;
 
     public virtual ICollection<MovimientoContable> MovimientoContables { get; set; } = new List<MovimientoContable>();
 }

@@ -6,6 +6,6 @@ namespace Backend.Repositories
 {
     public interface IUserRepository
     {
-        Task<Usuario?> GetByEmailAsync(string email);
+        Task<usuario?> GetByEmailAsync(string email);
     }
 }
