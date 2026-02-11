@@ -1,0 +1,9 @@
+# Ignorar los datos de la base de datos
+postgres_data/
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración personal
+.env
