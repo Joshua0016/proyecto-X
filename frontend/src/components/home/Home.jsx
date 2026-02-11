@@ -15,7 +15,7 @@ export default function Home() {
 
 
         if (logged === "false") {
-            navigate("/login");
+            navigate("/");
         }
 
     }, [])
@@ -28,7 +28,7 @@ export default function Home() {
                 <div className=" flex absolute right-0 top-0 bottom-0 my-auto items-center p-5 ">
 
                     <img src={user} alt="Admin" className="w-[18px] xl:w-[28px]"></img>
-                    <Link to={"/admin"} className="pl-2 xl:text-[24px]">Admin</Link>
+                    <Link to={"admin"} className="pl-2 xl:text-[24px]">Admin</Link>
                 </div>
             </nav>
 

@@ -37,7 +37,7 @@ export default function Login() {
                 }
                 setTextButton("success full");
                 localStorage.setItem("loggedIn", true); //asegurar que el usuario este logeado
-                navigate("/");
+                navigate("/home");
             } else {
                 setTextButton("Login failed");
             }
