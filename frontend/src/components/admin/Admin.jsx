@@ -12,15 +12,15 @@ export default function Admin() {
     }
     return (
         <>
-            <div className="w-[80%] mx-auto">
-                <h1 className="text-[20px]">User managment</h1>
+            <div className="w-[80%] mx-auto ">
+                <h1 className="text-[20px] sm:text-[24px] lg:text-[28px] xl:text-[32px]">User managment</h1>
             </div>
 
 
-            <div className="flex flex-col gap-2 mt-[25px]">
+            <div className="flex flex-col gap-2 mt-[25px] lg:w-[70%]  xl:w-[40%] w-[80%] mx-auto">
 
                 {!hideContent && (<div className="w-[80%] mx-auto border-2 rounded-[5px] border-gray-200 text-center">
-                    <button onClick={buttonCreate}>Create user</button>
+                    <button onClick={buttonCreate} className="cursor-pointer">Create user</button>
                 </div>)}
 
                 {newUser ? <NewUser setNewUser={setNewUser} sethideContent={sethideContent}></NewUser> : ""}
