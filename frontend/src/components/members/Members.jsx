@@ -7,11 +7,11 @@ export default function Members() {
 
 
                 <div className="w-[80%] mx-auto border-2 border-gray-200 rounded-[10px] mt-[20px] ">
-                    <h2>Create members</h2>
+                    <button className="w-[100%] cursor-pointer  xl:h-[35px]">Create members</button>
                 </div>
 
                 <div className="w-[80%] mx-auto mt-[20px] border-2 rounded-[10px] border-gray-200 text-center cursor-pointer">
-                    <h2>Edit members</h2>
+                    <button className="w-[100%] cursor-pointer  xl:h-[35px]">Edit members</button>
                 </div>
 
 

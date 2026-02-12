@@ -39,7 +39,7 @@ export default function NewUser({ setNewUser, sethideContent }) {
                 </div>
 
 
-                <button disabled={!text || !password} className={`${text || password ? "bg-blue-600 text-white rounded-[5px] cursor-pointer w-[80px] md:h-[42px] md:text-[24px]" : "bg-blue-200 text-white rounded-[5px] cursor-pointer w-[80px] md:h-[42px] md:text-[24px]"}`} onClick={handleButton}>Submit</button>
+                <button disabled={!text || !password} className={`${text && password ? "bg-blue-600 text-white rounded-[5px] cursor-pointer w-[80px] md:h-[42px] md:text-[24px]" : "bg-blue-200 text-white rounded-[5px] w-[80px] md:h-[42px] md:text-[24px]"}`} onClick={handleButton}>Submit</button>
 
             </div>
 
