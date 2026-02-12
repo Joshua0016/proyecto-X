@@ -18,7 +18,7 @@ export default function LandingPage() {
                 <nav className="bg-gray-950 h-[50px] md:h-[65px] lg:h-[90px] xl:h-[120px] flex justify-between items-center px-4 ">
                     <img src={logo} alt="logo" className="w-[50px] md:w-[75px] lg:w-[100px] xl:w-[150px]"></img>
                     <div className="w-[65%]  text-white flex justify-between text-[12px] md:text-sm  lg:text-lg xl:text-2xl xl:w-[50%]">
-                        <Link to="/">About Us </Link>
+                        <Link to="/home">About Us </Link>
                         <Link to="/"> Comunity </Link>
                         <Link to="/"> Get involved </Link>
                         <Link to="/"> Events </Link>

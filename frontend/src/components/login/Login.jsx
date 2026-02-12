@@ -13,6 +13,8 @@ export default function Login() {
 
     useEffect(() => {
         const rememberMe = localStorage.getItem("rememberUser");
+        localStorage.setItem("loggedIn", false);
+
         if (rememberMe != null) {
             setUserName(rememberMe);
             setRemember(true);
@@ -33,14 +35,15 @@ export default function Login() {
                 else {
                     localStorage.removeItem("rememberUser");
                 }
-                setTextButton("success full")
+                setTextButton("success full");
+                localStorage.setItem("loggedIn", true); //asegurar que el usuario este logeado
                 navigate("/home");
             } else {
                 setTextButton("Login failed");
             }
 
         } catch (error) {
-            console.log("Error... ", error);
+            alert("Error... ", error);
         }
     }
 
@@ -59,7 +62,7 @@ export default function Login() {
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-[30px] w-[100%] h-8 px-3 border border-gray-300 rounded-[5px] md:h-12"></input>
 
                 </div>
-                {/*input check and link PENDIENTE REALIZAR IMPLEMENTACIONES PARA CHECK Y LINK*/}
+                {/*input check and link PENDIENTE REALIZAR IMPLEMENTACIONES LINK*/}
                 <div className="w-[80%] mx-auto flex mt-[10px] relative">
 
                     <input type="checkbox" checked={rememberMe} onChange={(e) => setRemember(e.target.checked)}></input><p className="px-1 md:text-[20px]">Remember user</p>

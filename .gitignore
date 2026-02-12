@@ -1,3 +1,4 @@
+<<<<<<<<< Temporary merge branch 1
 # Logs
 logs
 *.log
@@ -27,3 +28,14 @@ dist-ssr
 obj/
 bin/
 *.user
+=========
+# Ignorar los datos de la base de datos
+postgres_data/
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración personal
+.env
+
