@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using Backend.Models;
 
 
 namespace Backend.Services
@@ -24,63 +25,85 @@ namespace Backend.Services
             _config = config;
         }
 
-        public async Task<LoginResponseDTO?> AuthenticateAsync(LoginRequestDTO request)
+        public async Task<string> RegisterAsync(RegisterRequestDto request)
         {
-            if (request is null) return null;
+            if (await _userRepository.ExistsAsync(request.Email))
+                throw new Exception("User already exists");
 
-            var user = await _userRepository.GetByEmailAsync(request.Email);
-
-            if (user is null) return null;
-
-            //verifica contraseña
-            //remplaza por verficacion con hashing
-
-            if (user.password != request.Password) return null;
-
-            var jwtKey = _config["jwt:Key"];
-            var jwtIssuer = _config["jwt:Issuer"];
-            var jwtAudience = _config["jwt:Audience"];
-            if (string.IsNullOrWhiteSpace(jwtKey)) return null;
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
+            var nuevoUsuario = new usuario
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.id_usuario.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.email),
-                new Claim(ClaimTypes.NameIdentifier, user.id_usuario.ToString())
+                email = request.Email,
+                password = request.Password, // In production, hash the password!
+                id_rol = request.IdRol, // Default role (e.g., user)
+                fecha_creacion = DateTimeOffset.UtcNow
             };
 
-            var roleName = user.id_rolNavigation?.nombre;
-            if (!string.IsNullOrEmpty(roleName)) claims.Add(new Claim(ClaimTypes.Role, roleName));
+            await _userRepository.AddAsync(nuevoUsuario);
+            return "User registered successfully";
 
-            var expiresInMinutes = 60;
-            if (int.TryParse(_config["jwt:ExpiresMinutes"], out var cfg)) expiresInMinutes = cfg;
-            var expiresAt = DateTime.UtcNow.AddMinutes(expiresInMinutes);
-
-            var token = new JwtSecurityToken(
-                issuer: jwtIssuer,
-                audience: jwtAudience,
-                claims: claims,
-                expires: expiresAt,
-                signingCredentials: creds
-            );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return new LoginResponseDTO
-            {
-                Token = tokenString,
-                ExpiresAt = expiresAt,
-                Username = user.email,
-                Roles = string.IsNullOrEmpty(roleName) ? Array.Empty<string>() : new[] { roleName }
-            };
 
 
         }
 
+        public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
+        {
+            var usuario = await _userRepository.GetByEmailAsync(request.Email);
+
+            if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Password, usuario.password))
+                throw new Exception("Invalid credentials");
+
+            var token = GenerateJwtToken(usuario);
+
+
+
+            return new LoginResponseDTO
+            (
+                token,
+                usuario.email,
+                usuario.id_rolNavigation.nombre // Return the token in the password field for simplicity
+            );
+
+
+
+
+        }
+
+        public async Task<IEnumerable<UserResponseDTO>> GetUsersAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            return users.Select(u => new UserResponseDTO(
+                 u.id_usuario,
+                 u.email,
+                 u.id_rolNavigation.nombre,
+                 u.fecha_creacion
+            ));
+        }
+
+        private string GenerateJwtToken(usuario user)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.id_usuario.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, user.id_rolNavigation.nombre)
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
 
     }
 }
+
+
+

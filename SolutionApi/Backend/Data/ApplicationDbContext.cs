@@ -49,6 +49,8 @@ namespace Backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<log_auditorium>();
+
             modelBuilder.Entity<AsientoContable>(entity =>
             {
                 entity.HasKey(e => e.IdAsiento).HasName("asiento_contable_pkey");
@@ -70,7 +72,7 @@ namespace Backend.Data
                     .HasMaxLength(50)
                     .HasColumnName("referencia");
 
-                entity.HasOne(d => d.IdUsuarioRegistradorNavigation).WithMany(p => p.AsientoContables)
+                entity.HasOne(d => d.IdUsuarioRegistradorNavigation).WithMany()
                     .HasForeignKey(d => d.IdUsuarioRegistrador)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("asiento_contable_id_usuario_registrador_fkey");
@@ -185,7 +187,7 @@ namespace Backend.Data
 
                 // Remove generic type to avoid referencing missing 'Usuario' symbol; infer from navigation property
                 entity.HasOne(e => e.IdUsuarioOrganizadorNavigation)
-                    .WithMany(u => u.Eventos)
+                    .WithMany()
                     .HasForeignKey(d => d.IdUsuarioOrganizador)
                     .HasConstraintName("evento_id_usuario_organizador_fkey");
             });
@@ -269,7 +271,7 @@ namespace Backend.Data
 
                 // Cambia el tipo de colección en la expresión lambda para que coincida con el modelo correcto
                 entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany("log_auditoria")
+                    .WithMany()
                     .HasForeignKey(d => d.IdUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("log_auditoria_id_usuario_fkey");
@@ -300,7 +302,7 @@ namespace Backend.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("miembro_id_familia_fkey");
 
-                entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Miembros)
+                entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
                     .HasForeignKey(d => d.IdUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("miembro_id_usuario_fkey");

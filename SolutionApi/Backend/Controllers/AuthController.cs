@@ -4,6 +4,7 @@ using Backend.Services;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Backend.Controllers
@@ -14,77 +15,49 @@ namespace Backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
-        private readonly Backend.Data.ApplicationDbContext _context;
 
-        public AuthController(IAuthService authService, Backend.Data.ApplicationDbContext context)
+        public AuthController(IAuthService _authService)
         {
-            this.authService = authService;
-            _context = context;
+            authService = _authService;
+
         }
+
+        [HttpGet("users")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await authService.GetUsersAsync();
+            return Ok(users);
+        }
+
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var response = await authService.LoginAsync(request);
+            return response != null ? Ok(response) : Unauthorized("Email o Contraseña");
 
-            var response = await authService.AuthenticateAsync(request);
-
-            if (response is null)
-                return Unauthorized("Invalid email or password.");
-
-            return Ok(response);
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
         {
-
-            // validar si el email ya existe 
-            if (await _context.Usuarios.AnyAsync(u => u.email == request.Email))
+            try
             {
-                return BadRequest("Email already exists.");
+                var result = await authService.RegisterAsync(request);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+
             }
 
-            //validar que el rol exista
-            var rolExiste = await _context.Rols.AnyAsync(r => r.id_rol == request.IdRol);
-
-            if (!rolExiste)
-            {
-                return BadRequest("Role does not exist.");
-            }
-
-            // crear el usuario y encriptar la contraseña
-
-            var usuario1 = new usuario
-            {
-                email = request.Email,
-                password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                id_rol = request.IdRol,
-                fecha_creacion = DateTimeOffset.UtcNow
-            };
-
-            //guardar usuario en la base de datos
-            _context.Usuarios.Add(usuario1);
-
-            var ip = HttpContext.Connection.RemoteIpAddress?.ToString()
-                     ?? Request.Headers["X-Forwarded-For"].FirstOrDefault()
-                     ?? "unknown";
-
-            var log = new LogAuditorium
-            {
-                Timestamp = DateTimeOffset.UtcNow,
-                Operacion = "Registro",
-                TablaAfectada = "Usuarios",
-                Detalle = $"Usuario {request.Email} registrado con exito",
-                IpOrigen = ip,
-                IdUsuarioNavigation = usuario1  // EF relaciona y usará el FK correcto
-            };
-
-            _context.LogAuditoria.Add(log);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { mensaje = "Usuario registrado con éxito." });
         }
+
+
+
+
     }
 }

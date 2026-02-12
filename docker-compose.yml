@@ -1,43 +1,46 @@
 services:
-  # Tu base de datos
+
   db_server:
     image: postgres:15
     container_name: server_dbProyectoX
+    restart: unless-stopped
+
     environment:
       POSTGRES_DB: dbProyectoX
-      POSTGRES_USER: elias
-      POSTGRES_PASSWORD: "1239874560"
-    volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123987456
 
-  # pgAdmin Web para el equipo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+    ports:
+      - "5433:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d dbProyectoX"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
   admin_panel:
     image: dpage/pgadmin4
     container_name: pgadmin_proyecto
+    restart: unless-stopped
+
     environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@proyectox.com"
-      PGADMIN_DEFAULT_PASSWORD: "123987456"
+      PGADMIN_DEFAULT_EMAIL: admin@proyectox.com
+      PGADMIN_DEFAULT_PASSWORD: 123987456
+
     ports:
       - "8080:80"
-    depends_on:
-      - db_server
 
-  # Espacio para Gadiel
-  backend_app:
-    build: ./backend
-    container_name: api_proyectox
     depends_on:
-      - db_server
-
-  # Espacio para Joshua
-  frontend_app:
-    build: ./frontend
-    container_name: web_proyectox
-    depends_on:
-      - db_server
+      db_server:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+
+

@@ -1,0 +1,49 @@
+
+Cada integrante DEBE ejecutar siempre para borrar los volumenes viejos:
+
+docker compose down -v
+
+y luego para levantar con los cambios:
+
+docker compose up -d
+
+__________________________________________________________
+
+- Al utilizar http://localhost:8080
+
+email:         admin@proyectox.com
+password       123987456
+
+Conectar con el servidor:
+
+Host	        db_server
+Port	        5432
+Database	dbProyectoX
+User	        admin
+Password	123987456
+__________________________________________________________
+
+- Al utilizar DBeaver o pgAdmin 4 u otro que no sea dentro de Docker
+
+Conectar con el servidor:
+
+Host	        localhost
+Port	        5433
+Database	dbProyectoX
+User	        admin
+Password	123987456
+__________________________________________________________
+
+  Mejoras:
+
+- Se borraron los usuarios fisicos.
+- Se borraron los contenedores Backend y Frontend.
+- Ahora solo hay un usuario: Admin y contraseña 123987456.
+- Se quito la version del YML para evitar el error (auqnue no afectaba el funcionamiento de nada).
+- Se agrego un healthcheck con la condition: service_healthy.
+  en el YML para evitar que pgAdmin arranque sin la base de datos estar lista.
+- Se agrego el restart: unless-stopped para que docker reinicie automaticamente si el contenedor.
+  cierra or error o se apaga el equipo.
+- Se agrego el unique al nombre en seguridad.rol.
+- En los insert de prueba por el momento llevaran ON CONFLICT () DO NOTHING; y id_rol dentro de una variable, 
+  para evitar errores y avanzar con lo mas importante.

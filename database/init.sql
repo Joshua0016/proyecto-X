@@ -10,8 +10,8 @@ CREATE SCHEMA IF NOT EXISTS finanzas;
 
 CREATE TABLE seguridad.rol (
     id_rol int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nombre varchar(50) NOT NULL,
-    descripcion text
+    nombre varchar(50) UNIQUE NOT NULL,
+	descripcion text NOT NULL
 );
 
 CREATE TABLE seguridad.usuario (
@@ -174,40 +174,27 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- Creación de usuarios físicos para el equipo
-
-CREATE USER yimi WITH PASSWORD '123987456';
-CREATE USER gadiel WITH PASSWORD '123987456';
-CREATE USER joshua WITH PASSWORD '123987456';
-
--- Permisos para el Líder/Experto (Solo lectura en todo)
-
-GRANT CONNECT ON DATABASE dbProyectoX TO yimi;
-GRANT USAGE ON SCHEMA seguridad, membresia, finanzas TO yimi;
-GRANT SELECT ON ALL TABLES IN SCHEMA seguridad, membresia, finanzas TO yimi;
-
--- Permisos para el Backend (Control total de datos para la lógica)
-
-GRANT CONNECT ON DATABASE dbProyectoX TO gadiel;
-GRANT USAGE, CREATE ON SCHEMA seguridad, membresia, finanzas TO gadiel;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA seguridad, membresia, finanzas TO gadiel;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA seguridad, membresia, finanzas TO gadiel;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA finanzas TO gadiel;
-
--- Permisos para el Frontend (Lectura para ver qué mostrar)
-GRANT CONNECT ON DATABASE dbProyectoX TO joshua;
-GRANT USAGE ON SCHEMA seguridad, membresia, finanzas TO joshua;
-GRANT SELECT ON ALL TABLES IN SCHEMA seguridad, membresia, finanzas TO joshua;
-
-
-
 -- DATOS DE PRUEBA PARA LOGIN
 
-INSERT INTO seguridad.rol (nombre, descripcion) 
-VALUES ('admin', 'Administrador con acceso total');
+INSERT INTO seguridad.rol (nombre, descripcion)
+VALUES ('admin', 'Administrador con acceso total')
+ON CONFLICT (nombre) DO NOTHING;
 
-INSERT INTO seguridad.usuario (email, password, id_rol) 
-VALUES 
-('joshua@proyectox.com', 'admin123', 1),
-('elias@proyectox.com', 'admin123', 1),
-('gadiel@proyectox.com', 'admin123', 1);
+DO $$
+DECLARE
+    v_admin_id INT;
+BEGIN
+    SELECT id_rol INTO v_admin_id
+    FROM seguridad.rol
+    WHERE nombre = 'admin';
+
+    IF v_admin_id IS NULL THEN
+        RAISE EXCEPTION 'No se pudo crear ni encontrar el rol admin';
+    END IF;
+
+    INSERT INTO seguridad.usuario (email, password, id_rol) VALUES
+    ('joshua@proyectox.com', 'admin123', v_admin_id),
+    ('elias@proyectox.com', 'admin123', v_admin_id),
+    ('gadiel@proyectox.com', 'admin123', v_admin_id)
+    ON CONFLICT (email) DO NOTHING;
+END $$;
