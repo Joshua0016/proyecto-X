@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+
+body {
+    background-color: rgb(240, 240, 240);
+}
+
+h1 {
+    font-family: "Archivo Black", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}

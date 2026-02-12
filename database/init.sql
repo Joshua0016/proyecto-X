@@ -11,7 +11,6 @@ CREATE SCHEMA IF NOT EXISTS finanzas;
 CREATE TABLE seguridad.rol (
     id_rol int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre varchar(50) UNIQUE NOT NULL,
-    descripcion text
 );
 
 CREATE TABLE seguridad.usuario (
