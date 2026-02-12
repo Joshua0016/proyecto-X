@@ -17,21 +17,20 @@ export default function Admin() {
             </div>
 
 
-            <div className="flex flex-col gap-2 mt-[25px] lg:w-[70%]  xl:w-[40%] w-[80%] mx-auto">
+            <div className=" mt-[25px] lg:w-[70%]  xl:w-[40%] w-[80%] mx-auto">
 
-                {!hideContent && (<div className="w-[80%] mx-auto border-2 rounded-[5px] border-gray-200 text-center">
-                    <button onClick={buttonCreate} className="cursor-pointer">Create user</button>
+                {!hideContent && (<div className="w-[80%] mx-auto mt-[20px] border-2 rounded-[10px] border-gray-200 text-center cursor-pointer">
+                    <button onClick={buttonCreate} className="w-[100%] cursor-pointer">Create user</button>
                 </div>)}
 
                 {newUser ? <NewUser setNewUser={setNewUser} sethideContent={sethideContent}></NewUser> : ""}
 
-                {/*
-                <div className="w-[80%] mx-auto border-2 rounded-[5px] border-gray-200 text-center">
-                    <button>Delete user</button>
-                </div>
-                <div className="w-[80%] mx-auto border-2 rounded-[5px] border-gray-200 text-center">
-                    <button>Update user</button>
-                </div>*/}
+                {!hideContent ? <div className="w-[80%] mx-auto mt-[20px] border-2 rounded-[10px] border-gray-200 text-center">
+                    <button>Edit users</button>
+                </div> : ""}
+
+
+
             </div>
 
 
