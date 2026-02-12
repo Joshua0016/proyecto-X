@@ -1,4 +1,4 @@
-
+<<<<<<<<< Temporary merge branch 1
 # Logs
 logs
 *.log
@@ -28,7 +28,7 @@ dist-ssr
 obj/
 bin/
 *.user
-
+=========
 # Ignorar los datos de la base de datos
 postgres_data/
 

@@ -198,3 +198,16 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA finanzas TO gadiel;
 GRANT CONNECT ON DATABASE dbProyectoX TO joshua;
 GRANT USAGE ON SCHEMA seguridad, membresia, finanzas TO joshua;
 GRANT SELECT ON ALL TABLES IN SCHEMA seguridad, membresia, finanzas TO joshua;
+
+
+
+-- DATOS DE PRUEBA PARA LOGIN
+
+INSERT INTO seguridad.rol (nombre, descripcion) 
+VALUES ('admin', 'Administrador con acceso total');
+
+INSERT INTO seguridad.usuario (email, password, id_rol) 
+VALUES 
+('joshua@proyectox.com', 'admin123', 1),
+('elias@proyectox.com', 'admin123', 1),
+('gadiel@proyectox.com', 'admin123', 1);
