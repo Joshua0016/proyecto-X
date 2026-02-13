@@ -1,14 +1,25 @@
-import { useState } from "react"
+import { use, useState } from "react"
+
 
 
 export default function NewUser({ setNewUser, sethideContent }) {
     const [text, setText] = useState("");
-    const [password, setPassword] = useState("")
+    const [password, setPassword] = useState("");
+    const [adminRol, setRolAdmin] = useState();
+    const [userRol, setUserRol] = useState();
 
 
     const handleButton = () => {
         reset();
         alert("Realizar conexion backend pendiente");
+
+
+        let seguridadUsuario = {
+            Name: text,
+            Password: password,
+            Rol: adminRol ? "admin" : "user",
+            Date: new Date().toLocaleDateString()
+        }
     }
 
     function reset() {
@@ -16,17 +27,47 @@ export default function NewUser({ setNewUser, sethideContent }) {
         sethideContent(false);
     }
 
+
     return (
         <>
-            <div className="text-center">
-                <h2 className="sm:text-[24px] lg:text-[28px]">Create user</h2>
+
+
+
+            <div className="border-2 rounded-[5px] rounded-black">
+                <div className="text-center">
+                    <h2 className="sm:text-[24px] lg:text-[28px]">Create user</h2>
+                </div>
+
+                <div className="w-[80%] mx-auto">
+                    <input type="text" placeholder="Name user" value={text} onChange={(e) => setText(e.target.value)} className="pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
+                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
+
+                </div>
+
+
+
+                <div className="w-[100%] mx-auto p-[5px] mt-3">
+
+                    <h2 className=" xl:text-2xl">Rol</h2>
+                    <div className="flex justify-around">
+                        <div>
+                            <input type="checkbox" disabled={userRol} checked={adminRol} onChange={(e) => setRolAdmin(e.target.checked)} className="cursor-pointer" ></input>
+                            <label className="pl-1 xl:text-2xl">admin</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" disabled={adminRol} checked={userRol} onChange={(e) => setUserRol(e.target.checked)} className="cursor-pointer" ></input>
+                            <label className="pl-1 xl:text-2xl">user</label>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div className="w-[80%] mx-auto">
-                <input type="text" placeholder="Name user" value={text} onChange={(e) => setText(e.target.value)} className="pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
 
-            </div>
 
             <div className="w-[80%] mx-auto flex justify-around mt-[15px]">
 
@@ -39,7 +80,8 @@ export default function NewUser({ setNewUser, sethideContent }) {
                 </div>
 
 
-                <button disabled={!text || !password} className={`${text && password ? "bg-blue-600 text-white rounded-[5px] cursor-pointer w-[80px] md:h-[42px] md:text-[24px]" : "bg-blue-200 text-white rounded-[5px] w-[80px] md:h-[42px] md:text-[24px]"}`} onClick={handleButton}>Submit</button>
+
+                <button disabled={!text || !password || !adminRol || userRol} className={`${text && password && (userRol || adminRol) ? "bg-blue-600 text-white rounded-[5px] cursor-pointer w-[80px] md:h-[42px] md:text-[24px]" : "bg-blue-200 text-white rounded-[5px] w-[80px] md:h-[42px] md:text-[24px]"}`} onClick={handleButton}>Submit</button>
 
             </div>
 

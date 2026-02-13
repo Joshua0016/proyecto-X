@@ -59,7 +59,7 @@ export default function Home() {
 
             </nav>
 
-            <div className="w-[65%] m-[10px] rounded-[10px] p-2 absolute right-1 top-[30%] text-center bg-white border-2 border-gray-300 sm:w-[80%] md:w-[80%] lg:w-[85%] xl:w-[85%] ">
+            <div className="w-[70%] m-[10px] rounded-[10px] p-2 absolute right-1 top-[30%] text-center bg-white border-2 border-gray-300 sm:w-[80%] md:w-[75%] lg:w-[80%] xl:w-[85%] ">
                 {outlet ? (<Outlet></Outlet>) : <img src={hands} className="mx-auto md:w-[200px]" ></img>}
             </div>
 

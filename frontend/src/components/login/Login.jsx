@@ -66,7 +66,7 @@ export default function Login() {
                 <div className="w-[80%] mx-auto flex mt-[10px] relative">
 
                     <input type="checkbox" checked={rememberMe} onChange={(e) => setRemember(e.target.checked)}></input><p className="px-1 md:text-[20px]">Remember user</p>
-                    <a className="absolute right-0 underline text-blue-600 md:text-[20px]">Forgot password</a>
+                    {/*<a className="absolute right-0 underline text-blue-600 md:text-[20px]">Forgot password</a>*/}
                 </div>
                 {/*button*/}
                 <div className="w-[80%] mx-auto">
