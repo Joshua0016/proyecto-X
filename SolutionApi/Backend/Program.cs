@@ -35,6 +35,10 @@ namespace Backend
 
             builder.Services.AddScoped<IGenericRepository<rol>, rolesRepository>();
 
+            builder.Services.AddScoped<IMemberService, MemberService>();
+
+
+
 
             //configurar autenticacion JWT
             var jwtKey = builder.Configuration["jwt:Key"] ?? string.Empty;

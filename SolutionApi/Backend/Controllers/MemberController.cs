@@ -9,8 +9,10 @@ namespace Backend.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class MembersController(IMemberService service) : ControllerBase
+    public class MembersController(IMemberService _service) : ControllerBase
     {
+        private readonly IMemberService service = _service;
+
         [HttpGet] public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
 
         [HttpPost]
