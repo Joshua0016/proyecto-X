@@ -11,7 +11,7 @@ CREATE SCHEMA IF NOT EXISTS finanzas;
 CREATE TABLE seguridad.rol (
     id_rol int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre varchar(50) UNIQUE NOT NULL,
-	descripcion text NOT NULL
+	descripcion text 
 );
 
 CREATE TABLE seguridad.usuario (
@@ -48,8 +48,10 @@ CREATE TABLE membresia.miembro (
     apellido varchar(50) NOT NULL,
     foto_url text,
     fecha_nacimiento date NOT NULL,
-    id_usuario int NOT NULL REFERENCES seguridad.usuario(id_usuario),
-    id_familia int NOT NULL REFERENCES membresia.familia(id_familia)
+    telefono varchar(10)
+    -- un miembro deberia de existir sin una familia, un miembro no es usuario de la aplicacion
+   -- id_usuario int NOT NULL REFERENCES seguridad.usuario(id_usuario),
+   -- id_familia int NOT NULL REFERENCES membresia.familia(id_familia)
 );
 
 CREATE TABLE membresia.evento (
