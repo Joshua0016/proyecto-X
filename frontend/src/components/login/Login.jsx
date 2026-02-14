@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import paloma from "./assets/paloma.png"
-import login from "../../api/login"
+import login from "../../apiServices/login"
 export default function Login() {
 
     const [userName, setUserName] = useState("");
