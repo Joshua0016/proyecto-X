@@ -13,7 +13,7 @@ public partial class usuario
 
     public int id_rol { get; set; }
 
-    public DateTimeOffset fecha_creacion { get; set; }
+    public DateTime fecha_creacion { get; set; }
 
     public virtual rol id_rolNavigation { get; set; } = null!;
 

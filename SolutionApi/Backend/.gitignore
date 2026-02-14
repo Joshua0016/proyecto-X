@@ -1,23 +1,22 @@
-# Visual Studio
-.vs/
-
-# Build results
+# 🔹 Build
 bin/
 obj/
 
-# User-specific files
+# 🔹 Visual Studio
+.vs/
 *.user
 *.suo
-*.userosscache
-*.sln.docstates
+*.cache
+*.db
+*.opendb
 
-# Rider / VS Code (por si acaso)
+# 🔹 Rider / VS Code
 .idea/
 .vscode/
 
-# Logs
+# 🔹 Logs
 *.log
 
-# OS files
+# 🔹 Archivos del sistema
 .DS_Store
 Thumbs.db

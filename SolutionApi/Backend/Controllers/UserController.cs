@@ -12,31 +12,34 @@ namespace Backend.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class UserController(IService service) : ControllerBase
     {
-        private readonly IAuthService authService;
+        private readonly IService userService = service;
 
-        public AuthController(IAuthService _authService)
-        {
-            authService = _authService;
 
-        }
-
-        [HttpGet("users")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
-        {
-            var users = await authService.GetUsersAsync();
-            return Ok(users);
-        }
 
 
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            var response = await authService.LoginAsync(request);
-            return response != null ? Ok(response) : Unauthorized("Email o Contraseña");
+            try
+            {
+                var user = await userService.LoginAsync(request);
+
+                return Ok(new
+                {
+                    id = user.id_usuario,
+                    email = user.email,
+                    idRol = user.id_rol,
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { message = ex.Message });
+
+            }
 
         }
 
@@ -45,8 +48,8 @@ namespace Backend.Controllers
         {
             try
             {
-                var result = await authService.RegisterAsync(request);
-                return Ok(new { message = result });
+                await userService.RegisterAsync(request);
+                return Ok(new { message = "User registered successfully" });
             }
             catch (Exception ex)
             {

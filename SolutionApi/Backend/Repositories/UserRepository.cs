@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(Backend.Data.ApplicationDbContext context) : IGenericRepository<usuario>
     {
-        private readonly Backend.Data.ApplicationDbContext _context;
+        private readonly Backend.Data.ApplicationDbContext _context = context;
 
-        public UserRepository(Backend.Data.ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        // public UserRepository(Backend.Data.ApplicationDbContext context)
+        // {
+        //     _context = context;
+        // }
 
         public async Task<IEnumerable<usuario>> GetAllAsync() =>
             await _context.Usuarios.Include(u => u.id_rolNavigation)

@@ -1,6 +1,7 @@
 
 using Backend.Data;
 using Backend.Repositories;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -19,36 +20,36 @@ namespace Backend
 
 
             //registrar DbContext con PostgreSQL
-            builder.Services.AddDbContext<ApplicationDbContext>(opts =>
+            builder.Services.AddDbContext<Backend.Data.ApplicationDbContext>(opts =>
                 opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            //registrar repositorios y servicio de autenticacion
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+            //registrar repositorios 
+            builder.Services.AddScoped<IGenericRepository<usuario>, UserRepository>();
 
             //registrar servicio de autenticacion
-            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IService, UserService>();
 
             //configurar autenticacion JWT
             var jwtKey = builder.Configuration["jwt:Key"] ?? string.Empty;
             var key = Encoding.UTF8.GetBytes(jwtKey);
 
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["jwt:Issuer"],
-                    ValidAudience = builder.Configuration["jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
-
+            // builder.Services.AddAuthentication(options =>
+            // {
+            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // }).AddJwtBearer(options =>
+            // {
+            //     options.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateIssuer = true,
+            //         ValidateAudience = true,
+            //         ValidateIssuerSigningKey = true,
+            //         ValidIssuer = builder.Configuration["jwt:Issuer"],
+            //         ValidAudience = builder.Configuration["jwt:Audience"],
+            //         IssuerSigningKey = new SymmetricSecurityKey(key)
+            //     };
+            // });
 
             builder.Services.AddEndpointsApiExplorer();
 
