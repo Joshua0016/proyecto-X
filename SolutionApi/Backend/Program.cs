@@ -30,6 +30,12 @@ namespace Backend
             //registrar servicio de autenticacion
             builder.Services.AddScoped<IService, UserService>();
 
+
+            builder.Services.AddScoped<IGenericRepository<Miembro>, MemberRepository>();
+
+            builder.Services.AddScoped<IGenericRepository<rol>, rolesRepository>();
+
+
             //configurar autenticacion JWT
             var jwtKey = builder.Configuration["jwt:Key"] ?? string.Empty;
             var key = Encoding.UTF8.GetBytes(jwtKey);

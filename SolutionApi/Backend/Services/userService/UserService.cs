@@ -18,26 +18,14 @@ namespace Backend.Services
     {
         private readonly IGenericRepository<usuario> _userRepository;
 
-        public UserService(IGenericRepository<usuario> userRepository, IConfiguration config)
+        public UserService(IGenericRepository<usuario> userRepository)
         {
             _userRepository = userRepository;
         }
 
         public async Task<string> RegisterAsync(RegisterRequestDto request)
         {
-            // if (await _userRepository.ExistsAsync(request.Email))
-            //     throw new Exception("User already exists");
 
-            // var nuevoUsuario = new usuario
-            // {
-            //     email = request.Email,
-            //     password = request.Password, // In production, hash the password!
-            //     id_rol = request.IdRol, // Default role (e.g., user)
-            //     fecha_creacion = DateTime.UtcNow
-            // };
-
-            // await _userRepository.AddAsync(nuevoUsuario);
-            // return "User registered successfully";
 
             try
             {

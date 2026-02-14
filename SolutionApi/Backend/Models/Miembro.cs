@@ -11,6 +11,11 @@ public partial class Miembro
 
     public string Apellido { get; set; } = null!;
 
+    public string Telefono { get; set; } = null!;
+
+    public string? Email { get; set; }
+
+
     public string? FotoUrl { get; set; }
 
     public DateOnly FechaNacimiento { get; set; }
