@@ -7,31 +7,33 @@ export default function Members() {
 
     return (
         <>
-            <h1>Members</h1>
-
-            <div className=" mt-[25px] lg:w-[70%]  xl:w-[40%] w-[80%] mx-auto ">
-
+            <div className="mt-[200px] md:">
+                <h1 className="text-white text-[28px] text-center  lg:text-[48px] ">Members</h1>
 
 
-                {view && (
-                    <div>
-                        <div className="w-[80%] mx-auto border-2 border-gray-200 rounded-[10px] mt-[20px] ">
-                            <button className="w-[100%] cursor-pointer  xl:h-[35px]" onClick={() => setViwe(false)}>Create members</button>
+
+
+                <div style={{ backgroundColor: "#1A1A1A" }} className=" rounded-2xl h-[150px] sm:text-2xl ">
+
+
+
+                    {view && (
+                        <div className="flex flex-col w-full h-full justify-around sm:w-[70%] sm:mx-auto 2xl:w-[40%]">
+                            <div style={{ backgroundColor: "#007ACC" }} className="w-[80%] mx-auto border-2 border-gray-200 rounded-[10px] ">
+                                <button className=" w-[100%] cursor-pointer  xl:h-[35px]" onClick={() => setViwe(false)}>Create</button>
+                            </div>
+                            <div style={{ backgroundColor: "#007ACC" }} className=" w-[80%] mx-auto border-2 border-gray-200 rounded-[10px]  border-gray-200 text-center cursor-pointer">
+                                <button className="w-[100%] cursor-pointer  xl:h-[35px]">Edit</button>
+                            </div>
                         </div>
-                        <div className="w-[80%] mx-auto mt-[20px] border-2 rounded-[10px] border-gray-200 text-center cursor-pointer">
-                            <button className="w-[100%] cursor-pointer  xl:h-[35px]">Edit members</button>
-                        </div>
-                    </div>
-                )}
+                    )}
 
-                {!view && <CreateMember setView={setViwe}></CreateMember>}
+                    {!view && <CreateMember setView={setViwe}></CreateMember>}
 
-
-
-
-
+                </div>
 
             </div>
+
 
         </>
     )

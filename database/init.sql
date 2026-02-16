@@ -48,7 +48,8 @@ CREATE TABLE membresia.miembro (
     apellido varchar(50) NOT NULL,
     foto_url text,
     fecha_nacimiento date NOT NULL,
-    telefono varchar(10)
+    telefono varchar(10),
+    email varchar(50)
     -- un miembro deberia de existir sin una familia, un miembro no es usuario de la aplicacion
    -- id_usuario int NOT NULL REFERENCES seguridad.usuario(id_usuario),
    -- id_familia int NOT NULL REFERENCES membresia.familia(id_familia)

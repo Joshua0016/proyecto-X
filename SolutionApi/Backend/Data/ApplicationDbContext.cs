@@ -101,10 +101,10 @@ namespace Backend.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("asistencia_id_evento_fkey");
 
-                entity.HasOne(d => d.IdMiembroNavigation).WithMany(p => p.Asistencia)
-                    .HasForeignKey(d => d.IdMiembro)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("asistencia_id_miembro_fkey");
+                //entity.HasOne(d => d.IdMiembroNavigation).WithMany(p => p.Asistencia)
+                //    .HasForeignKey(d => d.IdMiembro)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("asistencia_id_miembro_fkey");
             });
 
             modelBuilder.Entity<CuentaContable>(entity =>
@@ -159,10 +159,10 @@ namespace Backend.Data
                     .HasMaxLength(50)
                     .HasColumnName("tipo");
 
-                entity.HasOne(d => d.IdMiembroNavigation).WithMany(p => p.Donacions)
-                    .HasForeignKey(d => d.IdMiembro)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("donacion_id_miembro_fkey");
+                //entity.HasOne(d => d.IdMiembroNavigation).WithMany(p => p.Donacions)
+                //    .HasForeignKey(d => d.IdMiembro)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("donacion_id_miembro_fkey");
             });
 
             modelBuilder.Entity<Evento>(entity =>
@@ -291,21 +291,21 @@ namespace Backend.Data
                     .HasColumnName("apellido");
                 entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
                 entity.Property(e => e.FotoUrl).HasColumnName("foto_url");
-                entity.Property(e => e.IdFamilia).HasColumnName("id_familia");
-                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+               // entity.Property(e => e.IdFamilia).HasColumnName("id_familia");
+                //entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
                     .HasColumnName("nombre");
 
-                entity.HasOne(d => d.IdFamiliaNavigation).WithMany(p => p.Miembros)
-                    .HasForeignKey(d => d.IdFamilia)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("miembro_id_familia_fkey");
+                //entity.HasOne(d => d.IdFamiliaNavigation).WithMany(p => p.Miembros)
+                //    .HasForeignKey(d => d.IdFamilia)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("miembro_id_familia_fkey");
 
-                entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
-                    .HasForeignKey(d => d.IdUsuario)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("miembro_id_usuario_fkey");
+                //entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
+                //    .HasForeignKey(d => d.IdUsuario)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("miembro_id_usuario_fkey");
             });
 
             modelBuilder.Entity<MovimientoContable>(entity =>

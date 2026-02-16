@@ -1,6 +1,7 @@
 using Backend.DTOs;
 using Backend.Repositories;
 using Backend.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -13,14 +14,26 @@ namespace Backend.Controllers
     {
         private readonly IMemberService service = _service;
 
-        [HttpGet] public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
+        [HttpGet("GetAll")] public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create(MemberCreateDTO dto)
         {
-            try { await service.Persist(dto); return Ok("Registrado"); }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    // Devuelve los errores de validación para ver qué campo falla
+                    return BadRequest(ModelState);
+                }
+
+                await service.Persist(dto);
+                return Ok(new { message = "success full" });
+            }
+            catch (Exception ex) { var errors = new List<string>(); var current = ex; while (current != null) { errors.Add(current.Message); current = current.InnerException; } return BadRequest(new { error = string.Join(" --> ", errors), stack = ex.StackTrace }); }
+
         }
+
 
         [HttpPost("{id}")]
         public async Task<IActionResult> Update(int id)

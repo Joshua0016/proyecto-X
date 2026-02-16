@@ -15,11 +15,11 @@ export default async function login(username, password) {
         });
 
         if (response.ok) {
-            let response = await response.json();
-            return response;
+            let result = await response.json();
+            return result;
         }
         else {
-            console.log("error al enviar la peticon");
+
             return false;
         }
 

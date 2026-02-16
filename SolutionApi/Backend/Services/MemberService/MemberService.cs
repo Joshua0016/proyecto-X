@@ -22,26 +22,20 @@ public class MemberService(IGenericRepository<Miembro> repo) : IMemberService
             ));
 
 
-    public async Task Persist(MemberCreateDTO request)
-    {
-        try
-        {
-            if (await repo.ExistsAsync(request.Telefono)) throw new Exception("Ya existe ");
-            await repo.AddAsync(new Miembro
-            {
-                Nombre = request.Nombre,
-                Apellido = request.Apellido,
-                Telefono = request.Telefono,
-                IdUsuario = request.IdUsuario,
-                IdFamilia = request.IdFamilia
-            });
-        }
-        catch (Exception ex)
-        {
+    public async Task Persist(MemberCreateDTO request) 
+    { if (await repo.ExistsAsync(request.Telefono)) 
+    
+        throw new Exception("Ya existe");
 
-            throw new Exception(ex.Message);
-
-        }
+        await repo.AddAsync(new Miembro 
+        { 
+            Nombre = request.Nombre,
+            Apellido = request.Apellido,
+            Telefono = request.Telefono,
+            Email = request.Email,
+            FotoUrl = request.FotoUrl,
+            FechaNacimiento = request.FechaNacimiento
+        });
     }
 
     public async Task Update(int id)

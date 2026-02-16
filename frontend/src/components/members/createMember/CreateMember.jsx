@@ -1,55 +1,89 @@
-import { useState } from "react"
-
+import { useEffect, useState } from "react"
+import createMember from "../../../apiServices/createMember";
+import getAllMembers from "../../../apiServices/getAllMembers";
 export default function CreateMember({ setView }) {
     const [name, setName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const [birth, setBirth] = useState("");
+    const [email, setEmail] = useState("");
 
-    const handleButton = () => {
+    useEffect(() => {
+        async function getMemebers() {
+            let members = await getAllMembers()
+            console.log(members);
+        }
+        getMemebers();
+    }, [])
 
-        // Member = {
-        //     Nombre: name,
-        //     apellido: lastName,
-        //     foto: null,
-        //     fecha_nacimiento: birth,
-        //     telefono: phone,
+    const handleButton = async () => {
 
-        // }
-        verification();
-    }
+        let dto = {
+            nombre: name,
+            apellido: lastName,
+            telefono: phone,
+            email: email,
+            fotoUrl: "foto",
+            fechaNacimiento: birth
 
-    function verification() {
-        console.log(phone.length)
-        if (!isNaN(name || lastName) || isNaN(phone) || phone.length < 10) {
-            alert("Invalid values in the fields");
         }
 
+        if (verification(dto)) {
+
+            await createMember(dto);
+        }
+        else {
+            console.log(dto)
+            alert("Error en los campos... Por favor ingresar correctamente los valores");
+        }
+    }
+
+    function verification(dto) {
+
+        if (!name || !lastName || !email) {
+            console.log("aqui")
+            return false;
+        }
+        if (isNaN(phone) || phone.length < 10) {
+            console.log("aquisdfdf")
+            return false;
+        }
+        let isNull = Object.keys(dto).forEach((keys) => dto[keys] == undefined);
+
+        if (isNull) {
+            console.log("aquieeeeeeee")
+            return false;
+        }
+        return true;
     }
 
     return (
         <>
-            <div className="border-2  border-black rounded-[5px] p-[5px]">
+            <div style={{ backgroundColor: "#1A1A1A" }} className="rounded-2xl h-[350px] md:h-[500px] p-2 lg:p-4 lg:h-[550px] ">
                 <div className="text-center">
-                    <h2 className="sm:text-[24px] lg:text-[28px]">Create member</h2>
+                    <h2 className="text-white sm:text-[24px] lg:text-[48px]">Create member</h2>
                 </div>
-                <div className="w-[90%] mx-auto">
+                <div className="w-[90%] mx-auto flex flex-col items-center md:text-3xl ">
 
-                    <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
-                    <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
-                    <input type="tel" placeholder="Phone Number" maxLength={"10"} value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
+                    <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]" />
+                    <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 md:text-3xl xl:w-[20%]"></input>
+                    <input type="tel" placeholder="Phone Number" maxLength={"10"} value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
+                    <input type="tel" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
 
-                    <div className="mt-[15px] flex-col">
-                        <label>Date of birth</label>
-                        <input type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12"></input>
+                    <div className="mt-[15px] flex flex-col items-center">
+                        <label className="text-white xl:text-3xl">Date of birth</label>
+                        <input type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] pl-2 border-2 border-gray-200 rounded-[5px]  md:h-12 lg:w-[160px] xl:w-[175px]"></input>
 
                     </div>
 
-                    <div className="w-[100%] mx-auto flex mt-[30px] justify-around ">
-                        <img src="/flecha.svg" className="w-[40px]" alt="Back" onClick={() => setView(true)}></img>
+                    <div className="w-[100%] mx-auto flex mt-[30px] justify-around xl:w-[40%] md:text-3xl">
+                        <img src="/flecha.svg" className="w-[40px] md:w-[60px] lg:w-[70px] cursor-pointer" alt="Back" onClick={() => setView(true)}></img>
 
-                        <button className="rounded-[5px] cursor-pointer  text-white bg-blue-600 w-[70px]" onClick={handleButton}>Submit</button>
+                        <button className="rounded-[5px] cursor-pointer  text-white bg-blue-600 w-[70px] md:w-[118px] lg:w-[120px]" onClick={handleButton}>Submit</button>
                     </div>
+
+
+
 
                 </div>
 

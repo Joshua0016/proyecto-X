@@ -1,34 +1,27 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models;
 
 public partial class Miembro
 {
     public int IdMiembro { get; set; }
-
+    [Column("nombre")]
     public string Nombre { get; set; } = null!;
-
+    [Column("apellido")]
     public string Apellido { get; set; } = null!;
 
+    [Column("telefono")]
     public string Telefono { get; set; } = null!;
-
+    [Column("email")]
     public string? Email { get; set; }
 
-
+    [Column("foto_url")]
     public string? FotoUrl { get; set; }
-
+    [Column("fecha_nacimiento")]
     public DateOnly FechaNacimiento { get; set; }
 
-    public int IdUsuario { get; set; }
-
-    public int IdFamilia { get; set; }
-
-    public virtual ICollection<Asistencium> Asistencia { get; set; } = new List<Asistencium>();
-
-    public virtual ICollection<Donacion> Donacions { get; set; } = new List<Donacion>();
-
-    public virtual Familium IdFamiliaNavigation { get; set; } = null!;
-
-    public virtual usuario IdUsuarioNavigation { get; set; } = null!;
+  
 }

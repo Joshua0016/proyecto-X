@@ -13,5 +13,5 @@ public partial class Familium
 
     public string? Telefono { get; set; }
 
-    public virtual ICollection<Miembro> Miembros { get; set; } = new List<Miembro>();
+   
 }

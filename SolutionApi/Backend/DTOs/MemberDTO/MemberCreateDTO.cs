@@ -1,3 +1,4 @@
+
 namespace Backend.DTOs
 {
     public record MemberCreateDTO
@@ -5,8 +6,10 @@ namespace Backend.DTOs
         string Nombre,
         string? Apellido,
         string? Telefono,
-        int IdUsuario,
-        int IdFamilia
+        string Email,
+        string FotoUrl,
+        DateOnly FechaNacimiento 
+        
     );
 
 }
