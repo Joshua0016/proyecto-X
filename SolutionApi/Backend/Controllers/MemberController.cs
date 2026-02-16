@@ -30,7 +30,10 @@ namespace Backend.Controllers
                 await service.Persist(dto);
                 return Ok(new { message = "success full" });
             }
-            catch (Exception ex) { var errors = new List<string>(); var current = ex; while (current != null) { errors.Add(current.Message); current = current.InnerException; } return BadRequest(new { error = string.Join(" --> ", errors), stack = ex.StackTrace }); }
+            catch (Exception ex)
+            {
+                return BadRequest(new {message = ex.Message});
+            }
 
         }
 
