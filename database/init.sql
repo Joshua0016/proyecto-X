@@ -1,203 +1,184 @@
 
 -- 1. CREACIÓN DE ESQUEMAS
 
-CREATE SCHEMA IF NOT EXISTS seguridad;
-CREATE SCHEMA IF NOT EXISTS membresia;
-CREATE SCHEMA IF NOT EXISTS finanzas;
-
+CREATE SCHEMA IF NOT EXISTS "security";
+CREATE SCHEMA IF NOT EXISTS "membership";
+CREATE SCHEMA IF NOT EXISTS "finances";
 
 -- 2. ESQUEMA SEGURIDAD
 
-CREATE TABLE seguridad.rol (
-    id_rol int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nombre varchar(50) UNIQUE NOT NULL,
-	descripcion text 
+CREATE TABLE "security"."role" (
+    "roleId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(50) UNIQUE NOT NULL,
+    "description" text 
 );
 
-CREATE TABLE seguridad.usuario (
-    id_usuario int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email varchar(150) UNIQUE NOT NULL CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
-    password text NOT NULL,
-    id_rol int NOT NULL REFERENCES seguridad.rol(id_rol),
-    fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+CREATE TABLE "security"."user" (
+    "userId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "email" varchar(150) UNIQUE NOT NULL CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    "password" text NOT NULL,
+    "roleId" int NOT NULL REFERENCES "security"."role"("roleId"),
+    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE seguridad.log_auditoria (
-    id_log int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    timestamp timestamp DEFAULT CURRENT_TIMESTAMP,
-    id_usuario int NOT NULL REFERENCES seguridad.usuario(id_usuario),
-    operacion varchar(50) NOT NULL,
-    tabla_afectada varchar(100) NOT NULL,
-    detalle text NOT NULL,
-    ip_origen varchar(50) NOT NULL
+CREATE TABLE "security"."auditLog" (
+    "logId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "timestamp" timestamp DEFAULT CURRENT_TIMESTAMP,
+    "userId" int NOT NULL REFERENCES "security"."user"("userId"),
+    "operation" varchar(50) NOT NULL,
+    "affectedTable" varchar(100) NOT NULL,
+    "detail" text NOT NULL,
+    "sourceIp" varchar(50) NOT NULL
 );
 
-
--- 3. ESQUEMA MEMBRESIA
-
-CREATE TABLE membresia.familia (
-    id_familia int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nombre_familia varchar(100) NOT NULL,
-    direccion text NOT NULL,
-    telefono varchar(15)
+CREATE TABLE "membership"."family" (
+    "familyId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "familyName" varchar(100) NOT NULL,
+    "address" text NOT NULL,
+    "phoneNumber" varchar(15)
 );
 
-CREATE TABLE membresia.miembro (
-    id_miembro int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nombre varchar(50) NOT NULL,
-    apellido varchar(50) NOT NULL,
-    foto_url text,
-    fecha_nacimiento date NOT NULL,
-    telefono varchar(10),
-    email varchar(50)
-    -- un miembro deberia de existir sin una familia, un miembro no es usuario de la aplicacion
-   -- id_usuario int NOT NULL REFERENCES seguridad.usuario(id_usuario),
-   -- id_familia int NOT NULL REFERENCES membresia.familia(id_familia)
+CREATE TABLE "membership"."member" (
+    "memberId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "firstName" varchar(50) NOT NULL,
+    "lastName" varchar(50) NOT NULL,
+    "photoUrl" text,
+    "birthDate" date NOT NULL,
+    "phoneNumber" varchar(10),
+    "email" varchar(50)
 );
 
-CREATE TABLE membresia.evento (
-    id_evento int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    titulo varchar(100) NOT NULL,
-    tipo varchar(50) NOT NULL,
-    descripcion text,
-    fecha_inicio timestamptz NOT NULL,
-    fecha_fin timestamptz NOT NULL,
-    id_usuario_organizador int REFERENCES seguridad.usuario(id_usuario),
-    CONSTRAINT check_fechas CHECK (fecha_fin > fecha_inicio)
+CREATE TABLE "membership"."event" (
+    "eventId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "title" varchar(100) NOT NULL,
+    "type" varchar(50) NOT NULL,
+    "description" text,
+    "startDate" timestamptz NOT NULL,
+    "endDate" timestamptz NOT NULL,
+    "organizerUserId" int REFERENCES "security"."user"("userId"),
+    CONSTRAINT "checkDates" CHECK ("endDate" > "startDate")
 );
 
-CREATE TABLE membresia.asistencia (
-    id_asistencia int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_evento int NOT NULL REFERENCES membresia.evento(id_evento),
-    id_miembro int NOT NULL REFERENCES membresia.miembro(id_miembro),
-    fecha date DEFAULT CURRENT_DATE NOT NULL,
-    presente boolean NOT NULL,
-    hora_entrada timestamptz,
-    hora_salida timestamptz
+CREATE TABLE "membership"."attendance" (
+    "attendanceId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "eventId" int NOT NULL REFERENCES "membership"."event"("eventId"),
+    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
+    "date" date DEFAULT CURRENT_DATE NOT NULL,
+    "isPresent" boolean NOT NULL,
+    "entryTime" timestamptz,
+    "exitTime" timestamptz
 );
 
-
--- 4. ESQUEMA FINANZAS
-
-CREATE TABLE finanzas.cuenta_contable (
-    codigo_cuenta varchar(20) PRIMARY KEY,
-    nombre varchar(100) NOT NULL,
-    tipo varchar(50) NOT NULL,
-    subtipo varchar(50) NOT NULL,
-    saldo_actual decimal(12,2) DEFAULT 0 NOT NULL,
-    activa boolean DEFAULT true NOT NULL
+CREATE TABLE "finances"."ledgerAccount" (
+    "accountCode" varchar(20) PRIMARY KEY,
+    "name" varchar(100) NOT NULL,
+    "type" varchar(50) NOT NULL,
+    "subType" varchar(50) NOT NULL,
+    "currentBalance" decimal(12,2) DEFAULT 0 NOT NULL,
+    "isActive" boolean DEFAULT true NOT NULL
 );
 
-CREATE TABLE finanzas.asiento_contable (
-    id_asiento int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    fecha timestamptz DEFAULT NOW() NOT NULL,
-    glosa text NOT NULL,
-    referencia varchar(50) NOT NULL,
-    cuadrado boolean DEFAULT false,
-    id_usuario_registrador int NOT NULL REFERENCES seguridad.usuario(id_usuario)
+CREATE TABLE "finances"."journalEntry" (
+    "journalEntryId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "date" timestamptz DEFAULT NOW() NOT NULL,
+    "memo" text NOT NULL,
+    "reference" varchar(50) NOT NULL,
+    "isBalanced" boolean DEFAULT false,
+    "recordedByUserId" int NOT NULL REFERENCES "security"."user"("userId")
 );
 
-CREATE TABLE finanzas.movimiento_contable (
-    id_movimiento int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_asiento int NOT NULL REFERENCES finanzas.asiento_contable(id_asiento),
-    codigo_cuenta varchar(20) NOT NULL REFERENCES finanzas.cuenta_contable(codigo_cuenta),
-    debe decimal (12,2) DEFAULT 0 NOT NULL,
-    haber decimal(12,2) DEFAULT 0 NOT NULL
+CREATE TABLE "finances"."ledgerTransaction" (
+    "transactionId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "journalEntryId" int NOT NULL REFERENCES "finances"."journalEntry"("journalEntryId"),
+    "accountCode" varchar(20) NOT NULL REFERENCES "finances"."ledgerAccount"("accountCode"),
+    "debit" decimal (12,2) DEFAULT 0 NOT NULL,
+    "credit" decimal(12,2) DEFAULT 0 NOT NULL
 );
 
-CREATE TABLE finanzas.donacion (
-    id_donacion int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_miembro int NOT NULL REFERENCES membresia.miembro(id_miembro),
-    monto decimal (12,2) NOT NULL,
-    fecha timestamptz DEFAULT NOW() NOT NULL,
-    tipo varchar(50) NOT NULL,
-    metodo_pago varchar(50) NOT NULL,
-    estado varchar(20) NOT NULL
+CREATE TABLE "finances"."donation" (
+    "donationId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
+    "amount" decimal (12,2) NOT NULL,
+    "date" timestamptz DEFAULT NOW() NOT NULL,
+    "type" varchar(50) NOT NULL,
+    "paymentMethod" varchar(50) NOT NULL,
+    "status" varchar(20) NOT NULL
 );
 
-CREATE TABLE finanzas.recibo_fiscal (
-    id_recibo_fiscal int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    codigo varchar(50) UNIQUE NOT NULL, 
-    fecha_emision timestamptz DEFAULT NOW() NOT NULL,
-    id_donacion int NOT NULL REFERENCES finanzas.donacion(id_donacion)
+CREATE TABLE "finances"."taxReceipt" (
+    "taxReceiptId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "code" varchar(50) UNIQUE NOT NULL, 
+    "issueDate" timestamptz DEFAULT NOW() NOT NULL,
+    "donationId" int NOT NULL REFERENCES "finances"."donation"("donationId")
 );
 
-CREATE TABLE finanzas.proveedor (
-    id_proveedor int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nombre varchar(100) NOT NULL,
-    ruc varchar(20) NOT NULL,
-    direccion text NOT NULL,
-    telefono varchar(12) NOT NULL
+CREATE TABLE "finances"."vendor" (
+    "vendorId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(100) NOT NULL,
+    "taxId" varchar(20) NOT NULL,
+    "address" text NOT NULL,
+    "phoneNumber" varchar(12) NOT NULL
 );
 
-CREATE TABLE finanzas.factura_gasto (
-    id_factura_gasto int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_proveedor int NOT NULL REFERENCES finanzas.proveedor(id_proveedor),
-    numero_factura varchar(50) NOT NULL,
-    total decimal(12,2) NOT NULL,
-    fecha_emision timestamptz NOT NULL,
-    fecha_vencimiento timestamptz NOT NULL,
-    estado varchar(20) NOT NULL,
-    id_asiento int NOT NULL REFERENCES finanzas.asiento_contable(id_asiento)
+CREATE TABLE "finances"."expenseInvoice" (
+    "expenseInvoiceId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "vendorId" int NOT NULL REFERENCES "finances"."vendor"("vendorId"),
+    "invoiceNumber" varchar(50) NOT NULL,
+    "total" decimal(12,2) NOT NULL,
+    "issueDate" timestamptz NOT NULL,
+    "dueDate" timestamptz NOT NULL,
+    "status" varchar(20) NOT NULL,
+    "journalEntryId" int NOT NULL REFERENCES "finances"."journalEntry"("journalEntryId")
 );
 
-
--- 5. FUNCIONES ACTUALIZADAS CON ESQUEMAS
-		
-CREATE OR REPLACE FUNCTION finanzas.registrar_donacion(
-    p_miembro int,
-    p_monto decimal,
-    p_cuenta varchar,
-    p_usuario_id int,
-    p_metodo_pago varchar,
-    p_tipo varchar
+CREATE OR REPLACE FUNCTION "finances"."registerDonation"(
+    "pMemberId" int,
+    "pAmount" decimal,
+    "pAccountCode" varchar,
+    "pUserId" int,
+    "pPaymentMethod" varchar,
+    "pType" varchar
 )
 RETURNS int AS $$
 DECLARE
-    v_asiento int;
-    v_donacion int;
+    "vJournalEntryId" int;
+    "vDonationId" int;
 BEGIN
-    INSERT INTO finanzas.asiento_contable (glosa, referencia, id_usuario_registrador)
-    VALUES ('Donación Recibida', 'DON-MB-' || p_miembro, p_usuario_id)
-    RETURNING id_asiento INTO v_asiento;
+    INSERT INTO "finances"."journalEntry" ("memo", "reference", "recordedByUserId")
+    VALUES ('Donation Received', 'DON-MB-' || "pMemberId", "pUserId")
+    RETURNING "journalEntryId" INTO "vJournalEntryId";
 
-    INSERT INTO finanzas.movimiento_contable (id_asiento, codigo_cuenta, debe, haber)
-    VALUES (v_asiento, p_cuenta, p_monto, 0);
+    INSERT INTO "finances"."ledgerTransaction" ("journalEntryId", "accountCode", "debit", "credit")
+    VALUES ("vJournalEntryId", "pAccountCode", "pAmount", 0);
 
-    UPDATE finanzas.cuenta_contable
-    SET saldo_actual = saldo_actual + p_monto
-    WHERE codigo_cuenta = p_cuenta;
+    UPDATE "finances"."ledgerAccount"
+    SET "currentBalance" = "currentBalance" + "pAmount"
+    WHERE "accountCode" = "pAccountCode";
 
-    INSERT INTO finanzas.donacion (id_miembro, monto, tipo, metodo_pago, estado)
-    VALUES (p_miembro, p_monto, p_tipo, p_metodo_pago, 'CONFIRMADA')
-    RETURNING id_donacion INTO v_donacion;
+    INSERT INTO "finances"."donation" ("memberId", "amount", "type", "paymentMethod", "status")
+    VALUES ("pMemberId", "pAmount", "pType", "pPaymentMethod", 'CONFIRMED')
+    RETURNING "donationId" INTO "vDonationId";
 
-    RETURN v_donacion;
+    RETURN "vDonationId";
 END;
 $$ LANGUAGE plpgsql;
 
-
--- DATOS DE PRUEBA PARA LOGIN
-
-INSERT INTO seguridad.rol (nombre, descripcion)
-VALUES ('admin', 'Administrador con acceso total')
-ON CONFLICT (nombre) DO NOTHING;
+-- SEED DATA
+INSERT INTO "security"."role" ("name", "description")
+VALUES ('admin', 'Administrator with full access')
+ON CONFLICT ("name") DO NOTHING;
 
 DO $$
 DECLARE
-    v_admin_id INT;
+    "vAdminRoleId" INT;
 BEGIN
-    SELECT id_rol INTO v_admin_id
-    FROM seguridad.rol
-    WHERE nombre = 'admin';
+    SELECT "roleId" INTO "vAdminRoleId"
+    FROM "security"."role"
+    WHERE "name" = 'admin';
 
-    IF v_admin_id IS NULL THEN
-        RAISE EXCEPTION 'No se pudo crear ni encontrar el rol admin';
-    END IF;
-
-    INSERT INTO seguridad.usuario (email, password, id_rol) VALUES
-    ('joshua@proyectox.com', 'admin123', v_admin_id),
-    ('elias@proyectox.com', 'admin123', v_admin_id),
-    ('gadiel@proyectox.com', 'admin123', v_admin_id)
-    ON CONFLICT (email) DO NOTHING;
+    INSERT INTO "security"."user" ("email", "password", "roleId") VALUES
+    ('joshua@proyectox.com', 'admin123', "vAdminRoleId"),
+    ('elias@proyectox.com', 'admin123', "vAdminRoleId"),
+    ('gadiel@proyectox.com', 'admin123', "vAdminRoleId")
+    ON CONFLICT ("email") DO NOTHING;
 END $$;
