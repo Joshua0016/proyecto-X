@@ -42,7 +42,7 @@ export default function Home() {
                 </div>
 
             </div>
-            {view ? <MenuBar setView={setView}></MenuBar> : ""}
+            {view && <MenuBar setView={setView}></MenuBar>}
 
             <div className="">
                 <Outlet> </Outlet>

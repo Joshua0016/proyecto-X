@@ -9,11 +9,11 @@ export default async function getAllMembers() {
 
         if (response.ok) {
             let result = await response.json();
-            console.log(result);
+            return result;
         }
         else {
-
-            console.log("Error")
+            let result = await response.json();
+            console.log("Error al obtener los miembros", result);
         }
 
     } catch (error) {
@@ -22,5 +22,5 @@ export default async function getAllMembers() {
 
     }
 
-    return true;
+
 }
