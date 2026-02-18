@@ -18,7 +18,11 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
 
                  m.MemberId,
                  m.FirstName,
-                 m.LastName
+                 m.LastName,
+                 m.PhoneNumber,
+                 m.Email,
+                 m.PhotoUrl,
+                 m.BirthDate
             ));
 
 
@@ -53,9 +57,9 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         }
     }
 
-    public async Task Delete(int id)
+    public async Task Delete(int id_)
     {
-        await repo.DeleteAsync(id);
+        await repo.DeleteAsync(id_);
 
     }
 
