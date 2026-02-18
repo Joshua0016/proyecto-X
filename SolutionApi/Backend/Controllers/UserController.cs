@@ -29,9 +29,9 @@ namespace Backend.Controllers
 
                 return Ok(new
                 {
-                    id = user.id_usuario,
-                    email = user.email,
-                    idRol = user.id_rol,
+                    id = user.UserId,
+                    email = user.Email,
+                    idRol = user.RoleId,
                 });
             }
             catch (Exception ex)

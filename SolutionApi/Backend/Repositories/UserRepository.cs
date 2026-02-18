@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-    public class UserRepository(Backend.Data.ApplicationDbContext context) : IGenericRepository<usuario>
+    public class UserRepository(DbProyectoXContext context) : IGenericRepository<User>
     {
-        private readonly Backend.Data.ApplicationDbContext _context = context;
+        private readonly DbProyectoXContext _context = context;
 
         // public UserRepository(Backend.Data.ApplicationDbContext context)
         // {
         //     _context = context;
         // }
 
-        public async Task<IEnumerable<usuario>> GetAllAsync() =>
-            await _context.Usuarios.Include(u => u.id_rolNavigation)
+        public async Task<IEnumerable<User>> GetAllAsync() =>
+            await _context.Users.Include(u => u.Role)
                 .ToListAsync();
 
 
-        public async Task<usuario?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -29,27 +29,27 @@ namespace Backend.Repositories
 
             var normalizedEmail = email.ToLower();
 
-            return await _context.Usuarios
-                .Include(u => u.id_rolNavigation)
-                .FirstOrDefaultAsync(u => u.email.ToLower() == normalizedEmail);
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
         }
 
-        public async Task<usuario?> GetByIdAsync(int id) =>
-            await _context.Usuarios.Include(u => u.id_rolNavigation)
-                .FirstOrDefaultAsync(u => u.id_usuario == id);
+        public async Task<User?> GetByIdAsync(int id) =>
+            await _context.Users.Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.UserId == id);
 
-        public async Task AddAsync(usuario usuario)
+        public async Task AddAsync(User usuario)
         {
             if (usuario == null) throw new ArgumentNullException(nameof(usuario));
 
-            await _context.Usuarios.AddAsync(usuario);
+            await _context.Users.AddAsync(usuario);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(usuario usuario)
+        public async Task UpdateAsync(User usuario)
         {
             if (usuario == null) throw new ArgumentNullException(nameof(usuario));
-            _context.Usuarios.Update(usuario);
+            _context.Users.Update(usuario);
             await _context.SaveChangesAsync();
         }
 
@@ -58,7 +58,7 @@ namespace Backend.Repositories
             var usuario = await GetByIdAsync(id);
             if (usuario != null)
             {
-                _context.Usuarios.Remove(usuario);
+                _context.Users.Remove(usuario);
                 await _context.SaveChangesAsync();
             }
 
@@ -71,10 +71,7 @@ namespace Backend.Repositories
                 return false;
             }
             var normalizedEmail = email.ToLower();
-            return await _context.Usuarios.AnyAsync(u => u.email.ToLower() == normalizedEmail);
-
+            return await _context.Users.AnyAsync(u => u.Email.ToLower() == normalizedEmail);
         }
-
     }
 }
-

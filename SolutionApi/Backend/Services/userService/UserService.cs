@@ -16,9 +16,9 @@ namespace Backend.Services
 {
     public class UserService : IService
     {
-        private readonly IGenericRepository<usuario> _userRepository;
+        private readonly IGenericRepository<User> _userRepository;
 
-        public UserService(IGenericRepository<usuario> userRepository)
+        public UserService(IGenericRepository<User> userRepository)
         {
             _userRepository = userRepository;
         }
@@ -31,15 +31,15 @@ namespace Backend.Services
             {
                 var usuarios = await _userRepository.GetAllAsync();
 
-                if (usuarios.Any(u => u.email == request.Email))
+                if (usuarios.Any(u => u.Email == request.Email))
                     throw new Exception("User already exists");
 
-                var nuevoUsuario = new usuario
+                var nuevoUsuario = new User
                 {
-                    email = request.Email,
-                    password = request.Password,
-                    id_rol = request.IdRol,
-                    fecha_creacion = DateTime.UtcNow
+                    Email = request.Email,
+                    Password = request.Password,
+                    RoleId = request.IdRol,
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 await _userRepository.AddAsync(nuevoUsuario);
@@ -56,7 +56,7 @@ namespace Backend.Services
 
         }
 
-        public async Task<usuario> LoginAsync(LoginRequestDTO request)
+        public async Task<User> LoginAsync(LoginRequestDTO request)
         {
 
 
@@ -65,7 +65,7 @@ namespace Backend.Services
 
                 var usuario = await _userRepository.GetAllAsync();
 
-                var user = usuario.FirstOrDefault(u => u.email == request.Email && u.password == request.Password);
+                var user = usuario.FirstOrDefault(u => u.Email == request.Email && u.Password == request.Password);
 
                 if (user == null)
                     throw new Exception("Invalid credentials");
@@ -83,6 +83,3 @@ namespace Backend.Services
         }
     }
 }
-
-
-

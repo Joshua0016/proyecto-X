@@ -3,13 +3,13 @@ namespace Backend.DTOs
 {
     public record MemberCreateDTO
     (
-        string Nombre,
-        string? Apellido,
-        string? Telefono,
+        string Name,
+        string? LastName,
+        string? Telephon,
         string Email,
-        string FotoUrl,
-        DateOnly FechaNacimiento 
-        
+        string UrlPhoto,
+        DateOnly Birth
+
     );
 
 }
