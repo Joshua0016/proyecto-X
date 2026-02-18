@@ -2,7 +2,7 @@
 {
     public record RoleCreateDTO
     (
-        string Nombre,
-        string? Descripcion
+        string Name,
+        string? Description
     );
 }

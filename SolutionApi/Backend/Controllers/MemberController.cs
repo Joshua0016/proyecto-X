@@ -9,7 +9,7 @@ namespace Backend.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Member")]
     public class MembersController(IMemberService _service) : ControllerBase
     {
         private readonly IMemberService service = _service;
@@ -32,7 +32,7 @@ namespace Backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new {message = ex.Message});
+                return BadRequest(new { message = ex.Message });
             }
 
         }

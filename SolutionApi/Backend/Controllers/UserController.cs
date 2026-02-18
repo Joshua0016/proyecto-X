@@ -11,7 +11,7 @@ namespace Backend.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/User")]
     public class UserController(IService service) : ControllerBase
     {
         private readonly IService userService = service;
