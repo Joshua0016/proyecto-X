@@ -21,7 +21,7 @@ export default function CreateMember({ setView }) {
         let dto = {
             Name: name,
             LastName: lastName,
-            Telephone: phone,
+            Telephon: phone,
             Email: email,
             UrlPhoto: "foto",
             Birth: birth
@@ -40,10 +40,16 @@ export default function CreateMember({ setView }) {
 
     function verification(dto) {
 
-        if (!name || !lastName || !email) {
-            console.log("aqui")
+        if (
+            typeof name !== "string" || !/^[A-Za-z\s]+$/.test(name) ||
+            typeof lastName !== "string" || !/^[A-Za-z\s]+$/.test(lastName) ||
+            typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        ) {
+            console.log("Datos inválidos");
             return false;
         }
+
+
         if (isNaN(phone) || phone.length < 10) {
             console.log("aquisdfdf")
             return false;
@@ -54,6 +60,13 @@ export default function CreateMember({ setView }) {
             console.log("aquieeeeeeee")
             return false;
         }
+
+        setName("");
+        setLastName("");
+        setBirth("");
+        setEmail("");
+        setPhone("");
+
         return true;
     }
 
