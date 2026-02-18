@@ -33,7 +33,8 @@ namespace Backend
 
             builder.Services.AddScoped<IGenericRepository<Member>, MemberRepository>();
 
-            builder.Services.AddScoped<IGenericRepository<Role>, rolesRepository>();
+            builder.Services.AddScoped<IGenericRepository<Role>, RolesRepository>();
+            builder.Services.AddScoped<IRole, RoleService>();
 
             builder.Services.AddScoped<IMemberService, MemberService>();
 

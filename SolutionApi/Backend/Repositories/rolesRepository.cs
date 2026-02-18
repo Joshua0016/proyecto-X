@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories;
 
-public class rolesRepository(DbProyectoXContext context) : IGenericRepository<Role>
+public class RolesRepository(DbProyectoXContext context) : IGenericRepository<Role>
 {
 
     private readonly DbProyectoXContext _context = context;
