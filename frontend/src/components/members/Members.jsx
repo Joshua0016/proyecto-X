@@ -7,13 +7,10 @@ export default function Members() {
 
     return (
         <>
-            <div className="mt-[200px] md:">
-                <h1 className="text-white text-[28px] text-center  lg:text-[48px] ">Members</h1>
+            <div className="mt-[100px] mb-[100px]">
+                <h1 className="text-white text-[28px] text-center lg:text-[48px]">Members</h1>
 
-
-
-
-                <div style={{ backgroundColor: "#1A1A1A" }} className=" rounded-2xl h-[150px] sm:text-2xl ">
+                <div className="bg-[#1A1A1A] rounded-2xl h-[350px] p-5 sm:text-2xl sm:h-[450px] md:h-[500px] 2xl:h-[550px] ">
 
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import createMember from "../../../apiServices/createMember";
-import getAllMembers from "../../../apiServices/getAllMembers";
+import createMember from "../../../apiServices/members/createMember";
+import getAllMembers from "../../../apiServices/members/getAllMembers";
 export default function CreateMember({ setView }) {
     const [name, setName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -59,35 +59,36 @@ export default function CreateMember({ setView }) {
 
     return (
         <>
-            <div style={{ backgroundColor: "#1A1A1A" }} className="rounded-2xl h-[350px] md:h-[500px] p-2 lg:p-4 lg:h-[550px] ">
-                <div className="text-center">
-                    <h2 className="text-white sm:text-[24px] lg:text-[48px]">Create member</h2>
+
+
+            <div className="w-[90%] mx-auto flex flex-col items-center md:text-3xl ">
+                <div className="">
+                    <h2 className="text-gray-400 sm:text-[24px] lg:text-[32px]">Create member</h2>
                 </div>
-                <div className="w-[90%] mx-auto flex flex-col items-center md:text-3xl ">
 
-                    <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]" />
-                    <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 md:text-3xl xl:w-[20%]"></input>
-                    <input type="tel" placeholder="Phone Number" maxLength={"10"} value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
-                    <input type="tel" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
+                <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]" />
+                <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 text-3xl xl:w-[20%]"></input>
+                <input type="tel" placeholder="Phone Number" maxLength={"10"} value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
+                <input type="tel" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] mt-[15px] pl-2 border-2 border-gray-200 rounded-[5px] w-[80%] md:h-12 xl:w-[20%]"></input>
 
-                    <div className="mt-[15px] flex flex-col items-center">
-                        <label className="text-white xl:text-3xl">Date of birth</label>
-                        <input type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] pl-2 border-2 border-gray-200 rounded-[5px]  md:h-12 lg:w-[160px] xl:w-[175px]"></input>
-
-                    </div>
-
-                    <div className="w-[100%] mx-auto flex mt-[30px] justify-around xl:w-[40%] md:text-3xl">
-                        <img src="/flecha.svg" className="w-[40px] md:w-[60px] lg:w-[70px] cursor-pointer" alt="Back" onClick={() => setView(true)}></img>
-
-                        <button className="rounded-[5px] cursor-pointer  text-white bg-blue-600 w-[70px] md:w-[118px] lg:w-[120px]" onClick={handleButton}>Submit</button>
-                    </div>
-
-
-
+                <div className="mt-[15px] flex flex-col items-center">
+                    <label className="text-white xl:text-3xl">Date of birth</label>
+                    <input type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] pl-2 border-2 border-gray-200 rounded-[5px]  md:h-12 lg:w-[225px]"></input>
 
                 </div>
+
+                <div className="w-[100%] mx-auto flex mt-[30px] justify-around md:text-3xl xl:w-[40%] ">
+                    <img src="/flecha.svg" className="w-[40px] sm:w-[50px] md:w-[60px] lg:w-[70px] cursor-pointer" alt="Back" onClick={() => setView(true)}></img>
+
+                    <button className="rounded-[5px] cursor-pointer  text-white bg-blue-600 w-[70px] sm:w-[100px] md:w-[118px] lg:w-[120px]" onClick={handleButton}>Submit</button>
+                </div>
+
+
+
 
             </div>
+
+
         </>
     )
 }
