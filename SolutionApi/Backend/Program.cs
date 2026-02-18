@@ -20,20 +20,20 @@ namespace Backend
 
 
             //registrar DbContext con PostgreSQL
-            builder.Services.AddDbContext<Backend.Data.ApplicationDbContext>(opts =>
+            builder.Services.AddDbContext<DbProyectoXContext>(opts =>
                 opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
             //registrar repositorios 
-            builder.Services.AddScoped<IGenericRepository<usuario>, UserRepository>();
+            builder.Services.AddScoped<IGenericRepository<User>, UserRepository>();
 
             //registrar servicio de autenticacion
             builder.Services.AddScoped<IService, UserService>();
 
 
-            builder.Services.AddScoped<IGenericRepository<Miembro>, MemberRepository>();
+            builder.Services.AddScoped<IGenericRepository<Member>, MemberRepository>();
 
-            builder.Services.AddScoped<IGenericRepository<rol>, rolesRepository>();
+            builder.Services.AddScoped<IGenericRepository<Role>, rolesRepository>();
 
             builder.Services.AddScoped<IMemberService, MemberService>();
 

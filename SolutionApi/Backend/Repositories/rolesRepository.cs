@@ -6,24 +6,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories;
 
-public class rolesRepository(Backend.Data.ApplicationDbContext context) : IGenericRepository<rol>
+public class rolesRepository(DbProyectoXContext context) : IGenericRepository<Role>
 {
 
-    private readonly Backend.Data.ApplicationDbContext _context = context;
+    private readonly DbProyectoXContext _context = context;
 
 
-    public async Task<IEnumerable<rol>> GetAllAsync() =>
-        await _context.Rols.ToListAsync();
+    public async Task<IEnumerable<Role>> GetAllAsync() =>
+        await _context.Roles.ToListAsync();
 
-    public async Task<rol?> GetByIdAsync(int id) =>
-        await _context.Rols.FirstOrDefaultAsync(u => u.id_rol == id);
+    public async Task<Role?> GetByIdAsync(int id) =>
+        await _context.Roles.FirstOrDefaultAsync(u => u.RoleId == id);
 
 
-    public async Task AddAsync(rol rol)
+    public async Task AddAsync(Role rol)
     {
         if (rol == null) throw new ArgumentNullException(nameof(rol));
 
-        await _context.Rols.AddAsync(rol);
+        await _context.Roles.AddAsync(rol);
         await _context.SaveChangesAsync();
     }
 
@@ -32,16 +32,16 @@ public class rolesRepository(Backend.Data.ApplicationDbContext context) : IGener
         var rol = await GetByIdAsync(id);
         if (rol != null)
         {
-            _context.Rols.Remove(rol);
+            _context.Roles.Remove(rol);
             await _context.SaveChangesAsync();
         }
 
     }
 
-    public async Task UpdateAsync(rol rol)
+    public async Task UpdateAsync(Role rol)
     {
         if (rol == null) throw new ArgumentNullException(nameof(rol));
-        _context.Rols.Update(rol);
+        _context.Roles.Update(rol);
 
         await _context.SaveChangesAsync();
     }
@@ -53,16 +53,7 @@ public class rolesRepository(Backend.Data.ApplicationDbContext context) : IGener
             return false;
         }
 
-        var normalizedEmail = nombre.ToLower();
-        return await _context.Rols.AnyAsync(u => u.nombre.ToLower() == normalizedEmail);
-
-
+        var normalizedName = nombre.ToLower();
+        return await _context.Roles.AnyAsync(u => u.Name.ToLower() == normalizedName);
     }
-
-
-
-
-
-
-
 }

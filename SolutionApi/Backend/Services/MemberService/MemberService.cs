@@ -8,33 +8,34 @@ namespace Backend.Services;
 
 
 
-public class MemberService(IGenericRepository<Miembro> repo) : IMemberService
+public class MemberService(IGenericRepository<Member> repo) : IMemberService
 {
-    private readonly IGenericRepository<Miembro> _repo = repo;
+    private readonly IGenericRepository<Member> _repo = repo;
 
     public async Task<IEnumerable<MemberResponseDTO>> ListAll() => (
         await repo.GetAllAsync())
             .Select(m => new MemberResponseDTO(
 
-                 m.IdMiembro,
-                 m.Nombre,
-                 m.Apellido
+                 m.MemberId,
+                 m.FirstName,
+                 m.LastName
             ));
 
 
-    public async Task Persist(MemberCreateDTO request) 
-    { if (await repo.ExistsAsync(request.Telefono)) 
-    
-        throw new Exception("Ya existe");
+    public async Task Persist(MemberCreateDTO request)
+    {
+        if (await repo.ExistsAsync(request.Telephon))
 
-        await repo.AddAsync(new Miembro 
-        { 
-            Nombre = request.Nombre,
-            Apellido = request.Apellido,
-            Telefono = request.Telefono,
+            throw new Exception("Ya existe");
+
+        await repo.AddAsync(new Member
+        {
+            FirstName = request.Name,
+            LastName = request.LastName,
+            PhoneNumber = request.Telephon,
             Email = request.Email,
-            FotoUrl = request.FotoUrl,
-            FechaNacimiento = request.FechaNacimiento
+            PhotoUrl = request.UrlPhoto,
+            BirthDate = request.Birth
         });
     }
 

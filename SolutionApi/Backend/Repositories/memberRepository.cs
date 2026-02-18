@@ -5,24 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories;
 
-public class MemberRepository(Backend.Data.ApplicationDbContext context) : IGenericRepository<Miembro>
+public class MemberRepository(Backend.Data.DbProyectoXContext context) : IGenericRepository<Member>
 {
-    private readonly Backend.Data.ApplicationDbContext _context = context;
+    private readonly Backend.Data.DbProyectoXContext _context = context;
 
-    protected readonly DbSet<Miembro> _dbSet = context.Miembros;
+    protected readonly DbSet<Member> _dbSet = context.Members;
 
-    public async Task<IEnumerable<Miembro>> GetAllAsync() => await _dbSet.ToListAsync();
+    public async Task<IEnumerable<Member>> GetAllAsync() => await _dbSet.ToListAsync();
 
-    public async Task<Miembro?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+    public async Task<Member?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
 
-    public async Task AddAsync(Miembro miembro)
+    public async Task AddAsync(Member miembro)
     {
         await _dbSet.AddAsync(miembro);
         await _context.SaveChangesAsync();
 
     }
 
-    public async Task UpdateAsync(Miembro miembro)
+    public async Task UpdateAsync(Member miembro)
     {
         _dbSet.Update(miembro);
         await _context.SaveChangesAsync();
@@ -44,15 +44,6 @@ public class MemberRepository(Backend.Data.ApplicationDbContext context) : IGene
         {
             return false;
         }
-        return await _context.Miembros.AnyAsync(u => u.Telefono == telefono);
+        return await _context.Members.AnyAsync(u => u.PhoneNumber == telefono);
     }
-
-
 }
-
-
-
-
-
-
-
