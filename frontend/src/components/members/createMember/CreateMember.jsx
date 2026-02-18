@@ -19,12 +19,12 @@ export default function CreateMember({ setView }) {
     const handleButton = async () => {
 
         let dto = {
-            nombre: name,
-            apellido: lastName,
-            telefono: phone,
-            email: email,
-            fotoUrl: "foto",
-            fechaNacimiento: birth
+            Name: name,
+            LastName: lastName,
+            Telephone: phone,
+            Email: email,
+            UrlPhoto: "foto",
+            Birth: birth
 
         }
 

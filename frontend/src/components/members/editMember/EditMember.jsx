@@ -37,7 +37,7 @@ export default function EditMember({ setView }) {
                 </div>
                 <div className="mt-[15px] flex flex-col items-center">
                     <label className="text-white xl:text-3xl">Date of birth</label>
-                    <input type="date" value={birth} className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] pl-2 border-2 border-gray-200 rounded-[5px]  md:h-12 lg:w-[225px]"></input>
+                    <input type="date" className="bg-[#3C3C3C] text-[#D4D4D4] placeholder-[#808080] pl-2 border-2 border-gray-200 rounded-[5px]  md:h-12 lg:w-[225px]"></input>
 
                 </div>
                 <div className="w-[100%] mx-auto flex mt-[30px] justify-around md:text-3xl xl:w-[40%]">
