@@ -43,20 +43,20 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         });
     }
 
-    public async Task Update(int id)
+  public async Task Update(int id, MemberUpdateDTO dto)
     {
-        try
-        {
-            var m = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
-            await repo.UpdateAsync(m);
-        }
-        catch (Exception ex)
-        {
+        var m = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
+        //Aplicar cambios aqui gadi
+        m.FirstName = dto.Name;
+        m.LastName = dto.LastName;
+        m.Email = dto.Email;
+        m.PhoneNumber = dto.Telephon;
+        m.PhotoUrl = dto.UrlPhoto;
+        m.BirthDate = dto.Birth;
 
-            throw new Exception(ex.Message);
-        }
+        await _repo.UpdateAsync(m);
+
     }
-
     public async Task Delete(int id_)
     {
         await repo.DeleteAsync(id_);
