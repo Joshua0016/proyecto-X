@@ -39,9 +39,9 @@ namespace Backend.Controllers
 
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(int id, MemberUpdateDTO dto)
         {
-            try { await service.Update(id); return Ok("Editado"); }
+            try { await service.Update(id, dto); return Ok("Editado"); }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
