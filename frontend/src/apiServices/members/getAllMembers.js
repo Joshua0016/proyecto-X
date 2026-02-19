@@ -3,7 +3,7 @@ export default async function getAllMembers() {
 
     try {
 
-        let response = await fetch("/api/Members/GetAll", {
+        let response = await fetch("/api/Member/GetAll", {
             method: "GET",
         });
 

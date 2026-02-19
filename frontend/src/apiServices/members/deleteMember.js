@@ -1,6 +1,6 @@
 export default async function deleteMember(id) {
     try {
-        let response = await fetch(`/api/Members/${id}`, {
+        let response = await fetch(`/api/Member/${id}`, {
             method: "DELETE"
         });
         if (response.ok) {

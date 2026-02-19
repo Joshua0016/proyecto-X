@@ -8,13 +8,6 @@ export default function CreateMember({ setView }) {
     const [birth, setBirth] = useState("");
     const [email, setEmail] = useState("");
 
-    useEffect(() => {
-        async function getMemebers() {
-            let members = await getAllMembers()
-            console.log(members);
-        }
-        getMemebers();
-    }, [])
 
     const handleButton = async () => {
 
@@ -50,8 +43,7 @@ export default function CreateMember({ setView }) {
         }
 
 
-        if (isNaN(phone) || phone.length < 10) {
-            console.log("aquisdfdf")
+        if (!/^(809|829|849)\d{7}$/.test(phone)) {
             return false;
         }
         let isNull = Object.keys(dto).forEach((keys) => dto[keys] == undefined);

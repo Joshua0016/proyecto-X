@@ -1,8 +1,13 @@
-export default async function updateMember(id) {
+export default async function updateMember(id, dto) {
     try {
-        let response = await fetch(`/api/Members/${id}`, {
-            method: "POST"
-        });
+        let response = await fetch(`/api/Member/${id}`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(dto)
+        })
+
         if (response.ok) {
             let result = await response
             alert(`The member has been Update`);

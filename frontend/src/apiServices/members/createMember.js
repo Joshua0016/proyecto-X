@@ -2,7 +2,7 @@ export default async function createMember(dto) {
 
     try {
         console.log(dto);
-        let response = await fetch("/api/Members/Create", {
+        let response = await fetch("/api/Member/Create", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"

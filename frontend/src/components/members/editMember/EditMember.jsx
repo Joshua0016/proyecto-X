@@ -22,7 +22,16 @@ export default function EditMember({ setView }) {
             await deleteMember(memberId);
         }
         else if (updateCheck) {
-            await updateMember(memberId);
+            let dto = {
+                Name: name,
+                LastName: lastName,
+                Telephon: phone,
+                Email: email,
+                UrlPhoto: "photo",
+                Birth: birth
+            };
+
+            await updateMember(memberId, dto);
         }
         else {
             alert("Error...");
