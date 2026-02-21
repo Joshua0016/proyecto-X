@@ -5,7 +5,7 @@ services:
   db_server:
     # Usamos la versión exacta 15.5 para que todos tengan el mismo motor
     image: postgres:15.5-alpine 
-    container_name: server_dbProyectoX
+    container_name: server_ProyectoX
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
