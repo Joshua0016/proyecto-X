@@ -1,46 +1,63 @@
-services:
+# Especificar la versión del formato de Docker Compose
+version: '3.8' 
 
+services:
   db_server:
-    image: postgres:15
+    # Usamos la versión exacta 15.5 para que todos tengan el mismo motor
+    image: postgres:15.5-alpine 
     container_name: server_dbProyectoX
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: dbProyectoX
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: 123987456
-
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
-
     ports:
       - "5433:5432"
-
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d dbProyectoX"]
       interval: 5s
       timeout: 5s
       retries: 10
 
-
   admin_panel:
-    image: dpage/pgadmin4
+    # Versión específica de pgAdmin
+    image: dpage/pgadmin4:8.3
     container_name: pgadmin_proyecto
     restart: unless-stopped
-
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@proyectox.com
       PGADMIN_DEFAULT_PASSWORD: 123987456
-
     ports:
-      - "8080:80"
-
+      - "8081:80"
     depends_on:
       db_server:
         condition: service_healthy
 
+  backend:
+    build: 
+      context: .
+      dockerfile: Backend/Dockerfile
+    container_name: api_proyectoX
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db_server;Port=5432;Database=dbProyectoX;Username=admin;Password=123987456
+    depends_on:
+      db_server:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: web_proyectoX
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
-
-
