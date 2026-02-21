@@ -1,9 +1,5 @@
-# Especificar la versión del formato de Docker Compose
-version: '3.8' 
-
 services:
   db_server:
-    # Usamos la versión exacta 15.5 para que todos tengan el mismo motor
     image: postgres:15.5-alpine 
     container_name: server_ProyectoX
     restart: unless-stopped
@@ -23,7 +19,6 @@ services:
       retries: 10
 
   admin_panel:
-    # Versión específica de pgAdmin
     image: dpage/pgadmin4:8.3
     container_name: pgadmin_proyecto
     restart: unless-stopped
@@ -38,7 +33,7 @@ services:
 
   backend:
     build: 
-      context: .
+      context: ./SolutionApi
       dockerfile: backend/Dockerfile
     container_name: api_proyectoX
     ports:
