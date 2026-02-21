@@ -3,6 +3,7 @@ using Backend.Data;
 using Backend.Repositories;
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,10 @@ namespace Backend
             builder.Services.AddScoped<IRole, RoleService>();
 
             builder.Services.AddScoped<IMemberService, MemberService>();
+
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 
 
 
