@@ -39,7 +39,7 @@ services:
   backend:
     build: 
       context: .
-      dockerfile: Backend/Dockerfile
+      dockerfile: backend/Dockerfile
     container_name: api_proyectoX
     ports:
       - "8080:8080"
