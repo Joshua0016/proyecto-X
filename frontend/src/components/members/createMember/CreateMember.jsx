@@ -39,17 +39,19 @@ export default function CreateMember({ setView }) {
             typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         ) {
             console.log("Datos inválidos");
+            alert("Error al introducir el nombre")
             return false;
         }
 
 
         if (!/^(809|829|849)\d{7}$/.test(phone)) {
+            alert("Error al introducir el numero de telefono")
             return false;
         }
         let isNull = Object.keys(dto).forEach((keys) => dto[keys] == undefined);
 
         if (isNull) {
-            console.log("aquieeeeeeee")
+            console.log("No puede dejar los campos vacios")
             return false;
         }
 
