@@ -2,6 +2,7 @@ using Backend.Models;
 using Backend.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Backend.interfaces;
 
 namespace Backend.Repositories;
 

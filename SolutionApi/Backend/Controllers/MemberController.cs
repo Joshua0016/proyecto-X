@@ -1,8 +1,8 @@
 using Backend.DTOs;
-using Backend.Repositories;
-using Backend.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 using Microsoft.AspNetCore.Mvc;
+using Backend.interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 namespace Backend.Controllers

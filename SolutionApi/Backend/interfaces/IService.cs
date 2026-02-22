@@ -1,8 +1,9 @@
 ﻿using Backend.DTOs;
 using Backend.Models;
 
-namespace Backend.Services
+namespace Backend.interfaces
 {
+
     public interface IService
     {
         Task<string> RegisterAsync(RegisterRequestDto request);

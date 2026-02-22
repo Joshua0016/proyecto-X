@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Backend.interfaces;
 
 
 namespace Backend.Services
@@ -72,6 +73,10 @@ namespace Backend.Services
                     throw new Exception("Usuario no encontrado");
 
                 var result = hasher.VerifyHashedPassword(user, user.Password, request.Password);
+
+                if (result != PasswordVerificationResult.Success)
+                    throw new Exception("Contraseña incorrecta");
+
 
                 if (result == PasswordVerificationResult.SuccessRehashNeeded)
                 {

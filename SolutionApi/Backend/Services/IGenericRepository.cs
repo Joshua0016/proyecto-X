@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 
-namespace Backend.Repositories
+namespace Backend.interfaces
 {
     public interface IGenericRepository<T>
     {

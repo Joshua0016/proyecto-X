@@ -3,6 +3,8 @@ using Backend.Data;
 using Backend.Repositories;
 using Backend.Models;
 using Backend.Services;
+using Backend.interfaces;
+using Backend.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

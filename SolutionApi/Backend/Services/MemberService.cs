@@ -1,6 +1,7 @@
 using Backend.DTOs;
 using Backend.Repositories;
 using Backend.Models;
+using Backend.interfaces;
 using System.Threading.Tasks;
 
 
@@ -43,20 +44,32 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         });
     }
 
-  public async Task Update(int id, MemberUpdateDTO dto)
+    public async Task Update(int id, MemberUpdateDTO request)
     {
-        var m = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
-        //Aplicar cambios aqui gadi
-        m.FirstName = dto.Name;
-        m.LastName = dto.LastName;
-        m.Email = dto.Email;
-        m.PhoneNumber = dto.Telephon;
-        m.PhotoUrl = dto.UrlPhoto;
-        m.BirthDate = dto.Birth;
+        try
+        {
+            var miembro = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
+            miembro.FirstName = request.Name;
+            miembro.LastName = request.LastName;
+            miembro.PhoneNumber = request.Telephon;
+            miembro.Email = request.Email;
+            miembro.PhotoUrl = request.UrlPhoto;
+            miembro.BirthDate = request.Birth;
+            await _repo.UpdateAsync(miembro);
 
-        await _repo.UpdateAsync(m);
 
+
+            // await repo.UpdateAsync(m);
+
+
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
     }
+
     public async Task Delete(int id_)
     {
         await repo.DeleteAsync(id_);

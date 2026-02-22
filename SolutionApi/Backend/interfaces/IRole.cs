@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.DTOs;
 
-namespace Backend.Services
+namespace Backend.interfaces
 {
     public interface IRole
     {
