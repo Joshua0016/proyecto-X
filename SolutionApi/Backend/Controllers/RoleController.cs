@@ -2,7 +2,11 @@
 using Backend.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Backend.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize]
+[Route("api/[controller]")]
+[ApiController]
 public class RoleController(IRole service) : ControllerBase
 {
     private readonly IRole service = service;
@@ -11,6 +15,7 @@ public class RoleController(IRole service) : ControllerBase
     public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
 
     [HttpPost("Create")]
+    [Authorize(Roles = "1")] // Admin only
     public async Task<IActionResult> Create(RoleCreateDTO dto)
     {
         try
@@ -31,6 +36,8 @@ public class RoleController(IRole service) : ControllerBase
         }
     }
 
+    [HttpPut("Update/{id}")]
+    [Authorize(Roles = "1")] // Admin only
     public async Task<IActionResult> Update(int id)
     {
         try
@@ -45,6 +52,8 @@ public class RoleController(IRole service) : ControllerBase
         }
     }
 
+    [HttpDelete("Delete/{id}")]
+    [Authorize(Roles = "1")] // Admin only
     public async Task<IActionResult> Delete(int id)
     {
         try
