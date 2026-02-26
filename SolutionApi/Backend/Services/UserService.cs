@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Backend.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Backend.interfaces;
 
 
 namespace Backend.Services
 
 {
-    public class UserService : IService
+    public class UserService(IGenericRepository<User> userRepository, IPasswordHasher<User> hasher) : IService
     {
-        private readonly IGenericRepository<User> _userRepository;
+        // private readonly IPasswordHasher _passwordHasher ;
+        private readonly IGenericRepository<User> _userRepository = userRepository;
 
-        public UserService(IGenericRepository<User> userRepository)
-        {
-            _userRepository = userRepository;
-        }
 
         public async Task<string> RegisterAsync(RegisterRequestDto request)
         {
@@ -29,18 +29,20 @@ namespace Backend.Services
 
             try
             {
-                var usuarios = await _userRepository.GetAllAsync();
-
-                if (usuarios.Any(u => u.Email == request.Email))
+                if (await _userRepository.ExistsAsync(request.Email))
                     throw new Exception("User already exists");
+
+
 
                 var nuevoUsuario = new User
                 {
                     Email = request.Email,
-                    Password = request.Password,
                     RoleId = request.IdRol,
                     CreatedAt = DateTime.UtcNow
                 };
+
+                nuevoUsuario.Password = hasher.HashPassword(nuevoUsuario, request.Password);
+
 
                 await _userRepository.AddAsync(nuevoUsuario);
                 return "User registered successfully";
@@ -65,11 +67,22 @@ namespace Backend.Services
 
                 var usuario = await _userRepository.GetAllAsync();
 
-                var user = usuario.FirstOrDefault(u => u.Email == request.Email && u.Password == request.Password);
+                var user = usuario.FirstOrDefault(u => u.Email == request.Email);
 
                 if (user == null)
-                    throw new Exception("Invalid credentials");
+                    throw new Exception("Usuario no encontrado");
 
+                var result = hasher.VerifyHashedPassword(user, user.Password, request.Password);
+
+                if (result != PasswordVerificationResult.Success)
+                    throw new Exception("Contraseña incorrecta");
+
+
+                if (result == PasswordVerificationResult.SuccessRehashNeeded)
+                {
+                    user.Password = hasher.HashPassword(user, request.Password);
+                    await _userRepository.UpdateAsync(user);
+                }
                 return user;
 
 

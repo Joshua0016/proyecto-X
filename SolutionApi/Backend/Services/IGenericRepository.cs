@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 
-namespace Backend.Repositories
+namespace Backend.interfaces
 {
     public interface IGenericRepository<T>
     {
@@ -12,5 +12,8 @@ namespace Backend.Repositories
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(string t);
+
+        // Task <T> GetByEmailAsync(string email);
+
     }
 }

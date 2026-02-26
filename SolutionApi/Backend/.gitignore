@@ -9,6 +9,7 @@ obj/
 *.cache
 *.db
 *.opendb
+*.kiro
 
 # 🔹 Rider / VS Code
 .idea/

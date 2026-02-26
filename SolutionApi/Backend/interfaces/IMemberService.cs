@@ -2,7 +2,7 @@ using Backend.DTOs;
 using System.Threading.Tasks;
 
 
-namespace Backend.Services;
+namespace Backend.interfaces;
 
 public interface IMemberService
 {

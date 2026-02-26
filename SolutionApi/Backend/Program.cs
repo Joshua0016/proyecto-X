@@ -3,6 +3,9 @@ using Backend.Data;
 using Backend.Repositories;
 using Backend.Models;
 using Backend.Services;
+using Backend.interfaces;
+using Backend.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +33,8 @@ namespace Backend
             //registrar servicio de autenticacion
             builder.Services.AddScoped<IService, UserService>();
 
+            //registrar servicio JWT
+            builder.Services.AddScoped<IJwtService, JwtServices>();
 
             builder.Services.AddScoped<IGenericRepository<Member>, MemberRepository>();
 
@@ -38,29 +43,35 @@ namespace Backend
 
             builder.Services.AddScoped<IMemberService, MemberService>();
 
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+
 
 
 
             //configurar autenticacion JWT
-            var jwtKey = builder.Configuration["jwt:Key"] ?? string.Empty;
+            var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
             var key = Encoding.UTF8.GetBytes(jwtKey);
 
-            // builder.Services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            // }).AddJwtBearer(options =>
-            // {
-            //     options.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         ValidateIssuer = true,
-            //         ValidateAudience = true,
-            //         ValidateIssuerSigningKey = true,
-            //         ValidIssuer = builder.Configuration["jwt:Issuer"],
-            //         ValidAudience = builder.Configuration["jwt:Audience"],
-            //         IssuerSigningKey = new SymmetricSecurityKey(key)
-            //     };
-            // });
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
             builder.Services.AddEndpointsApiExplorer();
 
@@ -72,6 +83,31 @@ namespace Backend
                 {
                     Title = "Backend API",
                     Version = "v1"
+                });
+
+                // Add JWT authentication to Swagger
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
                 });
 
             });

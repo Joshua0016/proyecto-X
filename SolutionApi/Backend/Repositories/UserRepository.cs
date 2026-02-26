@@ -2,6 +2,7 @@
 using Backend.Data;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Backend.interfaces;
 
 
 namespace Backend.Repositories
@@ -73,5 +74,8 @@ namespace Backend.Repositories
             var normalizedEmail = email.ToLower();
             return await _context.Users.AnyAsync(u => u.Email.ToLower() == normalizedEmail);
         }
+
+
+
     }
 }
