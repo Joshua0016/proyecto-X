@@ -7,7 +7,7 @@ EXPOSE 8081
 # Fase de compilación
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
+WORKDIR /SolutionApi
 COPY ["Backend/Backend.csproj", "Backend/"] 
 RUN dotnet restore "Backend/Backend.csproj"
 COPY . .
