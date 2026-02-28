@@ -15,9 +15,10 @@ namespace Backend.Controllers
 
     [ApiController]
     [Route("api/User")]
-    public class UserController(IService service) : ControllerBase
+    public class UserController(IService service, IJwtService jwtService) : ControllerBase
     {
         private readonly IService userService = service;
+        private readonly IJwtService _jwtService = jwtService;
 
 
 
@@ -29,21 +30,18 @@ namespace Backend.Controllers
             try
             {
                 var user = await userService.LoginAsync(request);
+                var token = _jwtService.GenerateToken(user);
 
-                return Ok(new
-                {
-                    id = user.UserId,
-                    email = user.Email,
-                    idRol = user.RoleId,
-                });
+                return Ok(new LoginResponseDTO(
+                    Token: token,
+                    Email: user.Email,
+                    Rol: user.RoleId.ToString()
+                ));
             }
             catch (Exception ex)
             {
-
-                return BadRequest(new { message = ex.Message });
-
+                return Unauthorized(new { message = ex.Message });
             }
-
         }
 
         [HttpPost("register")]

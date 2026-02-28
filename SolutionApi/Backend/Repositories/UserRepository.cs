@@ -74,5 +74,8 @@ namespace Backend.Repositories
             var normalizedEmail = email.ToLower();
             return await _context.Users.AnyAsync(u => u.Email.ToLower() == normalizedEmail);
         }
+
+
+
     }
 }
