@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
 
-body {
-    background-color: #252526;
-}
 
 h1 {
     font-family: "Archivo Black", sans-serif;
