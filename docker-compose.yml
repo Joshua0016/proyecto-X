@@ -39,7 +39,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db_server;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=db_server;Port=5432;Database=dbProyectoX;Username=admin;Password=$123987456
     depends_on:
       db_server:
         condition: service_healthy
