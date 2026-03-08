@@ -61,8 +61,8 @@ export default function Login() {
 
                     {/*inputs userName password*/}
                     <div className="w-[80%] mx-auto mt-[25px]">
-                        <input type="text" placeholder="User Name" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-[100%] h-8 px-3 border border-gray-300 rounded-[5px] md:h-12"></input>
-                        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-[30px] w-[100%] h-8 px-3 border border-gray-300 rounded-[5px] md:h-12"></input>
+                        <input type="text" placeholder="User Name" value={userName} onChange={(e) => setUserName(e.target.value.toLowerCase())} className="w-[100%] h-8 px-3 border border-gray-300 rounded-[5px] md:h-12"></input>
+                        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value.toLowerCase())} className="mt-[30px] w-[100%] h-8 px-3 border border-gray-300 rounded-[5px] md:h-12"></input>
 
                     </div>
                     {/*input check and link PENDIENTE REALIZAR IMPLEMENTACIONES LINK*/}
