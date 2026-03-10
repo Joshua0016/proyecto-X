@@ -38,7 +38,7 @@ namespace Backend.Services
                 {
                     Email = request.Email,
                     RoleId = request.IdRol,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
 
                 nuevoUsuario.Password = hasher.HashPassword(nuevoUsuario, request.Password);
