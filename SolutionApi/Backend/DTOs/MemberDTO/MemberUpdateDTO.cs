@@ -11,7 +11,7 @@ public record MemberUpdateDTO
     string? LastName,
     string? PhoneNumber,
     string Email,
-    string UrlPhoto,
+    string PhotoUrl,
     DateOnly Birth
 );
 

@@ -7,7 +7,7 @@ namespace Backend.DTOs
         string? LastName,
         string? PhoneNumber,
         string Email,
-        string UrlPhoto,
+        string PhotoUrl,
         DateOnly Birth
 
     );

@@ -39,7 +39,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
             Email = request.Email,
-            PhotoUrl = request.UrlPhoto,
+            PhotoUrl = request.PhotoUrl,
             BirthDate = request.Birth
         });
     }
@@ -53,7 +53,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
             miembro.LastName = request.LastName;
             miembro.PhoneNumber = request.PhoneNumber;
             miembro.Email = request.Email;
-            miembro.PhotoUrl = request.UrlPhoto;
+            miembro.PhotoUrl = request.PhotoUrl;
             miembro.BirthDate = request.Birth;
             await _repo.UpdateAsync(miembro);
 
