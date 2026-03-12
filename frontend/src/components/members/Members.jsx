@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import React from "react";
-
+import dayjs from "dayjs";
+import getAllMembers from "../../apiServices/members/getAllMembers";
 import Box from '@mui/material/Box';//contenedor de estilos
 import Tooltip from '@mui/material/Tooltip';//Componente que muestra un texto flotante al pasar el cursor sobre un elemento
 //Iconos
@@ -28,6 +29,9 @@ import {
     GridActionsCell,//Celda especial que contiene acciones (botones) dentro de la tabla
     GridActionsCellItem,//Cada accion individual dentro de la celda de acciones(ej. boton de editar, borrar, guardar)
 } from '@mui/x-data-grid';
+import updateMember from "../../apiServices/members/updateMember";
+import createMember from "../../apiServices/members/createMember";
+import deleteMember from "../../apiServices/members/deleteMember";
 
 
 const roles = ['admin', 'user'];
@@ -39,12 +43,12 @@ function EditToolbar(props) {
         const id = randomId();
         setRows((oldRows) => [
             ...oldRows,
-            { id, name: '', lastName: '', age: '', isnew: true }
+            { id, name: '', lastName: '', phoneNumber: '', email: "", photoUrl: "text", birth: "", isnew: true }
         ]);
         setRowModelsModel((oldModel) => ({
             ...oldModel,
             //[id] propiedad computada, permite usar el valor de la variable id como nombre de la propiedad dentro del objeto.
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: "firstName" }
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" }
         }));
     };
 
@@ -98,18 +102,12 @@ export default function FullFeaturedCridGrid() {
     const [rowModesModel, setRowModelsModel] = useState({});
     useEffect(() => {
         //Database
-        const rows = [
-            { id: 1, lastName: "Snow", firstName: "Jon", age: 60 },
-            { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-            { id: 3, lastName: "Joshua", firstName: "Cersei", age: 35 },
-            { id: 4, lastName: "Alexander", firstName: "Cersei", age: 45 },
-            { id: 5, lastName: "Williams", firstName: "Cersei", age: 28 },
-            { id: 6, lastName: "Williams", firstName: "Cersei", age: 17 },
-            { id: 7, lastName: "Williams", firstName: "Cersei", age: 22 },
-            { id: 8, lastName: "Williams", firstName: "Cersei", age: 19 },
-            { id: 9, lastName: "Williams", firstName: "Cersei", age: 14 },
-        ];
-        setRows(rows);
+        async function allMembers() {
+            const rows = await getAllMembers();
+            setRows(rows);
+            console.log(rows)
+        }
+        allMembers();
     }, []);
 
     const handleRowEditStop = (params, event) => {
@@ -132,8 +130,13 @@ export default function FullFeaturedCridGrid() {
                 }));
             },
 
-            handleDeleteClick: (id) => {
-                setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+            handleDeleteClick: async (id) => {
+                const success = await deleteMember(id);
+                if (success) {
+
+                    setRows((prevRows) => prevRows.filter((row) => row.id != id));
+
+                }
             },
             handleCancelClick: (id) => {
                 setRowModelsModel((prevRowModesModel) => ({
@@ -152,33 +155,51 @@ export default function FullFeaturedCridGrid() {
         }),
         [rowModesModel] //  pasando las dependencias para que las funciones vean el estado actualizado
     );
-    const processRowUpdate = (newRow) => {
-        const updateRow = { ...newRow, isnew: false };
-        setRows((PREVrOWS) =>
-            PREVrOWS.map((row) => (row.id === newRow.id ? updateRow : row))
-        );
-        return updateRow;
+    const processRowUpdate = async (newRow) => {
+        try {
+
+            const wasNew = newRow.isnew;
+            const updateRow = { ...newRow, isnew: false, birth: dayjs(newRow.birth).format("YYYY-MM-DD"), };
+
+            let success = wasNew ? await createMember(updateRow) : await updateMember(updateRow.id, updateRow);
+
+            if (success) {
+
+                setRows((PREVrOWS) =>
+                    PREVrOWS.map((row) => (row.id === newRow.id ? updateRow : row))
+                );
+
+                if (wasNew) {
+                    setRows(await getAllMembers());
+                }
+
+                return updateRow;
+            }
+            actionHandlers.handleCancelClick(newRow.id);
+
+
+        } catch (error) {
+            alert("Error al actualizar la fila...");
+            console.log("Error en el try catch", error);
+        }
+
     }
 
     //Definimos las columnas del dataGrid. cada valor del campo debe coincidir con el nombre de la propiedad row a la que se mapeara
     const columns = [
         { field: "id", headerName: "ID", width: 70 },
-        { field: "firstName", headerName: "First name", editable: true, width: 130 },
+        { field: "name", headerName: "First name", editable: true, width: 130 },
         { field: "lastName", headerName: "Last name", editable: true, width: 130 },
+        { field: "phoneNumber", headerName: "Phone", editable: true, width: 130 },
         {
-            field: "age",
-            headerName: "Age",
-            width: 90,
+            field: "email",
+            headerName: "Email",
+            width: 130,
             editable: true,
         },
-        {
-            field: "fullName",
-            headerName: "Full name",
-            description: "This column has a value getter and is not sortable.",
+        { field: "photoUrl", headerName: "Photo", editable: false, width: 80 },
+        { field: "birth", headerName: "Join date", type: "date", with: 180, editable: true, valueGetter: (value) => dayjs(value).toDate() },
 
-            width: 160,
-            valueGetter: (value, row) => `${row.firstName || ``} ${row.lastName || ``}`,
-        },
         {
             field: 'actions',
             type: 'actions',
@@ -194,7 +215,7 @@ export default function FullFeaturedCridGrid() {
         <>
             <div className="mt-[100px] mb-[50px]">
                 <h1 className="text-white text-[28px] text-center lg:text-[48px]">Members</h1>
-                <div className="w-[40%] mx-auto">
+                <div className="w-[90%] mx-auto xl:w-[60%]">
 
 
                     <Box
@@ -215,8 +236,10 @@ export default function FullFeaturedCridGrid() {
                                 columns={columns}
                                 editMode="row"
                                 rowModesModel={rowModesModel}
+                                // getRowId={(row) => row.Id}
                                 onRowModesModelChange={setRowModelsModel}
                                 onRowEditStop={handleRowEditStop}
+                                onProcessRowUpdateError={(Error) => console.log(`Error capturado en el DataGrid ---> ${Error}`)}
                                 processRowUpdate={processRowUpdate}
                                 showToolbar
                                 slots={{ toolbar: EditToolbar }}
