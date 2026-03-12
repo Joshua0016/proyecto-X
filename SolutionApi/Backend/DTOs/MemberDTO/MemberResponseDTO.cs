@@ -1,13 +1,13 @@
 namespace Backend.DTOs
 {
     public record MemberResponseDTO(
-        int IdMiembro,
-        string Nombre,
-        string Apellido,
-        string? Telefono,
-        string? Correo,
-        string? UrlFoto,
-        DateOnly FechaNacimiento
+        int MemberId,
+        string Name,
+        string LastName,
+        string? PhoneNumber,
+        string? Email,
+        string? PhotoUrl,
+        DateOnly Birth
 
     );
 
