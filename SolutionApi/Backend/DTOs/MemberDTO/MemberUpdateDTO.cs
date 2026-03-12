@@ -9,7 +9,7 @@ public record MemberUpdateDTO
 (
     string Name,
     string? LastName,
-    string? Telephon,
+    string? PhoneNumber,
     string Email,
     string UrlPhoto,
     DateOnly Birth

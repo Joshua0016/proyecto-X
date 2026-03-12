@@ -5,7 +5,7 @@ namespace Backend.DTOs
     (
         string Name,
         string? LastName,
-        string? Telephon,
+        string? PhoneNumber,
         string Email,
         string UrlPhoto,
         DateOnly Birth

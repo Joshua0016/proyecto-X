@@ -29,7 +29,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
 
     public async Task Persist(MemberCreateDTO request)
     {
-        if (await repo.ExistsAsync(request.Telephon))
+        if (await repo.ExistsAsync(request.PhoneNumber))
 
             throw new Exception("Ya existe");
 
@@ -37,7 +37,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         {
             FirstName = request.Name,
             LastName = request.LastName,
-            PhoneNumber = request.Telephon,
+            PhoneNumber = request.PhoneNumber,
             Email = request.Email,
             PhotoUrl = request.UrlPhoto,
             BirthDate = request.Birth
@@ -51,7 +51,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
             var miembro = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
             miembro.FirstName = request.Name;
             miembro.LastName = request.LastName;
-            miembro.PhoneNumber = request.Telephon;
+            miembro.PhoneNumber = request.PhoneNumber;
             miembro.Email = request.Email;
             miembro.PhotoUrl = request.UrlPhoto;
             miembro.BirthDate = request.Birth;
