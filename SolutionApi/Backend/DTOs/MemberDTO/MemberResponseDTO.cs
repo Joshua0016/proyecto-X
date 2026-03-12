@@ -1,7 +1,7 @@
 namespace Backend.DTOs
 {
     public record MemberResponseDTO(
-        int MemberId,
+        int IdMember,
         string Name,
         string LastName,
         string? PhoneNumber,
