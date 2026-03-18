@@ -268,7 +268,7 @@ export default function FullFeaturedCridGrid() {
     return (
         <>
             <div className="mt-[100px] mb-[50px]">
-                <h1 className="text-white text-[28px] text-center lg:text-[48px]">Members</h1>
+                <h1 className="text-black text-[28px] text-center lg:text-[48px]">Members</h1>
                 <div className="w-[90%] mx-auto xl:w-[60%]">
 
 
