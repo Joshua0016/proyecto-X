@@ -32,6 +32,7 @@
 
 	<ItemGroup>
 		<Folder Include="Data\" />
+		<Folder Include="DTOs\MemberDTO\" />
 		<Folder Include="Models\" />
 		<Folder Include="commons\" />
 	</ItemGroup>

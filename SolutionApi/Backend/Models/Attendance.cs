@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Backend.Models;
 
+
+// Where are the validations
 public partial class Attendance
 {
     public int AttendanceId { get; set; }

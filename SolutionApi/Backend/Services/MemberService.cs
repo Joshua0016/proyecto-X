@@ -4,15 +4,12 @@ using Backend.Models;
 using Backend.interfaces;
 using System.Threading.Tasks;
 
-
 namespace Backend.Services;
-
-
 
 public class MemberService(IGenericRepository<Member> repo) : IMemberService
 {
-    private readonly IGenericRepository<Member> _repo = repo;
 
+    // use Mapster
     public async Task<IEnumerable<MemberResponseDTO>> ListAll() => (
         await repo.GetAllAsync())
             .Select(m => new MemberResponseDTO(
@@ -48,6 +45,7 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
     {
         try
         {
+            // use specific exception
             var miembro = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
             miembro.FirstName = request.Name;
             miembro.LastName = request.LastName;

@@ -13,7 +13,5 @@ namespace Backend.interfaces
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(string t);
 
-        // Task <T> GetByEmailAsync(string email);
-
     }
 }
