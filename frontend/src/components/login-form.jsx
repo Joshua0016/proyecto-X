@@ -46,7 +46,7 @@ export function LoginForm({ className, ...props }) {
         }
         setTextButton("success full");
         localStorage.setItem("loggedIn", true); //asegurar que el usuario este logeado
-        navigate("/home");
+        navigate("/home/members");
       } else {
         setTextButton("Login failed");
       }
