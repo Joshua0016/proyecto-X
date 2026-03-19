@@ -1,3 +1,4 @@
+using Backend.DTOs;
 using Backend.Models;
 
 
@@ -7,6 +8,6 @@ namespace Backend.interfaces
     {
 
         // Entity
-        string GenerateToken(User user);
+        string GenerateToken(LoginResponseDTO request);
     }
 }

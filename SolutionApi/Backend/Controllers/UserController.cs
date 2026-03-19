@@ -30,7 +30,11 @@ namespace Backend.Controllers
             try
             {
                 var user = await userService.LoginAsync(request);
-                var token = _jwtService.GenerateToken(user);
+                var token = _jwtService.GenerateToken(new LoginResponseDTO(
+                    Token: "",
+                    Email: user.Email,
+                    Rol: user.RoleId.ToString()
+                ));
 
                 return Ok(new LoginResponseDTO(
                     Token: token,

@@ -3,12 +3,12 @@ namespace Backend.DTOs;
 
 public record MemberCreateDTO
    (
-       string Name,
+       string FirstName,
        string? LastName,
        string? PhoneNumber,
        string Email,
        string PhotoUrl,
-       DateTime Birth
+       DateTime BirthDate
 
    );
 
