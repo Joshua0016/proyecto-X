@@ -15,6 +15,7 @@ import {
     randomTraderName,
     randomId,
     randomArrayItem,
+    randomEmail,
 } from '@mui/x-data-grid-generator';
 //Tabla
 import {
@@ -28,6 +29,7 @@ import {
     useGridApiContext,//Hook que da acceso al API del DataGrid (ej. para actualizar filas, cambiar modos, etc.)
     GridActionsCell,//Celda especial que contiene acciones (botones) dentro de la tabla
     GridActionsCellItem,//Cada accion individual dentro de la celda de acciones(ej. boton de editar, borrar, guardar)
+
 } from '@mui/x-data-grid';
 import updateMember from "../../apiServices/members/updateMember";
 import createMember from "../../apiServices/members/createMember";
@@ -35,6 +37,8 @@ import deleteMember from "../../apiServices/members/deleteMember";
 
 
 const roles = ['admin', 'user'];
+
+
 
 function EditToolbar(props) {
     const { setRows, setRowModelsModel } = props;
@@ -188,17 +192,67 @@ export default function FullFeaturedCridGrid() {
     //Definimos las columnas del dataGrid. cada valor del campo debe coincidir con el nombre de la propiedad row a la que se mapeara
     const columns = [
         { field: "id", headerName: "ID", width: 70 },
-        { field: "name", headerName: "First name", editable: true, width: 130 },
-        { field: "lastName", headerName: "Last name", editable: true, width: 130 },
-        { field: "phoneNumber", headerName: "Phone", editable: true, width: 130 },
+        {
+            field: "name",
+            headerName: "First name",
+            editable: true,
+            width: 130,
+            preProcessEditCellProps: (params) => {
+                const { props } = params;
+
+                const hasNumber = /\d/.test(props.value) || props.value == "";
+                return { ...props, error: hasNumber };
+            }
+        },
+        {
+            field: "lastName",
+            headerName: "Last name",
+            editable: true, width: 130,
+            preProcessEditCellProps: (params) => {
+                const { props } = params;
+
+                const hasNumber = /\d/.test(props.value);
+
+                return {
+                    ...props,
+                    error: hasNumber,
+                }
+            }
+        },
+        {
+            field: "phoneNumber",
+            headerName: "Phone",
+            editable: true,
+            width: 130,
+            preProcessEditCellProps: (params) => {
+                const { props } = params;
+
+                const hasError = /^(809|829|849)\d{7}$/.test(props.value);
+
+                return {
+                    ...props,
+                    error: !hasError,
+                }
+            }
+        },
         {
             field: "email",
             headerName: "Email",
             width: 130,
             editable: true,
+            preProcessEditCellProps: (params) => {
+                const { props } = params;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(props.value);
+
+
+                return {
+                    ...props,
+                    error: !emailRegex,
+                }
+            }
         },
         { field: "photoUrl", headerName: "Photo", editable: false, width: 80 },
-        { field: "birth", headerName: "Join date", type: "date", with: 180, editable: true, valueGetter: (value) => dayjs(value).toDate() },
+        { field: "birth", headerName: "Join date", type: "date", witdh: 180, editable: true, valueGetter: (value) => dayjs(value).toDate() },
 
         {
             field: 'actions',
@@ -214,7 +268,7 @@ export default function FullFeaturedCridGrid() {
     return (
         <>
             <div className="mt-[100px] mb-[50px]">
-                <h1 className="text-white text-[28px] text-center lg:text-[48px]">Members</h1>
+                <h1 className="text-black text-[28px] text-center lg:text-[48px]">Members</h1>
                 <div className="w-[90%] mx-auto xl:w-[60%]">
 
 
@@ -228,12 +282,20 @@ export default function FullFeaturedCridGrid() {
                             '& .textPrimary': {
                                 color: 'text.primary',
                             },
+
                         }}
                     >
                         <ActionHandlersContext.Provider value={actionHandlers}>
                             <DataGrid
                                 rows={rows}
                                 columns={columns}
+                                sx={{
+                                    "& .Mui-error": {
+                                        backgroundColor: "rgb(255,0,0,0.1)",
+                                        color: "red",
+                                        fontWeight: "bold"
+                                    }
+                                }}
                                 editMode="row"
                                 rowModesModel={rowModesModel}
                                 // getRowId={(row) => row.Id}
@@ -243,9 +305,11 @@ export default function FullFeaturedCridGrid() {
                                 processRowUpdate={processRowUpdate}
                                 showToolbar
                                 slots={{ toolbar: EditToolbar }}
+
                                 slotProps={{
                                     toolbar: { setRows, setRowModelsModel },
                                 }}
+
                             />
                         </ActionHandlersContext.Provider>
                     </Box>

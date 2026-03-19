@@ -5,6 +5,8 @@ namespace Backend.interfaces
 {
     public interface IJwtService
     {
+
+        // Entity
         string GenerateToken(User user);
     }
 }

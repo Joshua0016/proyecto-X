@@ -7,6 +7,7 @@ public partial class Event
 {
     public int EventId { get; set; }
 
+    [Required(ErrorMessage = "the Title is required")]
     public string Title { get; set; } = null!;
 
     public string Type { get; set; } = null!;

@@ -44,8 +44,8 @@ public partial class DbProyectoXContext : DbContext
 
     public virtual DbSet<Vendor> Vendors { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=ConnectionStrings:DefaultConnection");
+
+    // use asembly call
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -419,6 +419,4 @@ public partial class DbProyectoXContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
