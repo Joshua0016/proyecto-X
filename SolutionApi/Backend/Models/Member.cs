@@ -7,8 +7,12 @@ public partial class Member
 {
     public int MemberId { get; set; }
 
+    [Required(ErrorMessage = "the Name is required")]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "the name should be beetween 3 and 100 characters")]
     public string FirstName { get; set; } = null!;
 
+    [Required(ErrorMessage = "the Name is required")]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "the name should be beetween 3 and 100 characters")]
     public string LastName { get; set; } = null!;
 
     public string? PhotoUrl { get; set; }
