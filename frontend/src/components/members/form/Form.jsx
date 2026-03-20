@@ -1,11 +1,11 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod" //libreria de validaciones de esquemas 
-import { Controller, useForm } from "react-hook-form"
-import { toast } from "sonner"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"; //libreria de validaciones de esquemas 
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -13,21 +13,24 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     Field,
     FieldDescription,
     FieldError,
     FieldGroup,
     FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import dayjs from "dayjs";
+import createMember from "@/apiServices/members/createMember";
+import { useState } from "react";
+import getAllMembers from "@/apiServices/members/getAllMembers";
 const formSchema = z.object({
     name: z
         .string()
         .min(3, "name must be at least 3 characters.")
-        .max(10, "Username must be at most 10 characters.")
+        .max(20, "Username must be at most 10 characters.")
         .regex(
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Only letters and spaces are allowed."
@@ -35,7 +38,7 @@ const formSchema = z.object({
     lastName: z
         .string()
         .min(3, "Last Name must be at least 3 characters.")
-        .max(10, "Last name must be at most 10 characters.")
+        .max(20, "Last name must be at most 10 characters.")
         .regex(
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Only letters and spaces are allowed."
@@ -58,7 +61,9 @@ const formSchema = z.object({
 
 })
 
-export default function FormRhfInput() {
+export default function FormRhfInput({ setformMember, setRows }) {
+
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -71,8 +76,24 @@ export default function FormRhfInput() {
     })
 
     function onSubmit(data) {
-        console.log(data);
+        const create = async () => {
+            data.birth = dayjs(data.birth).format("YYYY-MM-DD");
+            const newdata = { ...data, photoUrl: "text" };
+            try {
+                const response = await createMember(newdata);
+                if (response) {
+                    setRows(await getAllMembers());
+                    setformMember(false);
+                }
+
+            } catch (error) {
+                console.log("error al crear el miembro" + error)
+            }
+        }
+        create();
     }
+
+
 
     return (
         <>
@@ -216,13 +237,20 @@ export default function FormRhfInput() {
                         </form>
                     </CardContent>
                     <CardFooter>
-                        <Field orientation="horizontal">
-                            <Button type="button" variant="outline" onClick={() => form.reset()}>
-                                Reset
-                            </Button>
-                            <Button type="submit" form="form-rhf-input">
-                                Save
-                            </Button>
+                        <Field className="">
+                            <div className="flex justify-between">
+                                <div>
+                                    <Button type="button" variant="outline" className="cursor-pointer" onClick={() => form.reset()}>
+                                        Reset
+                                    </Button>
+                                    <Button type="submit" form="form-rhf-input" className="cursor-pointer">
+                                        Save
+                                    </Button>
+
+                                </div>
+                                <Button onClick={() => setformMember(false)} className="bg-red-600 cursor-pointer">Cancel</Button>
+                            </div>
+
                         </Field>
                     </CardFooter>
                 </Card>

@@ -8,7 +8,6 @@ export default async function deleteMember(id) {
         });
         if (response.ok) {
             let result = await response.text()
-            alert(`The member has been Delete`, result);
             return true;
         }
         else {
