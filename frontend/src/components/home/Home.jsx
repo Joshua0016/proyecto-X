@@ -1,24 +1,31 @@
 
-import user from "./assets/member.png"
-import finance from "./assets/finance.svg"
-import events from "./assets/event.png"
-import report from "./assets/report.svg"
 
-import church from "./assets/church.svg"
 import { useOutlet, Link, Outlet } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import MenuBar from "./menuBar/MenuBar"
+
+import { TooltipProvider } from '../ui/tooltip';
+
+
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import {
+    SidebarInset,
+    SidebarProvider,
+} from "@/components/ui/sidebar"
+export const iframeHeight = "800px"
+export const description = "A sidebar with a header and a search form."
+
+
 
 export default function Home() {
     const navigate = useNavigate();
-    const [view, setView] = useState(false);
     const outlet = useOutlet();
+    const [view, setView] = useState(false);
+
 
     useEffect(() => {
         let logged = localStorage.getItem("loggedIn");
-
-
         if (logged === "false") {
             navigate("/");
         }
@@ -28,25 +35,25 @@ export default function Home() {
     return (
         <>
 
-            <div style={{ backgroundColor: "#1A1A1A", color: "white" }} className="p-2">
+            <TooltipProvider>
+                <div className="[--header-height:calc(--spacing(14))]">
+                    <SidebarProvider className="flex flex-col">
+                        <SiteHeader />
+                        <div className="flex flex-1">
+                            <AppSidebar />
+                            <SidebarInset>
+                                <div className="flex flex-1 flex-col gap-4 p-4">
 
-                <div className="xl:hidden flex flex-row gap-2 text-2xl" onClick={() => setView(!view)}>
-                    <img src="/menu.svg" className="w-8 "></img>
-                    <h2>Menu</h2>
+                                    <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min relative">
+                                        <Outlet />
+                                    </div>
+
+                                </div>
+                            </SidebarInset>
+                        </div>
+                    </SidebarProvider>
                 </div>
-                <div className="hidden xl:flex gap-6 text-3xl p-4 text-white">
-                    <Link to="members">Members</Link>
-                    <Link to="finance">Finance</Link>
-                    <Link to="events">Events</Link>
-                    <Link to="report">Report</Link>
-                </div>
-
-            </div>
-            {view && <MenuBar setView={setView}></MenuBar>}
-
-            <div className="">
-                <Outlet> </Outlet>
-            </div>
+            </TooltipProvider>
 
         </>
     )

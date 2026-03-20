@@ -1,35 +1,159 @@
-import { useState } from "react"
-import CreateMember from "./createMember/CreateMember";
-import EditMember from "./editMember/EditMember";
+import { useEffect, useState } from "react"
+import React from "react";
+import dayjs from "dayjs";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import getAllMembers from "../../apiServices/members/getAllMembers";
+import FormRhfInput from "./form/Form"
+import DataTable from "react-data-table-component";
+import deleteMember from "@/apiServices/members/deleteMember";
+import { data } from "react-router-dom";
+import { promise } from "zod";
+export default function FullFeaturedCridGrid() {
+    const [rows, setRows] = useState([]);
+    const [formMember, setformMember] = useState(false);
+    const [selectRow, setSelectRow] = useState(true);
+    const [handleRows, setHandleRows] = useState();
+    const [toggleCleared, setToggleCleared] = useState(false);
+    useEffect(() => {
+        //Database
+        async function allMembers() {
+            const rows = await getAllMembers();
+            setRows(rows);
+            console.log(rows)
+        }
+        allMembers();
+    }, []);
 
-export default function Members() {
-    const [viewCreate, setViewCreate] = useState(true);
-    const [viewEdit, setViewEdit] = useState(true);
 
+
+    const columns = [
+        {
+            name: "ID",
+            selector: row => row.id,
+            sortable: true,
+        },
+        {
+            name: "name",
+            selector: row => row.name,
+            sortable: true,
+        },
+        {
+            name: "Last Name",
+            selector: row => row.lastName,
+        },
+        {
+            name: "email",
+            selector: row => row.email,
+        },
+        {
+            name: "phone",
+            selector: row => row.phoneNumber,
+        },
+        {
+            name: "photoUrl",
+            selector: row => row.photoUrl,
+        },
+        {
+            name: "birth",
+            selector: row => row.birth
+        }
+
+    ];
+    const customStyles = {
+        header: {
+            style: {
+                minHeight: '56px',
+            },
+        },
+        headRow: {
+            style: {
+                borderTopStyle: 'solid',
+                borderTopWidth: '1px',
+                borderTopColor: '#e5e7eb',
+                backgroundColor: '#f9fafb',
+            },
+        },
+        headCells: {
+            style: {
+                fontWeight: 'bold',
+                fontSize: '14px',
+                color: '#374151',
+            },
+        },
+        cells: {
+            style: {
+                fontSize: '14px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+            },
+        },
+        rows: {
+            style: {
+                minHeight: '64px', // Filas más altas para que respiren
+                '&:not(:last-of-type)': {
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: '1px',
+                    borderBottomColor: '#e5e7eb',
+                },
+            },
+        },
+    };
+    const handleSelectRows = (data) => {
+        setSelectRow(data.selectedCount === 0);
+        setHandleRows(data);
+        console.log(data)
+    }
+    //delete rows
+    const handleDelete = async () => {
+
+        try {
+            const members = handleRows.selectedCount;
+            const deletePromises = handleRows.selectedRows.map(async (element) => await deleteMember(element.id));
+            await Promise.all(deletePromises);
+
+            setRows(await getAllMembers());
+            alert(`${members} members have been delete`)
+            setToggleCleared(!toggleCleared);
+            setSelectRow(true);
+
+        } catch (error) {
+            console.log("Error en memberjsx --> " + error);
+        }
+
+    }
 
     return (
         <>
             <div className="mt-[100px] mb-[50px]">
-                <h1 className="text-white text-[28px] text-center lg:text-[48px]">Members</h1>
+                <h1 className="text-black text-[28px] text-center lg:text-[48px]">Members</h1>
+                <div className="w-[90%] mx-auto xl:w-[60%]">
 
-                <div className="bg-[#1A1A1A] rounded-2xl p-8 sm:text-2xl ">
+                    <div className="flex justify-between">
+                        <div>
+                            <Button className="bg-black cursor-pointer" onClick={() => setformMember(true)}>Add</Button>
 
-
-
-                    {(viewCreate && viewEdit) && (
-                        <div className="flex flex-col gap-10 w-full h-full justify-around sm:w-[70%] sm:mx-auto 2xl:w-[40%]">
-                            <div style={{ backgroundColor: "#007ACC" }} className="w-[80%] mx-auto border-2 border-gray-200 rounded-[10px] ">
-                                <button className=" w-[100%] cursor-pointer  xl:h-[35px]" onClick={() => setViewCreate(!viewCreate)}>Create</button>
-                            </div>
-                            <div style={{ backgroundColor: "#007ACC" }} className=" w-[80%] mx-auto border-2 border-gray-200 rounded-[10px]  border-gray-200 text-center cursor-pointer">
-                                <button className="w-[100%] cursor-pointer  xl:h-[35px]" onClick={() => setViewEdit(!viewEdit)}>Edit</button>
-                            </div>
                         </div>
-                    )}
+                        <div>
+                            <Button className="bg-gray-600 cursor-pointer" disabled={selectRow}>Update</Button>
+                            <Button className="bg-red-600 cursor-pointer" disabled={selectRow} onClick={handleDelete} >Eliminate</Button>
 
-                    {!viewCreate && <CreateMember setView={setViewCreate}></CreateMember>}
-                    {!viewEdit && <EditMember setView={setViewEdit}></EditMember>}
+                        </div>
 
+                    </div>
+
+
+                    <DataTable columns={columns} data={rows} customStyles={customStyles} pagination selectableRows clearSelectedRows={toggleCleared} onSelectedRowsChange={(data) => handleSelectRows(data)} />
+
+                    {formMember && <FormRhfInput setformMember={setformMember} setRows={setRows}></FormRhfInput>}
                 </div>
 
             </div>

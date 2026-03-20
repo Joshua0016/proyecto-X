@@ -1,0 +1,8 @@
+# Configuración de la Base de Datos
+DB_PASSWORD=123987456
+DB_USER=admin
+DB_NAME=dbProyectoX
+
+# Configuración de pgAdmin
+PGADMIN_EMAIL=admin@proyectox.com
+PGADMIN_PASSWORD=123987456

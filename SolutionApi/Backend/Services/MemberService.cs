@@ -3,76 +3,57 @@ using Backend.Repositories;
 using Backend.Models;
 using Backend.interfaces;
 using System.Threading.Tasks;
-
+using Mapster;
 
 namespace Backend.Services;
 
-
-
 public class MemberService(IGenericRepository<Member> repo) : IMemberService
 {
-    private readonly IGenericRepository<Member> _repo = repo;
 
+    // use Mapster
     public async Task<IEnumerable<MemberResponseDTO>> ListAll() => (
         await repo.GetAllAsync())
-            .Select(m => new MemberResponseDTO(
-
-                 m.MemberId,
-                 m.FirstName,
-                 m.LastName,
-                 m.PhoneNumber,
-                 m.Email,
-                 m.PhotoUrl,
-                 m.BirthDate
-            ));
-
+        .Adapt<IEnumerable<MemberResponseDTO>>();
 
     public async Task Persist(MemberCreateDTO request)
     {
-        if (await repo.ExistsAsync(request.Telephon))
+        if (await repo.ExistsAsync(request.PhoneNumber))
 
             throw new Exception("Ya existe");
 
-        await repo.AddAsync(new Member
-        {
-            FirstName = request.Name,
-            LastName = request.LastName,
-            PhoneNumber = request.Telephon,
-            Email = request.Email,
-            PhotoUrl = request.UrlPhoto,
-            BirthDate = request.Birth
-        });
+
+
+        var member = request.Adapt<Member>();
+        await repo.AddAsync(member);
     }
 
     public async Task Update(int id, MemberUpdateDTO request)
     {
         try
         {
-            var miembro = await _repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
-            miembro.FirstName = request.Name;
-            miembro.LastName = request.LastName;
-            miembro.PhoneNumber = request.Telephon;
-            miembro.Email = request.Email;
-            miembro.PhotoUrl = request.UrlPhoto;
-            miembro.BirthDate = request.Birth;
-            await _repo.UpdateAsync(miembro);
+            var miembro = await repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
 
-
-
-            // await repo.UpdateAsync(m);
-
-
+            request.Adapt(miembro);
+            await repo.UpdateAsync(miembro);
         }
         catch (Exception ex)
         {
-
             throw new Exception(ex.Message);
         }
     }
 
     public async Task Delete(int id_)
     {
-        await repo.DeleteAsync(id_);
+        try
+        {
+            await repo.DeleteAsync(id_);
+        }
+        catch (System.Exception ex)
+        {
+            throw new Exception(ex.Message);
+
+        }
+
 
     }
 

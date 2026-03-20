@@ -25,37 +25,29 @@ namespace Backend.Services
 
         public async Task<string> RegisterAsync(RegisterRequestDto request)
         {
-
-
             try
             {
                 if (await _userRepository.ExistsAsync(request.Email))
                     throw new Exception("User already exists");
 
-
-
                 var nuevoUsuario = new User
                 {
                     Email = request.Email,
                     RoleId = request.IdRol,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
                 };
 
                 nuevoUsuario.Password = hasher.HashPassword(nuevoUsuario, request.Password);
 
-
                 await _userRepository.AddAsync(nuevoUsuario);
                 return "User registered successfully";
-
             }
             catch (Exception ex)
             {
-
-                throw new Exception($"Error al registrar: {ex.Message}");
+                // Log the full exception including inner exception
+                var innerMessage = ex.InnerException?.Message ?? "No inner exception";
+                throw new Exception($"Error al registrar: {ex.Message} | Inner: {innerMessage}");
             }
-
-
-
         }
 
         public async Task<User> LoginAsync(LoginRequestDTO request)

@@ -2,9 +2,12 @@
 export default async function getAllMembers() {
 
     try {
-
+        const token = localStorage.getItem("token");
         let response = await fetch("/api/Member/GetAll", {
             method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         });
 
         if (response.ok) {
