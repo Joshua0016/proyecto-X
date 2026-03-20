@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models;
 
@@ -7,6 +8,7 @@ public partial class User
 {
     public int UserId { get; set; }
 
+    [Required(ErrorMessage = "the Email is required")]
     public string Email { get; set; } = null!;
 
     public string Password { get; set; } = null!;

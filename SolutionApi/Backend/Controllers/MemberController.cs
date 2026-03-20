@@ -16,7 +16,8 @@ namespace Backend.Controllers
     {
         private readonly IMemberService service = _service;
 
-        [HttpGet("GetAll")] public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll() => Ok(await service.ListAll());
 
         [HttpPost("Create")]
         [Authorize(Roles = "1")] // Admin only
@@ -39,7 +40,6 @@ namespace Backend.Controllers
             }
 
         }
-
 
         [HttpPost("{id}")]
         [Authorize(Roles = "1")] // Admin only

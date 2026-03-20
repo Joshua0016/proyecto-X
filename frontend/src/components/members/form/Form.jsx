@@ -27,7 +27,7 @@ import createMember from "@/apiServices/members/createMember";
 import { useState } from "react";
 import getAllMembers from "@/apiServices/members/getAllMembers";
 const formSchema = z.object({
-    name: z
+    FirstName: z
         .string()
         .min(3, "name must be at least 3 characters.")
         .max(20, "Username must be at most 10 characters.")
@@ -35,7 +35,7 @@ const formSchema = z.object({
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Only letters and spaces are allowed."
         ),
-    lastName: z
+    LastName: z
         .string()
         .min(3, "Last Name must be at least 3 characters.")
         .max(20, "Last name must be at most 10 characters.")
@@ -43,12 +43,12 @@ const formSchema = z.object({
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Only letters and spaces are allowed."
         ),
-    email: z
+    Email: z
         .string()
         .min(5, "email must be at least 5 characters.")
         .max(150, "Email must be at most 150 characters."),
 
-    phoneNumber: z
+    PhoneNumber: z
         .string()
         .min(10, "phone number must be at least 10 digits")
         .max(10, "Phone number must be at most 10 digits.")
@@ -56,7 +56,7 @@ const formSchema = z.object({
             /^(809|829|849)\d{7}$/,
             "phone number can ony 829/809/849 with 7 digits"
         ),
-    birth: z.coerce
+    BirthDate: z.coerce
         .date("Date is required")
 
 })
@@ -67,18 +67,20 @@ export default function FormRhfInput({ setformMember, setRows }) {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-            birth: "",
+            FirstName: "",
+            LastName: "",
+            Email: "",
+            PhoneNumber: "",
+            BirthDate: "",
         },
     })
 
     function onSubmit(data) {
         const create = async () => {
-            data.birth = dayjs(data.birth).format("YYYY-MM-DD");
-            const newdata = { ...data, photoUrl: "text" };
+            data.BirthDate = dayjs(data.birth).toISOString();
+            console.log(data)
+
+            const newdata = { ...data, PhotoUrl: "text" };
             try {
                 const response = await createMember(newdata);
                 if (response) {
@@ -109,7 +111,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                         <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)}>
                             <FieldGroup>
                                 <Controller
-                                    name="name"
+                                    name="FirstName"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
@@ -131,7 +133,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     )}
                                 />
                                 <Controller
-                                    name="lastName"
+                                    name="LastName"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
@@ -158,7 +160,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     characters. Must only contain letters
                                 </FieldDescription>
                                 <Controller
-                                    name="email"
+                                    name="Email"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
@@ -185,7 +187,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     characters.
                                 </FieldDescription>
                                 <Controller
-                                    name="phoneNumber"
+                                    name="PhoneNumber"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
@@ -211,7 +213,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     This is your public display phone number. Must be 10 digits.
                                 </FieldDescription>
                                 <Controller
-                                    name="birth"
+                                    name="BirthDate"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
