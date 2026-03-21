@@ -1,11 +1,10 @@
-
--- 1. CREACIÓN DE ESQUEMAS
+--  CREACIÓN DE ESQUEMAS
 
 CREATE SCHEMA IF NOT EXISTS "security";
 CREATE SCHEMA IF NOT EXISTS "membership";
 CREATE SCHEMA IF NOT EXISTS "finances";
 
--- 2. ESQUEMA SEGURIDAD
+--  ESQUEMA SEGURIDAD
 
 CREATE TABLE "security"."role" (
     "roleId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -15,9 +14,11 @@ CREATE TABLE "security"."role" (
 
 CREATE TABLE "security"."user" (
     "userId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(100) NOT NULL,
     "email" varchar(150) UNIQUE NOT NULL CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
-    "password" text NOT NULL,
+    "passwordHash" text NOT NULL,
     "roleId" int NOT NULL REFERENCES "security"."role"("roleId"),
+    "active" boolean DEFAULT true NOT NULL,
     "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
@@ -30,6 +31,8 @@ CREATE TABLE "security"."auditLog" (
     "detail" text NOT NULL,
     "sourceIp" varchar(50) NOT NULL
 );
+
+-- ESQUEMA MEMBRESÍA
 
 CREATE TABLE "membership"."family" (
     "familyId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -44,8 +47,8 @@ CREATE TABLE "membership"."member" (
     "lastName" varchar(50) NOT NULL,
     "photoUrl" text,
     "birthDate" date NOT NULL,
-    "phoneNumber" varchar(10),
-    "email" varchar(50)
+    "phoneNumber" varchar(15),
+    "email" varchar(150)
 );
 
 CREATE TABLE "membership"."event" (
@@ -68,6 +71,8 @@ CREATE TABLE "membership"."attendance" (
     "entryTime" timestamptz,
     "exitTime" timestamptz
 );
+
+--  ESQUEMA FINANZAS
 
 CREATE TABLE "finances"."ledgerAccount" (
     "accountCode" varchar(20) PRIMARY KEY,
@@ -131,6 +136,8 @@ CREATE TABLE "finances"."expenseInvoice" (
     "journalEntryId" int NOT NULL REFERENCES "finances"."journalEntry"("journalEntryId")
 );
 
+-- FUNCIONES
+
 CREATE OR REPLACE FUNCTION "finances"."registerDonation"(
     "pMemberId" int,
     "pAmount" decimal,
@@ -165,20 +172,50 @@ $$ LANGUAGE plpgsql;
 
 -- SEED DATA
 INSERT INTO "security"."role" ("name", "description")
-VALUES ('admin', 'Administrator with full access')
+VALUES 
+    ('admin', 'Administrator with full access'),
+    ('manager', 'Gestor con acceso a reportes y finanzas'),
+    ('staff', 'Personal operativo con permisos de registro'),
+    ('auditor', 'Acceso de solo lectura para revisión de registros y logs')
 ON CONFLICT ("name") DO NOTHING;
+
+
+--  || Insertar usuarios con diferentes roles ||
 
 DO $$
 DECLARE
-    "vAdminRoleId" INT;
+    "vAdminId" int;
+    "vManagerId" int;
+    "vStaffId" int;
+    "vAuditorId" int;
 BEGIN
-    SELECT "roleId" INTO "vAdminRoleId"
-    FROM "security"."role"
-    WHERE "name" = 'admin';
+    -- Obtener IDs de los roles de forma dinámica
+    SELECT "roleId" INTO "vAdminId" FROM "security"."role" WHERE "name" = 'admin';
+    SELECT "roleId" INTO "vManagerId" FROM "security"."role" WHERE "name" = 'manager';
+    SELECT "roleId" INTO "vStaffId" FROM "security"."role" WHERE "name" = 'staff';
+    SELECT "roleId" INTO "vAuditorId" FROM "security"."role" WHERE "name" = 'auditor';
 
-    INSERT INTO "security"."user" ("email", "password", "roleId") VALUES
-    ('joshua@proyectox.com', 'admin123', "vAdminRoleId"),
-    ('elias@proyectox.com', 'admin123', "vAdminRoleId"),
-    ('gadiel@proyectox.com', 'admin123', "vAdminRoleId")
+    -- Insertar Administradores adicionales (si no existen)
+    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
+    ('Admin 01', 'joshua@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true),
+    ('Admin 02', 'elias@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true),
+    ('Admin 03', 'gadiel@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true)
     ON CONFLICT ("email") DO NOTHING;
+
+    -- Insertar Gerente de Finanzas
+    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
+    ('Finance Manager', 'finance_mgr@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vManagerId", true)
+    ON CONFLICT ("email") DO NOTHING;
+
+    -- Insertar Staff Operativo
+    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
+    ('Operativo 01', 'operaciones_01@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vStaffId", true),
+    ('Operativo 02', 'operaciones_02@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vStaffId", true)
+    ON CONFLICT ("email") DO NOTHING;
+
+    -- Insertar Auditor Externo
+    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
+    ('Auditor Externo', 'auditoria_externa@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAuditorId", true)
+    ON CONFLICT ("email") DO NOTHING;
+
 END $$;

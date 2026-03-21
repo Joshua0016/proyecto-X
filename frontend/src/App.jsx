@@ -5,7 +5,7 @@ import Login from './components/login/Login'
 import Home from './components/home/Home'
 import Finance from './components/finance/Finance';
 import Members from './components/members/Members';
-import Admin from './components/admin/Admin';
+
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -24,7 +24,7 @@ function App() {
             <Route path="members" element={<Members />}></Route>
             <Route path="events"></Route>
             <Route path="report"></Route>
-            <Route path='admin' element={<Admin />}>
+            <Route path='' >
             </Route>
           </Route>
 

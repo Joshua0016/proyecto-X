@@ -46,7 +46,7 @@ const data = {
     //   items: [
     //     {
     //       title: "Genesis",
-    //       url: "#",
+    //       url: () => console.log("Hola"),
     //     },
     //     {
     //       title: "Explorer",

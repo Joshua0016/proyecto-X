@@ -1,109 +1,28 @@
 import { useEffect, useState } from "react"
 import React from "react";
 import dayjs from "dayjs";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
 import getAllMembers from "../../apiServices/members/getAllMembers";
-import Box from '@mui/material/Box';//contenedor de estilos
-import Tooltip from '@mui/material/Tooltip';//Componente que muestra un texto flotante al pasar el cursor sobre un elemento
-//Iconos
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import {
-    randomCreatedDate,
-    randomTraderName,
-    randomId,
-    randomArrayItem,
-    randomEmail,
-} from '@mui/x-data-grid-generator';
-//Tabla
-import {
-    GridRowModes, //Enum para definir los modos de una fila (viwe o edit)
-    DataGrid,//Componente principal de tabla con paginacion, filtros, edicin
-    GridRowEditStopReasons,//Enum que idica por que se detuvo la edicion de una fila (el. perdida de foco, tecla Enter etc).
-    Toolbar,//Barra superior 
-    ToolbarButton,//Boton dentro de la barra de herramientas (superior)
-    gridEditRowsStateSelector,//Selector para obetner el estado de las filas que estan en edicion
-    useGridSelector,//Hook para acceder a partes especificas del estado interno del DataGrid
-    useGridApiContext,//Hook que da acceso al API del DataGrid (ej. para actualizar filas, cambiar modos, etc.)
-    GridActionsCell,//Celda especial que contiene acciones (botones) dentro de la tabla
-    GridActionsCellItem,//Cada accion individual dentro de la celda de acciones(ej. boton de editar, borrar, guardar)
-
-} from '@mui/x-data-grid';
-import updateMember from "../../apiServices/members/updateMember";
-import createMember from "../../apiServices/members/createMember";
-import deleteMember from "../../apiServices/members/deleteMember";
-
-
-const roles = ['admin', 'user'];
-
-
-
-function EditToolbar(props) {
-    const { setRows, setRowModelsModel } = props;
-
-    const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [
-            ...oldRows,
-            { id, name: '', lastName: '', phoneNumber: '', email: "", photoUrl: "text", birth: "", isnew: true }
-        ]);
-        setRowModelsModel((oldModel) => ({
-            ...oldModel,
-            //[id] propiedad computada, permite usar el valor de la variable id como nombre de la propiedad dentro del objeto.
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" }
-        }));
-    };
-
-    return (
-        <Toolbar>
-            <Tooltip title="Add member">
-                <ToolbarButton onClick={handleClick}>
-                    <AddIcon fontSize="small"></AddIcon>
-                </ToolbarButton>
-            </Tooltip>
-        </Toolbar>
-    );
-}
-
-//React crea un espacio en memoria para que  todas las funciones esten disponibles para cualquier Componente sin pasar props
-const ActionHandlersContext = React.createContext({
-    handleCancelClick: () => { },
-    handleDeleteClick: () => { },
-    handleEditClick: () => { },
-    handleSaveClick: () => { },
-});
-//Botones de las celdas
-function ActionsCell(props) {
-    const apiRef = useGridApiContext();
-    const rowModesModel = useGridSelector(apiRef, gridEditRowsStateSelector);//objeto que guarda el estado de la tabla (members, y funciones internas de MUI) y devuelve el resultado de gridRowSelector
-    const isInEditMode = typeof rowModesModel[props.id] != 'undefined';
-
-    const { handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick } = React.useContext(ActionHandlersContext);
-
-    return (
-        <GridActionsCell {...props}>
-            {isInEditMode ? (
-                <React.Fragment>
-                    <GridActionsCellItem icon={<SaveIcon />} label="Save" material={{ sx: { color: "primary.main" } }} onClick={() => handleSaveClick(props.id)} />
-                    <GridActionsCellItem icon={<CancelIcon />} label="Cancel" className="textPrimary" onClick={() => handleCancelClick(props.id)} color="inherit" />
-                </React.Fragment>
-
-            ) : (
-                <React.Fragment>
-                    <GridActionsCellItem icon={<EditIcon />} label="Edit" className="textPrimary" onClick={() => handleEditClick(props.id)} color="inherit" />
-                    <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDeleteClick(props.id)} color="inherit" />
-                </React.Fragment>
-            )}
-
-        </GridActionsCell>
-    )
-}
-
+import FormRhfInput from "./form/Form"
+import DataTable from "react-data-table-component";
+import deleteMember from "@/apiServices/members/deleteMember";
+import { data } from "react-router-dom";
+import { promise } from "zod";
 export default function FullFeaturedCridGrid() {
     const [rows, setRows] = useState([]);
-    const [rowModesModel, setRowModelsModel] = useState({});
+    const [formMember, setformMember] = useState(false);
+    const [selectRow, setSelectRow] = useState(true);
+    const [handleRows, setHandleRows] = useState();
+    const [toggleCleared, setToggleCleared] = useState(false);
     useEffect(() => {
         //Database
         async function allMembers() {
@@ -114,156 +33,103 @@ export default function FullFeaturedCridGrid() {
         allMembers();
     }, []);
 
-    const handleRowEditStop = (params, event) => {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
+
+
+    const columns = [
+        {
+            name: "ID",
+            selector: row => row.id,
+            sortable: true,
+        },
+        {
+            name: "name",
+            selector: row => row.name,
+            sortable: true,
+        },
+        {
+            name: "Last Name",
+            selector: row => row.lastName,
+        },
+        {
+            name: "email",
+            selector: row => row.email,
+        },
+        {
+            name: "phone",
+            selector: row => row.phoneNumber,
+        },
+        {
+            name: "photoUrl",
+            selector: row => row.photoUrl,
+        },
+        {
+            name: "birth",
+            selector: row => row.birth
         }
+
+    ];
+    const customStyles = {
+        header: {
+            style: {
+                minHeight: '56px',
+            },
+        },
+        headRow: {
+            style: {
+                borderTopStyle: 'solid',
+                borderTopWidth: '1px',
+                borderTopColor: '#e5e7eb',
+                backgroundColor: '#f9fafb',
+            },
+        },
+        headCells: {
+            style: {
+                fontWeight: 'bold',
+                fontSize: '14px',
+                color: '#374151',
+            },
+        },
+        cells: {
+            style: {
+                fontSize: '14px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+            },
+        },
+        rows: {
+            style: {
+                minHeight: '64px', // Filas más altas para que respiren
+                '&:not(:last-of-type)': {
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: '1px',
+                    borderBottomColor: '#e5e7eb',
+                },
+            },
+        },
     };
-    const actionHandlers = React.useMemo(
-        () => ({
-            handleEditClick: (id) => {
-                setRowModelsModel((prevRowModesModel) => ({
-                    ...prevRowModesModel,
-                    [id]: { mode: GridRowModes.Edit },
-                }));
-            },
-            handleSaveClick: (id) => {
-                setRowModelsModel((prevRowModesModel) => ({
-                    ...prevRowModesModel,
-                    [id]: { mode: GridRowModes.View },
-                }));
-            },
+    const handleSelectRows = (data) => {
+        setSelectRow(data.selectedCount === 0);
+        setHandleRows(data);
+        console.log(data)
+    }
+    //delete rows
+    const handleDelete = async () => {
 
-            handleDeleteClick: async (id) => {
-                const success = await deleteMember(id);
-                if (success) {
-
-                    setRows((prevRows) => prevRows.filter((row) => row.id != id));
-
-                }
-            },
-            handleCancelClick: (id) => {
-                setRowModelsModel((prevRowModesModel) => ({
-                    ...prevRowModesModel,
-                    [id]: { mode: GridRowModes.View, ignoreModifications: true },
-                }));
-
-                setRows((prevRows) => {
-                    const editedRow = prevRows.find((row) => row.id === id);
-                    if (editedRow?.isnew) {
-                        return prevRows.filter((row) => row.id !== id);
-                    }
-                    return prevRows;
-                });
-            }
-        }),
-        [rowModesModel] //  pasando las dependencias para que las funciones vean el estado actualizado
-    );
-    const processRowUpdate = async (newRow) => {
         try {
+            const members = handleRows.selectedCount;
+            const deletePromises = handleRows.selectedRows.map(async (element) => await deleteMember(element.id));
+            await Promise.all(deletePromises);
 
-            const wasNew = newRow.isnew;
-            const updateRow = { ...newRow, isnew: false, birth: dayjs(newRow.birth).format("YYYY-MM-DD"), };
-
-            let success = wasNew ? await createMember(updateRow) : await updateMember(updateRow.id, updateRow);
-
-            if (success) {
-
-                setRows((PREVrOWS) =>
-                    PREVrOWS.map((row) => (row.id === newRow.id ? updateRow : row))
-                );
-
-                if (wasNew) {
-                    setRows(await getAllMembers());
-                }
-
-                return updateRow;
-            }
-            actionHandlers.handleCancelClick(newRow.id);
-
+            setRows(await getAllMembers());
+            alert(`${members} members have been delete`)
+            setToggleCleared(!toggleCleared);
+            setSelectRow(true);
 
         } catch (error) {
-            alert("Error al actualizar la fila...");
-            console.log("Error en el try catch", error);
+            console.log("Error en memberjsx --> " + error);
         }
 
     }
-
-    //Definimos las columnas del dataGrid. cada valor del campo debe coincidir con el nombre de la propiedad row a la que se mapeara
-    const columns = [
-        { field: "id", headerName: "ID", width: 70 },
-        {
-            field: "name",
-            headerName: "First name",
-            editable: true,
-            width: 130,
-            preProcessEditCellProps: (params) => {
-                const { props } = params;
-
-                const hasNumber = /\d/.test(props.value) || props.value == "";
-                return { ...props, error: hasNumber };
-            }
-        },
-        {
-            field: "lastName",
-            headerName: "Last name",
-            editable: true, width: 130,
-            preProcessEditCellProps: (params) => {
-                const { props } = params;
-
-                const hasNumber = /\d/.test(props.value);
-
-                return {
-                    ...props,
-                    error: hasNumber,
-                }
-            }
-        },
-        {
-            field: "phoneNumber",
-            headerName: "Phone",
-            editable: true,
-            width: 130,
-            preProcessEditCellProps: (params) => {
-                const { props } = params;
-
-                const hasError = /^(809|829|849)\d{7}$/.test(props.value);
-
-                return {
-                    ...props,
-                    error: !hasError,
-                }
-            }
-        },
-        {
-            field: "email",
-            headerName: "Email",
-            width: 130,
-            editable: true,
-            preProcessEditCellProps: (params) => {
-                const { props } = params;
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(props.value);
-
-
-                return {
-                    ...props,
-                    error: !emailRegex,
-                }
-            }
-        },
-        { field: "photoUrl", headerName: "Photo", editable: false, width: 80 },
-        { field: "birth", headerName: "Join date", type: "date", witdh: 180, editable: true, valueGetter: (value) => dayjs(value).toDate() },
-
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            cellClassName: 'actions',
-            renderCell: (params) => <ActionsCell {...params} />,
-        },
-
-    ];
 
     return (
         <>
@@ -271,49 +137,23 @@ export default function FullFeaturedCridGrid() {
                 <h1 className="text-black text-[28px] text-center lg:text-[48px]">Members</h1>
                 <div className="w-[90%] mx-auto xl:w-[60%]">
 
+                    <div className="flex justify-between">
+                        <div>
+                            <Button className="bg-black cursor-pointer" onClick={() => setformMember(true)}>Add</Button>
 
-                    <Box
-                        sx={{
-                            height: 500,
-                            width: '100%',
-                            '& .actions': {
-                                color: 'text.secondary',
-                            },
-                            '& .textPrimary': {
-                                color: 'text.primary',
-                            },
+                        </div>
+                        <div>
+                            <Button className="bg-gray-600 cursor-pointer" disabled={selectRow}>Update</Button>
+                            <Button className="bg-red-600 cursor-pointer" disabled={selectRow} onClick={handleDelete} >Eliminate</Button>
 
-                        }}
-                    >
-                        <ActionHandlersContext.Provider value={actionHandlers}>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                sx={{
-                                    "& .Mui-error": {
-                                        backgroundColor: "rgb(255,0,0,0.1)",
-                                        color: "red",
-                                        fontWeight: "bold"
-                                    }
-                                }}
-                                editMode="row"
-                                rowModesModel={rowModesModel}
-                                // getRowId={(row) => row.Id}
-                                onRowModesModelChange={setRowModelsModel}
-                                onRowEditStop={handleRowEditStop}
-                                onProcessRowUpdateError={(Error) => console.log(`Error capturado en el DataGrid ---> ${Error}`)}
-                                processRowUpdate={processRowUpdate}
-                                showToolbar
-                                slots={{ toolbar: EditToolbar }}
+                        </div>
 
-                                slotProps={{
-                                    toolbar: { setRows, setRowModelsModel },
-                                }}
+                    </div>
 
-                            />
-                        </ActionHandlersContext.Provider>
-                    </Box>
 
+                    <DataTable columns={columns} data={rows} customStyles={customStyles} pagination selectableRows clearSelectedRows={toggleCleared} onSelectedRowsChange={(data) => handleSelectRows(data)} />
+
+                    {formMember && <FormRhfInput setformMember={setformMember} setRows={setRows}></FormRhfInput>}
                 </div>
 
             </div>
