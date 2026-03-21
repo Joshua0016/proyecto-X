@@ -6,26 +6,25 @@ using Backend.interfaces;
 
 namespace Backend.Repositories;
 
-public class MemberRepository(Backend.Data.DbProyectoXContext context) : IGenericRepository<Member>
+public class MemberRepository(DbProyectoXContext context) : IGenericRepository<Member>
 {
-    private readonly Backend.Data.DbProyectoXContext _context = context;
+    private readonly DbProyectoXContext _context = context;
 
-    protected readonly DbSet<Member> _dbSet = context.Members;
 
-    public async Task<IEnumerable<Member>> GetAllAsync() => await _dbSet.ToListAsync();
+    public async Task<IEnumerable<Member>> GetAllAsync() => await _context.Members.ToListAsync();
 
-    public async Task<Member?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+    public async Task<Member?> GetByIdAsync(int id) => await _context.Members.FindAsync(id);
 
     public async Task AddAsync(Member miembro)
     {
-        await _dbSet.AddAsync(miembro);
+        await _context.AddAsync(miembro);
         await _context.SaveChangesAsync();
 
     }
 
     public async Task UpdateAsync(Member miembro)
     {
-        _dbSet.Update(miembro);
+        _context.Update(miembro);
         await _context.SaveChangesAsync();
     }
 
@@ -34,7 +33,7 @@ public class MemberRepository(Backend.Data.DbProyectoXContext context) : IGeneri
         var miebro = await GetByIdAsync(id);
         if (miebro != null)
         {
-            _dbSet.Remove(miebro);
+            _context.Remove(miebro);
             await _context.SaveChangesAsync();
         }
     }

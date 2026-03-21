@@ -1,5 +1,6 @@
 
 using Backend.Data;
+using Backend.commons;
 using Backend.Repositories;
 using Backend.Models;
 using Backend.Services;
@@ -20,6 +21,9 @@ namespace Backend
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Registrar configuración de Mapster
+            MapsterConfig.RegisterMappings();
 
 
             //registrar DbContext con PostgreSQL
@@ -43,7 +47,22 @@ namespace Backend
 
             builder.Services.AddScoped<IMemberService, MemberService>();
 
+            builder.Services.AddScoped<IGenericRepository<JournalEntry>, JournalEntryRepository>();
+            builder.Services.AddScoped<JournalEntryRepository>();
+            builder.Services.AddScoped<IJournalEntryService, JournalEntryService>();
+
+            builder.Services.AddScoped<IGenericRepository<LedgerAccount>, LedgerAccountRepository>();
+            builder.Services.AddScoped<LedgerAccountRepository>();
+            builder.Services.AddScoped<ILedgerAccountService, LedgerAccountService>();
+
+            builder.Services.AddScoped<IGenericRepository<LedgerTransaction>, LedgerTransactionRepository>();
+            builder.Services.AddScoped<LedgerTransactionRepository>();
+            builder.Services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
+
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+            builder.Services.AddScoped<IGenericRepository<Family>, FamilyRepository>();
+
 
 
 
