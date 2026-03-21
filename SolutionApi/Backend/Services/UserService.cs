@@ -24,8 +24,10 @@ namespace Backend.Services
 
                 var nuevoUsuario = new User
                 {
+                    Name = request.Name,
                     Email = request.Email,
                     RoleId = request.IdRol,
+                    Active = true,
                     CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
                 };
 

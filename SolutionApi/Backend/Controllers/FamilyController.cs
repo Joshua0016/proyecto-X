@@ -27,7 +27,6 @@ namespace Backend.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    // Devuelve los errores de validación para ver qué campo falla
                     return BadRequest(ModelState);
                 }
 
@@ -42,7 +41,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("{id}")]
-        [Authorize(Roles = "1")] // Admin only
+        [Authorize(Roles = "1")] 
         public async Task<IActionResult> Update(int id, FamilyCreateDto dto)
         {
             try { await service.Update(id, dto); return Ok("Editado"); }
@@ -50,7 +49,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "1")] // Admin only
+        [Authorize(Roles = "1")] 
         public async Task<IActionResult> Delete(int id)
         {
             await service.Delete(id); return Ok("Borrado");

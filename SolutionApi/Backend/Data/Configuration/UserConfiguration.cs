@@ -15,10 +15,15 @@ namespace Backend.Data.Configuration
             entity.HasIndex(e => e.Email, "user_email_key").IsUnique();
 
             entity.Property(e => e.UserId).UseIdentityAlwaysColumn().HasColumnName("userId");
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnType("timestamp without time zone").HasColumnName("createdAt");
+            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("name");
             entity.Property(e => e.Email).HasMaxLength(150).HasColumnName("email");
-            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.Password).HasColumnName("passwordHash");
             entity.Property(e => e.RoleId).HasColumnName("roleId");
+            entity.Property(e => e.Active).HasDefaultValue(true).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdAt");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)

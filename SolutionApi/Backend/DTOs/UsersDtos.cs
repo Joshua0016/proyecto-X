@@ -13,9 +13,10 @@ public record LoginResponseDTO(
 );
 
 public record RegisterRequestDto(
-string Email,
-string Password,
-int IdRol
+    string Name,
+    string Email,
+    string Password,
+    int IdRol
 );
 
 public record UserResponseDTO

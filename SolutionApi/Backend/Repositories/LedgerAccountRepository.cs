@@ -10,7 +10,7 @@ public class LedgerAccountRepository(DbProyectoXContext context) : IGenericRepos
     public async Task<IEnumerable<LedgerAccount>> GetAllAsync() =>
         await context.LedgerAccounts.ToListAsync();
 
-    public async Task<LedgerAccount?> GetByIdAsync(int id) => null; // PK is string
+    public async Task<LedgerAccount?> GetByIdAsync(int id) => null; 
 
     public async Task<LedgerAccount?> GetByCodeAsync(string code) =>
         await context.LedgerAccounts.FindAsync(code);
@@ -27,7 +27,7 @@ public class LedgerAccountRepository(DbProyectoXContext context) : IGenericRepos
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id) { } // use DeleteByCodeAsync
+    public async Task DeleteAsync(int id) { } 
 
     public async Task DeleteByCodeAsync(string code)
     {
