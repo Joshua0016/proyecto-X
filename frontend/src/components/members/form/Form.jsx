@@ -99,8 +99,8 @@ export default function FormRhfInput({ setformMember, setRows }) {
 
     return (
         <>
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-[5px] flex ">
-                <Card className="w-full sm:max-w-md top-0 bottom-0 my-auto mx-auto">
+            <div className="fixed z-50 inset-0 bg-black/70 backdrop-blur-[5px] flex p-2">
+                <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-[auto] overflow-auto">
                     <CardHeader>
                         <CardTitle>Member Settings</CardTitle>
                         <CardDescription>

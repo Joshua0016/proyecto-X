@@ -35,7 +35,7 @@ export default function Home() {
                   <p className="text-2xl font-semibold text-muted-foreground pb-2">
                     Welcome user, good night!
                   </p>
-                  <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min relative p-6">
+                  <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-6">
                     <Outlet />
                   </div>
                 </div>
