@@ -11,13 +11,12 @@ export default async function createMember(dto) {
             body: JSON.stringify(dto)
         })
         if (response.ok) {
-            let result = await response.json();
-            alert(`Member has been create ${result.message}`);
+
             return true;
         }
         else {
             let result = await response.json();
-            alert("Create of member failure");
+            alert("No se ha podido crear el miembro");
             console.log(result.message);
             return false;
         }

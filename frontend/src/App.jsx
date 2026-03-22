@@ -4,10 +4,11 @@ import { Routes, Route, Link } from "react-router-dom";
 import Login from './components/login/Login'
 import Home from './components/home/Home'
 import Finance from './components/finance/Finance';
-import Members from './components/members/Members';
-
+import Members from './components/membersManagment/members/Members';
+import Events from './components/membersManagment/events/Events';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Family from './components/membersManagment/family/Family';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
           <Route path='/home' element={<Home />}>
             <Route path="finance" element={<Finance />}></Route>
             <Route path="members" element={<Members />}></Route>
-            <Route path="events"></Route>
+            <Route path="events" element={<Events />}></Route>
+            <Route path="families" element={<Family />}></Route>
             <Route path="report"></Route>
             <Route path='' >
             </Route>

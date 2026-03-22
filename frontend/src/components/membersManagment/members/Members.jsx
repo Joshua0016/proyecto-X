@@ -1,34 +1,32 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import dayjs from "dayjs";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import getAllMembers from "../../apiServices/members/getAllMembers";
-import FormRhfInput from "./form/Form";
 import DataTable from "react-data-table-component";
-import deleteMember from "@/apiServices/members/deleteMember";
-import { data } from "react-router-dom";
-import { promise } from "zod";
+//shadcn components
+import { Button } from "@/components/ui/button";
+import { LucidePencil, LucidePlus, LucideTrash } from "lucide-react";
+import FormRhfInput from "./formCreate/Form";
+
+
+//apiService
+import getAllMembers from "../../../apiServices/members/getAllMembers";
+import CardActions from "./cardActions/CardActions";
+
+
+
+
+
 export default function FullFeaturedCridGrid() {
   const [rows, setRows] = useState([]);
   const [formMember, setformMember] = useState(false);
-  const [selectRow, setSelectRow] = useState(true);
-  const [handleRows, setHandleRows] = useState();
-  const [toggleCleared, setToggleCleared] = useState(false);
+  const [rowMember, setRowMember] = useState({});
+
+  const [viewCardAction, setViewCardAction] = useState(false)
   useEffect(() => {
     //Database
     async function allMembers() {
       const rows = await getAllMembers();
       setRows(rows);
-      console.log(rows);
+
     }
     allMembers();
   }, []);
@@ -40,30 +38,49 @@ export default function FullFeaturedCridGrid() {
       sortable: true,
     },
     {
-      name: "name",
+      name: "Nombre",
       selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: "Last Name",
+      name: "Apellido",
       selector: (row) => row.lastName,
     },
     {
-      name: "email",
+      name: "Correo",
       selector: (row) => row.email,
     },
     {
-      name: "phone",
+      name: "Telefono",
       selector: (row) => row.phoneNumber,
     },
     {
-      name: "photoUrl",
+      name: "Foto",
       selector: (row) => row.photoUrl,
     },
     {
-      name: "birth",
+      name: "Cumpleaños",
       selector: (row) => row.birth,
     },
+    {
+      name: "Acciones",
+      cell: (row) => (
+        <div className="flex gap-2">
+          {/*Update*/}
+          <Button className="cursor-pointer bg-gray-600" onClick={() => { setformMember(true); setRowMember({ ...row, isUpdate: true }) }}>
+            <LucidePencil></LucidePencil>
+          </Button>
+          {/*Eliminate*/}
+          <Button className="cursor-pointer bg-red-600" onClick={() => { setViewCardAction(true); setRowMember(row); }}>
+            <LucideTrash>
+
+            </LucideTrash>
+          </Button>
+
+
+        </div>
+      )
+    }
   ];
   const customStyles = {
     header: {
@@ -104,51 +121,19 @@ export default function FullFeaturedCridGrid() {
       },
     },
   };
-  const handleSelectRows = (data) => {
-    setSelectRow(data.selectedCount === 0);
-    setHandleRows(data);
-    console.log(data);
-  };
-  //delete rows
-  const handleDelete = async () => {
-    try {
-      const members = handleRows.selectedCount;
-      const deletePromises = handleRows.selectedRows.map(
-        async (element) => await deleteMember(element.id),
-      );
-      await Promise.all(deletePromises);
-
-      setRows(await getAllMembers());
-      alert(`${members} members have been delete`);
-      setToggleCleared(!toggleCleared);
-      setSelectRow(true);
-    } catch (error) {
-      console.log("Error en memberjsx --> " + error);
-    }
-  };
 
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between">
+        <div className="flex justify-end w-full">
+          {/*add member*/}
           <Button
-            className="bg-black cursor-pointer"
-            onClick={() => setformMember(true)}
+            className="bg-black cursor-pointer right-0"
+            onClick={() => { setformMember(true); setRowMember(null) }}
           >
-            Add
+            <LucidePlus></LucidePlus>
           </Button>
-          <div>
-            <Button className="bg-gray-600 cursor-pointer" disabled={selectRow}>
-              Update
-            </Button>
-            <Button
-              className="bg-red-600 cursor-pointer"
-              disabled={selectRow}
-              onClick={handleDelete}
-            >
-              Eliminate
-            </Button>
-          </div>
+
         </div>
 
         <div>
@@ -157,16 +142,22 @@ export default function FullFeaturedCridGrid() {
             data={rows}
             customStyles={customStyles}
             pagination
-            selectableRows
-            clearSelectedRows={toggleCleared}
-            onSelectedRowsChange={(data) => handleSelectRows(data)}
           />
 
           {formMember && (
             <FormRhfInput
               setformMember={setformMember}
               setRows={setRows}
+              rowMember={rowMember}
             ></FormRhfInput>
+          )}
+
+          {viewCardAction && (
+            <CardActions
+              setRows={setRows}
+              setViewCardAction={setViewCardAction}
+              rowMember={rowMember}>
+            </CardActions>
           )}
         </div>
       </div>

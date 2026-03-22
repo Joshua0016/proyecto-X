@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import createMember from "@/apiServices/members/createMember";
 import { useState } from "react";
 import getAllMembers from "@/apiServices/members/getAllMembers";
+import updateMember from "@/apiServices/members/updateMember";
 const formSchema = z.object({
     FirstName: z
         .string()
@@ -61,38 +62,75 @@ const formSchema = z.object({
 
 })
 
-export default function FormRhfInput({ setformMember, setRows }) {
-
-
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
+export default function FormRhfInput({ setformMember, setRows, rowMember }) {
+    const defaultValues = rowMember?.isUpdate
+        ? {
+            FirstName: rowMember.name || "",
+            LastName: rowMember.lastName || "",
+            Email: rowMember.email || "",
+            PhoneNumber: rowMember.phoneNumber || "",
+            BirthDate: dayjs(rowMember.birth).format("YYYY-MM-DD") || "",
+        }
+        : {
             FirstName: "",
             LastName: "",
             Email: "",
             PhoneNumber: "",
             BirthDate: "",
-        },
-    })
+        };
+
+    const form = useForm(
+        {
+            resolver: zodResolver(formSchema),
+            defaultValues,
+        })
 
     function onSubmit(data) {
-        const create = async () => {
-            data.BirthDate = dayjs(data.birth).toISOString();
-            console.log(data)
+        const Save = async () => {
 
-            const newdata = { ...data, PhotoUrl: "text" };
-            try {
-                const response = await createMember(newdata);
-                if (response) {
-                    setRows(await getAllMembers());
-                    setformMember(false);
+            const { isUpdate, ...dataUpdate } = data;
+
+            const finalData = {
+                ...dataUpdate,
+                BirthDate: dayjs(data.BirthDate).toISOString(),
+                PhotoUrl: "text",
+
+                name: data.FirstName //gadiel me pone a coger lucha xdddddddd
+            }
+
+            if (rowMember?.isUpdate) {
+                try {
+
+                    const updatePayLoad = { ...finalData, id: rowMember.id } //agrego el id de la fila que se esta actualizando
+                    const { BirthDate, ...updatePayLoad2 } = updatePayLoad //extraigo BirthDate porque gadiel le puso otro nombre a la variable
+                    const updatePayLoad3 = { ...updatePayLoad2, Birth: finalData.BirthDate };//agregamos Birth que es lo que espera el backend
+                    const response = await updateMember(updatePayLoad3.id, updatePayLoad3);
+                    if (response) {
+
+                        setRows(await getAllMembers());
+                        setformMember(false);
+                    }
+                } catch (error) {
+                    console.log("Error al intentar actualizr  update/create form member--> " + error)
                 }
 
-            } catch (error) {
-                console.log("error al crear el miembro" + error)
             }
+            else {
+                try {
+                    const response = await createMember(finalData);
+                    if (response) {
+
+                        setRows(await getAllMembers());
+                        setformMember(false);
+                    }
+
+                } catch (error) {
+                    console.log("error al crear el miembro update/create ---> " + error)
+                }
+            }
+
         }
-        create();
+        Save();
     }
 
 
@@ -100,7 +138,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
     return (
         <>
             <div className="fixed z-50 inset-0 bg-black/70 backdrop-blur-[5px] flex p-2">
-                <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-[auto] overflow-auto">
+                <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-auto overflow-auto">
                     <CardHeader>
                         <CardTitle>Member Settings</CardTitle>
                         <CardDescription>
@@ -156,8 +194,8 @@ export default function FormRhfInput({ setformMember, setRows }) {
 
                                 />
                                 <FieldDescription>
-                                    This is your public display name and last name. Must be between 3 and 10
-                                    characters. Must only contain letters
+                                    Este es tu nombre y apllido. deben contener entre 3 y 10
+                                    caracteres. Solo debe contener letras.
                                 </FieldDescription>
                                 <Controller
                                     name="Email"
@@ -183,7 +221,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     )}
                                 />
                                 <FieldDescription>
-                                    This is your public display email address. Must be between 3 and 150
+                                    Este es tu correo electrónico. solo puede contener 150 caracteres
                                     characters.
                                 </FieldDescription>
                                 <Controller
@@ -210,7 +248,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     )}
                                 />
                                 <FieldDescription>
-                                    This is your public display phone number. Must be 10 digits.
+                                    Este es tu número de teléfono. debe contener 10 digitos.
                                 </FieldDescription>
                                 <Controller
                                     name="BirthDate"
@@ -250,7 +288,7 @@ export default function FormRhfInput({ setformMember, setRows }) {
                                     </Button>
 
                                 </div>
-                                <Button onClick={() => setformMember(false)} className="bg-red-600 cursor-pointer">Cancel</Button>
+                                <Button onClick={() => { setformMember(false); }} className="bg-red-600 cursor-pointer">Cancel</Button>
                             </div>
 
                         </Field>

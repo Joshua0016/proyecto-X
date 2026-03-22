@@ -10,8 +10,7 @@ export default async function updateMember(id, dto) {
         })
 
         if (response.ok) {
-            let result = await response.text()
-            alert(`The member has been ${result}`);
+
             return true;
 
         }

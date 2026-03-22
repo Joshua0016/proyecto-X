@@ -7,12 +7,13 @@ export default async function deleteMember(id) {
             }
         });
         if (response.ok) {
-            let result = await response.text()
+
             return true;
         }
         else {
+
             let result = await response.text()
-            alert("Error delete member");
+            alert("Error al intentar eliminar el miembro");
             console.log(result);
             return false;
         }
