@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { useEffect } from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -29,7 +29,7 @@ import {
 const data = {
   user: {
     name: "User Logged",
-    email: "user@example.com",
+    email: localStorage.getItem("email"),
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -124,6 +124,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }) {
+
   return (
     <Sidebar
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
@@ -138,8 +139,8 @@ export function AppSidebar({ ...props }) {
                   <TerminalIcon className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">MonarkTekk</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-medium">Casa de oración</span>
+                  <span className="truncate text-xs">Bani</span>
                 </div>
               </a>
             </SidebarMenuButton>

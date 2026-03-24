@@ -12,16 +12,28 @@ export const description = "A sidebar with a header and a search form.";
 
 export default function Home() {
   const navigate = useNavigate();
-  const outlet = useOutlet();
-  const [view, setView] = useState(false);
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     let logged = localStorage.getItem("loggedIn");
     if (logged === "false") {
       navigate("/");
     }
+    getMessage();
+
   }, []);
 
+  function getMessage() {
+    const time = new Date().getHours();
+    if (time >= 6 && time < 12) {
+      setMessage("Buenos días")
+    } else if (time >= 12 && time < 20) {
+      setMessage("Buenas tardes")
+    } else {
+      setMessage("Buenas noches");
+    }
+  }
   return (
     <>
       <TooltipProvider>
@@ -32,9 +44,9 @@ export default function Home() {
               <AppSidebar />
               <SidebarInset>
                 <div className="flex flex-1 flex-col gap-4 p-4">
-                  <p className="text-2xl font-semibold text-muted-foreground pb-2">
-                    Welcome user, good night!
-                  </p>
+                  <h1 className="text-2xl font-semibold text-muted-foreground pb-2">
+                    Bienvenido, {message}
+                  </h1>
                   <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-6">
                     <Outlet />
                   </div>
