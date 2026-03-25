@@ -9,6 +9,7 @@ import Events from './components/membersManagment/events/Events';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Family from './components/membersManagment/family/Family';
+import LedgerAccount from './components/chartsAccounts/LedgerAccount';
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
             <Route path="events" element={<Events />}></Route>
             <Route path="families" element={<Family />}></Route>
             <Route path="report"></Route>
-            <Route path='' >
+            <Route path='ledgerAccount' element={<LedgerAccount />} >
             </Route>
           </Route>
 

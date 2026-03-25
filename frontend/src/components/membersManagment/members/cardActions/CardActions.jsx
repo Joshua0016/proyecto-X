@@ -40,7 +40,7 @@ export default function CardActions({ setRows, setViewCardAction, rowMember }) {
                     </CardHeader>
                     <CardContent>
                         <p>
-                            ¿Estás seguro de ralizar esta acción?
+                            ¿Estás seguro que deseas ralizar esta acción?
                         </p>
                     </CardContent>
                     <CardFooter className="flex flex-col">
