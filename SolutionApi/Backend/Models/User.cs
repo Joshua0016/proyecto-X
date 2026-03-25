@@ -29,6 +29,8 @@ public partial class User
     [Range(1, 4, ErrorMessage = "El Rol debe estar entre 1 y 4")]
     public int RoleId { get; set; }
 
+    public bool Active { get; set; } = true;
+
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CreatedAt { get; set; }
 
