@@ -14,7 +14,6 @@ public partial class LedgerTransaction
     [Required(ErrorMessage = "La entrada de diario relacionada es obligatoria.")]
     public int JournalEntryId { get; set; }
 
-
     [Required(ErrorMessage = "El código de cuenta es obligatorio.")]
     [StringLength(20, ErrorMessage = "El código de cuenta no puede exceder los 20 caracteres.")]
     [RegularExpression(@"^[0-9.-]+$", ErrorMessage = "El código de cuenta solo debe contener números, puntos o guiones.")]
