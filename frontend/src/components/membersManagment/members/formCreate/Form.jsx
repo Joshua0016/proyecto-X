@@ -27,6 +27,7 @@ import createMember from "@/apiServices/members/createMember";
 import { useState } from "react";
 import getAllMembers from "@/apiServices/members/getAllMembers";
 import updateMember from "@/apiServices/members/updateMember";
+
 const formSchema = z.object({
     FirstName: z
         .string()
@@ -140,9 +141,9 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
             <div className="fixed z-50 inset-0 bg-black/70 backdrop-blur-[5px] flex p-2">
                 <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-auto overflow-auto">
                     <CardHeader>
-                        <CardTitle>Member Settings</CardTitle>
+                        <CardTitle>Configuración de miembro</CardTitle>
                         <CardDescription>
-                            Update your member information below.
+                            Llena de forma adecuada las siguientes informaciones:
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -154,13 +155,13 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
                                             <FieldLabel htmlFor="form-rhf-input-name">
-                                                Name
+                                                Nombre
                                             </FieldLabel>
                                             <Input
                                                 {...field}
                                                 id="form-rhf-input-name"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="name"
+                                                placeholder="nombre"
                                                 autoComplete="Name"
                                             />
 
@@ -176,13 +177,13 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
                                             <FieldLabel htmlFor="form-rhf-input-lastName">
-                                                Last Name
+                                                Apellido
                                             </FieldLabel>
                                             <Input
                                                 {...field}
                                                 id="form-rhf-input-lastName"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="last name"
+                                                placeholder="Apellido"
                                                 autoComplete="Last name"
                                             />
                                             {fieldState.invalid && (
@@ -221,8 +222,8 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     )}
                                 />
                                 <FieldDescription>
-                                    Este es tu correo electrónico. solo puede contener 150 caracteres
-                                    characters.
+                                    Este es tu correo electrónico. solo puede contener 150 caracteres.
+
                                 </FieldDescription>
                                 <Controller
                                     name="PhoneNumber"
@@ -230,7 +231,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
                                             <FieldLabel htmlFor="form-html-input-phoneNumber">
-                                                Phone
+                                                Teléfono
                                             </FieldLabel>
                                             <Input
                                                 {...field}
@@ -238,7 +239,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                                 aria-invalid={fieldState.invalid}
                                                 placeholder="80930000000"
                                                 type="tel"
-                                                autoComplete="phone"
+                                                autoComplete="Teléfono"
                                             />
                                             {fieldState.invalid &&
                                                 (<FieldError errors={[fieldState.error]} />)
@@ -256,7 +257,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
                                             <FieldLabel htmlFor="form-html-input-birth">
-                                                Birth
+                                                Cumpleaños
                                             </FieldLabel>
                                             <Input
                                                 {...field}

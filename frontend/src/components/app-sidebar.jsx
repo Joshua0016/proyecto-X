@@ -24,6 +24,9 @@ import {
   PieChartIcon,
   MapIcon,
   TerminalIcon,
+  LucideBook,
+  LucideGoal,
+  LucideGem,
 } from "lucide-react";
 
 const data = {
@@ -56,7 +59,7 @@ const data = {
     {
       title: "Finanzas",
       url: "#",
-      icon: <BotIcon />,
+      icon: <LucideGem />,
       items: [
         {
           title: "Diario Entrada",
@@ -96,26 +99,26 @@ const data = {
       ],
     },
     {
-      title: "Settings",
+      title: "Plan de cuentas",
       url: "#",
-      icon: <Settings2Icon />,
+      icon: <LucideBook />,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Libro mayor",
+          url: "ledgerAccount",
         },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        // {
+        //   title: "Team",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Billing",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Limits",
+        //   url: "#",
+        // },
       ],
     },
   ],
