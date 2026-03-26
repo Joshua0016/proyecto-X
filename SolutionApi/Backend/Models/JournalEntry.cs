@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models;
+
 public partial class JournalEntry
 {
     [Key]
@@ -21,10 +22,7 @@ public partial class JournalEntry
     [StringLength(50, ErrorMessage = "La referencia no puede exceder los 50 caracteres.")]
     public string Reference { get; set; } = null!;
 
-    /// <summary>
-    /// Indica si la suma de Débitos y Créditos es igual. 
-    /// Se marca como true tras validar las LedgerTransactions asociadas.
-    /// </summary>
+
     public bool? IsBalanced { get; set; } = false;
 
     [Required(ErrorMessage = "El usuario que registra el asiento es obligatorio.")]

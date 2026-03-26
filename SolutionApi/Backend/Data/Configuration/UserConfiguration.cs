@@ -19,7 +19,7 @@ namespace Backend.Data.Configuration
             entity.Property(e => e.Email).HasMaxLength(150).HasColumnName("email");
             entity.Property(e => e.Password).HasColumnName("passwordHash");
             entity.Property(e => e.RoleId).HasColumnName("roleId");
-            entity.Property(e => e.Active).HasDefaultValue(true).HasColumnName("active");
+            // entity.Property(e => e.Active).HasDefaultValue(true).HasColumnName("active");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
