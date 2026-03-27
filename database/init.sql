@@ -197,25 +197,25 @@ BEGIN
 
     -- Insertar Administradores adicionales (si no existen)
     INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Admin 01', 'joshua@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true),
-    ('Admin 02', 'elias@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true),
-    ('Admin 03', 'gadiel@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAdminId", true)
+    ('Admin 01', 'joshua@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true),
+    ('Admin 02', 'elias@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true),
+    ('Admin 03', 'gadiel@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true)
     ON CONFLICT ("email") DO NOTHING;
 
     -- Insertar Gerente de Finanzas
     INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Finance Manager', 'finance_mgr@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vManagerId", true)
+    ('Finance Manager', 'finance_mgr@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vManagerId", true)
     ON CONFLICT ("email") DO NOTHING;
 
     -- Insertar Staff Operativo
     INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Operativo 01', 'operaciones_01@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vStaffId", true),
-    ('Operativo 02', 'operaciones_02@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vStaffId", true)
+    ('Operativo 01', 'operaciones_01@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vStaffId", true),
+    ('Operativo 02', 'operaciones_02@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vStaffId", true)
     ON CONFLICT ("email") DO NOTHING;
 
     -- Insertar Auditor Externo
     INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Auditor Externo', 'auditoria_externa@proyectox.com', '$2a$12$9omdOrc8A4Wc.nsdzSMRZ.ZHq8SkGqPd6h8uTJxdzFvJpu6YNfGz2', "vAuditorId", true)
+    ('Auditor Externo', 'auditoria_externa@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAuditorId", true)
     ON CONFLICT ("email") DO NOTHING;
 
 END $$;

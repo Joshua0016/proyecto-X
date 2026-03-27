@@ -1,8 +1,5 @@
-export default function Family() {
+import { useState } from 'react';
 
-    return (
-        <>
-            <h1 className="text-black">aqui elias</h1>
-        </>
-    )
+export default function Family() {
+  
 }
