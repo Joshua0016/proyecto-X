@@ -12,6 +12,5 @@ namespace Backend.interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(string t);
-
     }
 }

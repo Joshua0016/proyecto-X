@@ -14,7 +14,10 @@ namespace Backend.Data.Configuration
 
             entity.Property(e => e.DonationId).UseIdentityAlwaysColumn().HasColumnName("donationId");
             entity.Property(e => e.Amount).HasPrecision(12, 2).HasColumnName("amount");
-            entity.Property(e => e.Date).HasDefaultValueSql("now()").HasColumnName("date");
+            entity.Property(e => e.Date)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp with time zone")
+                .HasColumnName("date");
             entity.Property(e => e.MemberId).HasColumnName("memberId");
             entity.Property(e => e.PaymentMethod).HasMaxLength(50).HasColumnName("paymentMethod");
             entity.Property(e => e.Status).HasMaxLength(20).HasColumnName("status");
