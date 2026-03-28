@@ -35,7 +35,7 @@ const formSchema = z.object({
         .max(20, "Username must be at most 10 characters.")
         .regex(
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            "Only letters and spaces are allowed."
+            "Solo puede contener letras y espacios."
         ),
     LastName: z
         .string()
@@ -56,10 +56,10 @@ const formSchema = z.object({
         .max(10, "Phone number must be at most 10 digits.")
         .regex(
             /^(809|829|849)\d{7}$/,
-            "phone number can ony 829/809/849 with 7 digits"
+            "El número de teléfono debe comenzar con: 829/809/849 seguido de 7 digitos"
         ),
     BirthDate: z.coerce
-        .date("Date is required")
+        .date("Fecha requerida")
 
 })
 
@@ -282,10 +282,10 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                             <div className="flex justify-between">
                                 <div>
                                     <Button type="button" variant="outline" className="cursor-pointer" onClick={() => form.reset()}>
-                                        Reset
+                                        Restablecer
                                     </Button>
                                     <Button type="submit" form="form-rhf-input" className="cursor-pointer">
-                                        Save
+                                        Guardar
                                     </Button>
 
                                 </div>
