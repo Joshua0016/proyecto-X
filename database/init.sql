@@ -3,6 +3,7 @@
 CREATE SCHEMA IF NOT EXISTS "security";
 CREATE SCHEMA IF NOT EXISTS "membership";
 CREATE SCHEMA IF NOT EXISTS "finances";
+CREATE INDEX idx_member_family ON "membership"."member"("familyId");
 
 --  ESQUEMA SEGURIDAD
 
@@ -17,9 +18,18 @@ CREATE TABLE "security"."user" (
     "name" varchar(100) NOT NULL,
     "email" varchar(150) UNIQUE NOT NULL CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     "passwordHash" text NOT NULL,
-    "roleId" int NOT NULL REFERENCES "security"."role"("roleId"),
     "active" boolean DEFAULT true NOT NULL,
     "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE "security"."userRoles" (
+    "userId" int NOT NULL,
+    "roleId" int NOT NULL,
+    "assignedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY ("userId", "roleId"),
+    CONSTRAINT fk_user FOREIGN KEY ("userId") REFERENCES "security"."user"("userId") ON DELETE CASCADE,
+    CONSTRAINT fk_role FOREIGN KEY ("roleId") REFERENCES "security"."role"("roleId") ON DELETE CASCADE
 );
 
 CREATE TABLE "security"."auditLog" (
@@ -35,21 +45,75 @@ CREATE TABLE "security"."auditLog" (
 -- ESQUEMA MEMBRESÍA
 
 CREATE TABLE "membership"."family" (
-    "familyId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "familyName" varchar(100) NOT NULL,
-    "address" text NOT NULL,
-    "phoneNumber" varchar(15)
+    "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "familyName" VARCHAR(100) NOT NULL,
+    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "membership"."member" (
-    "memberId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "firstName" varchar(50) NOT NULL,
-    "lastName" varchar(50) NOT NULL,
+    "memberId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "familyId" INT NOT NULL,
+    "relationship" VARCHAR(50) NOT NULL,
+    "firstName" VARCHAR(25) NOT NULL,
+    "lastName" VARCHAR(25) NOT NULL,
+    "nationality" VARCHAR(50) NOT NULL,
+    "sex" VARCHAR(10) CHECK ("sex" IN ('Femenino', 'Masculino')) NOT NULL,
+    "academicLevel" VARCHAR(100),
+    "occupation" VARCHAR(100),
+    "profession" VARCHAR(100),
+    "idCard" VARCHAR(20),
+    "passport" VARCHAR(20),
+    "birthDate" DATE,
+    "district" VARCHAR(100),
+    "sector" VARCHAR(100),
+    "address" TEXT,
+    "phoneNumber" VARCHAR(15),
+    "emergencyNumber" VARCHAR(15),
+    "email" VARCHAR(255),
+    "medicalCondition" TEXT,
     "photoUrl" text,
-    "birthDate" date NOT NULL,
-    "phoneNumber" varchar(15),
-    "email" varchar(150)
+    
+    CONSTRAINT fk_family 
+        FOREIGN KEY ("familyId") 
+        REFERENCES "membership"."family"("familyId") 
+        ON DELETE CASCADE
 );
+
+/*CREATE TABLE "membership"."family" (
+    "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "familyName" VARCHAR(100) NOT NULL,
+    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE "membership"."member" (
+    "memberId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "familyId" INT NOT NULL,
+    "relationship" VARCHAR(50) NOT NULL,
+    "firstName" VARCHAR(25) NOT NULL,
+    "lastName" VARCHAR(25) NOT NULL,
+    "nationality" VARCHAR(50) NOT NULL,
+    "sex" VARCHAR(10) CHECK ("sex" IN ('Femenino', 'Masculino')) NOT NULL,
+    "academicLevel" VARCHAR(100),
+    "occupation" VARCHAR(100),
+    "profession" VARCHAR(100),
+    "idCard" VARCHAR(20),
+    "passport" VARCHAR(20),
+    "birthDate" DATE,
+    "district" VARCHAR(100),
+    "sector" VARCHAR(100),
+    "address" TEXT,
+    "phoneNumber" VARCHAR(15),
+    "emergencyNumber" VARCHAR(15),
+    "email" VARCHAR(255),
+    "medicalCondition" TEXT,
+    "photoUrl" text,
+    
+    CONSTRAINT fk_family 
+        FOREIGN KEY ("familyId") 
+        REFERENCES "membership"."family"("familyId") 
+        ON DELETE CASCADE
+);*/
+
 
 CREATE TABLE "membership"."event" (
     "eventId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -122,7 +186,7 @@ CREATE TABLE "finances"."vendor" (
     "name" varchar(100) NOT NULL,
     "taxId" varchar(20) NOT NULL,
     "address" text NOT NULL,
-    "phoneNumber" varchar(12) NOT NULL
+    "phoneNumber" varchar(13) NOT NULL
 );
 
 CREATE TABLE "finances"."expenseInvoice" (
