@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from "@/components/barMenu/nav-main";
+import { NavProjects } from "@/components/barMenu/nav-projects";
+import { NavSecondary } from "@/components/barMenu/nav-secondary";
+import { NavUser } from "@/components/barMenu/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -104,7 +104,7 @@ const data = {
       icon: <LucideBook />,
       items: [
         {
-          title: "Libro mayor",
+          title: "Cuentas del libro mayor",
           url: "ledgerAccount",
         },
         // {

@@ -47,6 +47,9 @@ namespace Backend
 
             builder.Services.AddScoped<IMemberService, MemberService>();
 
+            builder.Services.AddScoped<DonationRepository>();
+            builder.Services.AddScoped<IDonationService, DonationService>();
+
             builder.Services.AddScoped<IGenericRepository<JournalEntry>, JournalEntryRepository>();
             builder.Services.AddScoped<JournalEntryRepository>();
             builder.Services.AddScoped<IJournalEntryService, JournalEntryService>();

@@ -13,6 +13,7 @@ public class MemberRepository(DbProyectoXContext context) : IGenericRepository<M
 
     public async Task<IEnumerable<Member>> GetAllAsync() => await _context.Members.ToListAsync();
 
+
     public async Task<Member?> GetByIdAsync(int id) => await _context.Members.FindAsync(id);
 
     public async Task AddAsync(Member miembro)

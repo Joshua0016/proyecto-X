@@ -1,4 +1,4 @@
-import { SearchForm } from "@/components/search-form"
+import { SearchForm } from "@/components/barMenu/search-form"
 import {
   Breadcrumb,
   BreadcrumbItem,
