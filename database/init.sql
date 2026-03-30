@@ -66,7 +66,8 @@ CREATE TABLE "membership"."member" (
     "photoUrl" text,
     "birthDate" date NOT NULL,
     "phoneNumber" varchar(15),
-    "email" varchar(150)
+    "email" varchar(150),
+    "familyId" int NOT NULL REFERENCES "membership"."family"("familyId")
 );
 
 CREATE TABLE "membership"."event" (
