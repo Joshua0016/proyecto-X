@@ -62,7 +62,7 @@ const formSchema = z.object({
         .string()
         .max(100, "Este campo solo puede contener un máximo de 100 caracteres")
         .regex(
-            /^[[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^[[a-zA-ZáéíóúÁÉÍÓÚñÑ-\s]+$/,
             "La descripción de la cuenta solo puede contener letras, números y guiones"
         ),
     type: z
@@ -113,8 +113,8 @@ export default function FormAccount({ setRows }) {
                 <CardContent className="">
                     <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup>
-                            <div className="flex gap-7 p-8 ">
-                                <div className="flex flex-col gap-8 top-0 bottom-0 my-auto">
+                            <div className="w-[80%] mx-auto flex justify-between gap-7 p-8 ">
+                                <div className="w-[45%] flex flex-col gap-8 ">
                                     <Controller
                                         name="accountCode"
                                         control={form.control}
@@ -155,7 +155,7 @@ export default function FormAccount({ setRows }) {
                                                         id="form-rhf-demo-description"
                                                         placeholder="Descripción"
                                                         rows={6}
-                                                        className="min-h-24 resize-none"
+                                                        className="min-h-24 w-full  resize-none"
                                                         aria-invalid={fieldState.invalid}
                                                     />
                                                     <InputGroupAddon align="block-end">

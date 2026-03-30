@@ -14,9 +14,10 @@ export default async function createAccount(data) {
             return true;
         }
         else {
-            let result = response.json();
-            alert("Error al intentar crear la cuenta...")
-            console.log(result)
+            let result = await response.json();
+
+            alert(`${result.message}`)
+
         }
 
     } catch (error) {

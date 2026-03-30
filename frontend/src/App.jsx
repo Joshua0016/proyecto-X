@@ -6,10 +6,11 @@ import Home from './components/home/Home'
 import Finance from './components/finance/Finance';
 import Members from './components/membersManagment/members/Members';
 import Events from './components/membersManagment/events/Events';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import Family from './components/membersManagment/family/Family';
 import LedgerAccount from './components/chartsAccounts/LedgerAccount';
+import JournalEntry from './components/finance/journalEntry/JournalEntry';
 
 
 function App() {
@@ -17,23 +18,23 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={mySettingsStyle}>
-        <CssBaseline></CssBaseline>
-        <Routes>
-          <Route path='/' element={<Login />}></Route>
-          <Route path='/home' element={<Home />}>
-            <Route path="finance" element={<Finance />}></Route>
-            <Route path="members" element={<Members />}></Route>
-            <Route path="events" element={<Events />}></Route>
-            <Route path="families" element={<Family />}></Route>
-            <Route path="report"></Route>
-            <Route path='ledgerAccount' element={<LedgerAccount />} >
-            </Route>
-          </Route>
+
+      <CssBaseline></CssBaseline>
+      <Routes>
+        <Route path='/' element={<Login />}></Route>
+        <Route path='/home' element={<Home />}>
+          <Route path="finance" element={<Finance />}></Route>
+          <Route path="members" element={<Members />}></Route>
+          <Route path="events" element={<Events />}></Route>
+          <Route path="families" element={<Family />}></Route>
+          <Route path="report"></Route>
+          <Route path='ledgerAccount' element={<LedgerAccount />} ></Route>
+          <Route path='journalEntry' element={<JournalEntry />} ></Route>
+        </Route>
 
 
-        </Routes>
-      </ThemeProvider>
+      </Routes>
+
 
     </>
   )
@@ -41,11 +42,4 @@ function App() {
 
 export default App
 //configuracion de colores MUI
-const mySettingsStyle = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#007ACC"
-    }
-  }
-})
+
