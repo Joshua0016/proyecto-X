@@ -37,6 +37,25 @@ CREATE TABLE "security"."auditLog" (
 CREATE TABLE "membership"."family" (
     "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "familyName" VARCHAR(100) NOT NULL,
+    "relationship" VARCHAR(50) NOT NULL,
+    "firstName" VARCHAR(25) NOT NULL,
+    "lastName" VARCHAR(25) NOT NULL,
+    "nationality" VARCHAR(50) NOT NULL,
+    "sex" VARCHAR(10) CHECK ("sex" IN ('Femenino', 'Masculino')) NOT NULL,
+    "academicLevel" VARCHAR(100),
+    "occupation" VARCHAR(100),
+    "profession" VARCHAR(100),
+    "idCard" VARCHAR(20),
+    "passport" VARCHAR(20),
+    "birthDate" DATE,
+    "district" VARCHAR(100),
+    "sector" VARCHAR(100),
+    "address" TEXT,
+    "phoneNumber" VARCHAR(15),
+    "emergencyNumber" VARCHAR(15),
+    "email" VARCHAR(255),
+    "medicalCondition" TEXT,
+    "photoUrl" text,
     "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
