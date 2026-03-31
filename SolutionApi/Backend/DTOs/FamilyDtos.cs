@@ -1,17 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.DTOs;
 
-public record FamilyCreateDto
-(
-    string FamilyName,
+public record FamilyCreateDto(
+    [Required] string FamilyName,
+    string? District,
+    string? Sector,
     string? Address,
-    string? PhoneNumber
+    DateTime CreatedAt
 );
 
-public record FamilyResponseDTO
-(
+public record FamilyResponseDTO(
     int Id,
     string FamilyName,
-    string Address,
-    string PhoneNumber
+    int MemberCount
 );
 
+public record FamilyDetailDTO(
+    int Id,
+    string FamilyName,
+    IEnumerable<MemberResponseDTO> Members
+);

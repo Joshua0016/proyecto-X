@@ -1,16 +1,15 @@
 
 namespace Backend.DTOs;
 
-public record MemberCreateDTO
-   (
-       string FirstName,
-       string? LastName,
-       string? PhoneNumber,
-       string Email,
-       string PhotoUrl,
-       DateTime BirthDate
-
-   );
+public record MemberCreateDTO(
+    string FirstName,
+    string? LastName,
+    string? PhoneNumber,
+    string? Email,
+    string? PhotoUrl,
+    DateTime BirthDate,
+    int FamilyId
+);
 
 public record MemberResponseDTO(
     int Id,

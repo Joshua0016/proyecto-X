@@ -39,4 +39,7 @@ public partial class Member
     public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
 
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+
+    public int? FamilyId { get; set; }
+    public virtual Family? Family { get; set; }
 }
