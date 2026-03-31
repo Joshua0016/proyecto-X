@@ -12,7 +12,7 @@ public class FamilyConfiguration : IEntityTypeConfiguration<Family>
         entity.ToTable("family", "membership");
 
         entity.Property(e => e.FamilyId).UseIdentityAlwaysColumn().HasColumnName("familyId");
-        entity.Property(e => e.FamilyName).HasMaxLength(100).HasColumnName("familyName");
+        entity.Property(e => e.LastName).HasMaxLength(100).HasColumnName("lastName");
         entity.Property(e => e.District).HasMaxLength(100).HasColumnName("district");
         entity.Property(e => e.Sector).HasMaxLength(100).HasColumnName("sector");
         entity.Property(e => e.Address).HasColumnName("address");

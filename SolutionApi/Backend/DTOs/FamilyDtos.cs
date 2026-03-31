@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Backend.DTOs;
 
 public record FamilyCreateDto(
-    [Required] string FamilyName,
+    [Required] string LastName,
     string? District,
     string? Sector,
     string? Address,
@@ -12,12 +12,12 @@ public record FamilyCreateDto(
 
 public record FamilyResponseDTO(
     int Id,
-    string FamilyName,
+    string LastName,
     int MemberCount
 );
 
 public record FamilyDetailDTO(
     int Id,
-    string FamilyName,
+    string LastName,
     IEnumerable<MemberResponseDTO> Members
 );

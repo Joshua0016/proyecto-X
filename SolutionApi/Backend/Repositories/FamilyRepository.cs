@@ -17,12 +17,12 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
     public async Task<Family?> GetByIdAsync(int id) =>
         await _context.Families.Include(f => f.Members).FirstOrDefaultAsync(f => f.FamilyId == id);
 
-    public async Task<IEnumerable<Family>> SearchAsync(string? familyName, string? memberName)
+    public async Task<IEnumerable<Family>> SearchAsync(string? lastName, string? memberName)
     {
         var query = _context.Families.Include(f => f.Members).AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(familyName))
-            query = query.Where(f => f.FamilyName.ToLower().Contains(familyName.ToLower()));
+        if (!string.IsNullOrWhiteSpace(lastName))
+            query = query.Where(f => f.LastName.ToLower().Contains(lastName.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(memberName))
             query = query.Where(f => f.Members.Any(m =>
