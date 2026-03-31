@@ -63,7 +63,7 @@ const data = {
       items: [
         {
           title: "Diario Entrada",
-          url: () => console.log("Hola"),
+          url: "journalEntry",
         },
         {
           title: "Cuentas Por Pagar",

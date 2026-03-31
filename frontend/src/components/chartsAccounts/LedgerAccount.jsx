@@ -6,6 +6,7 @@ import { consumeSlots } from "@mui/x-charts/internals";
 import { Button } from "../ui/button";
 import { LucideTrash } from "lucide-react";
 import CardActions from "./cardActions/CardActions";
+import { Card, CardTitle } from "../ui/card";
 export default function LedgerAccount() {
     const [rows, setRows] = useState();
     const [rowAccount, setRowAccount] = useState();
@@ -88,9 +89,12 @@ export default function LedgerAccount() {
         <>
             <FormAccount setRows={setRows}></FormAccount>
 
-            <div className="mt-[25px] w-[80%] mx-auto">
+            <Card className="mt-[25px] w-[80%] mx-auto p-8">
+                <CardTitle>
+                    Cuentas
+                </CardTitle>
                 <DataTable columns={columns} data={rows} customStyles={customStyles} pagination />
-            </div>
+            </Card>
 
             {viewCardAction && (
                 <CardActions setRows={setRows} setViewCardAction={setViewCardAction} rowAccount={rowAccount}></CardActions>
