@@ -4,292 +4,291 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Search, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 
-import createMember from "@/apiServices/members/createMember";
-import updateMember from "@/apiServices/members/updateMember";
-import deleteMember from "@/apiServices/members/deleteMember";
-import getAllMembers from "@/apiServices/members/getAllMembers";
-
 // UI
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
-// Schema mejorado
+// Services
+import getAllFamilies from "@/apiServices/families/getAllFamilies";
+import createFamily from "@/apiServices/families/createFamily";
+import updateFamily from "@/apiServices/families/updateFamily";
+import deleteFamily from "@/apiServices/families/deleteFamily";
+import searchFamilies from "@/apiServices/families/searchFamilies";
+
+import createMember from "@/apiServices/members/createMember";
+import updateMember from "@/apiServices/members/updateMember";
+import deleteMember from "@/apiServices/members/deleteMember";
+
+// Schemas
 const memberSchema = z.object({
-  firstName: z.string().min(2, "El nombre es muy corto"),
-  lastName: z.string().min(2, "El apellido es muy corto"),
-  email: z.string().email("Correo inválido").optional().or(z.literal("")),
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  email: z.string().email().optional().or(z.literal("")),
   phoneNumber: z.string().optional(),
-  birthDate: z.string().refine(val => !isNaN(Date.parse(val)), {
-    message: "Fecha inválida",
-  }),
+  birthDate: z.string().optional(),
+});
+
+const familySchema = z.object({
+  lastName: z.string().min(2),
+  sector: z.string().optional(),
 });
 
 export default function Family() {
   const [families, setFamilies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  //  Modal unificado
-  const [modalState, setModalState] = useState({
-    open: false,
-    familyId: null,
-    member: null,
-  });
+  const [memberModal, setMemberModal] = useState({ open: false, id: null, member: null });
+  const [familyModal, setFamilyModal] = useState({ open: false, family: null });
 
-  const form = useForm({
-    resolver: zodResolver(memberSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      birthDate: "",
-    },
-  });
+  const memberForm = useForm({ resolver: zodResolver(memberSchema) });
+  const familyForm = useForm({ resolver: zodResolver(familySchema) });
 
-  //  API BASE
-  const API = "/api/families";
-
-  //   Fetch inicial
   const fetchFamilies = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(API);
-      if (!res.ok) throw new Error("Error al cargar familias");
-      const data = await res.json();
-      setFamilies(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const data = await getAllFamilies();
+    setFamilies(data);
+    setLoading(false);
   };
 
+  useEffect(() => { fetchFamilies(); }, []);
+
+  // 🔍 debounce search
   useEffect(() => {
-    fetchFamilies();
-  }, []);
+    const delay = setTimeout(() => {
+      if (!searchTerm.trim()) {
+        fetchFamilies();
+      } else {
+        handleSearch(searchTerm);
+      }
+    }, 400);
 
-  //  Filtrado optimizado
-  const filteredFamilies = useMemo(() => {
-    return families.filter(f =>
-      (f.familyName || "").toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [families, searchTerm]);
+    return () => clearTimeout(delay);
+  }, [searchTerm]);
 
-  //  Abrir modal
-  const openModal = (familyId, member = null) => {
-    setModalState({ open: true, familyId, member });
+  const handleSearch = async (term) => {
+    const results = await searchFamilies(term);
+    setFamilies(results);
+  };
 
-    if (member) {
-      form.reset(member);
+  const filteredFamilies = useMemo(() => families, [families]);
+
+  // CRUD
+  const openFamily = (family = null) => {
+    setFamilyModal({ open: true, family });
+    family ? familyForm.reset(family) : familyForm.reset({});
+  };
+
+  const openMember = (id, member = null) => {
+    setMemberModal({ open: true, id, member });
+    member ? memberForm.reset(member) : memberForm.reset({});
+  };
+
+  const submitFamily = async (values) => {
+    setLoading(true);
+    if (familyModal.family) {
+      await updateFamily(familyModal.family.id, values);
     } else {
-      form.reset({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        birthDate: "",
-      });
+      await createFamily(values);
     }
+    await fetchFamilies();
+    setFamilyModal({ open: false, family: null });
+    setLoading(false);
   };
 
-  //  Crear o editar
-  const onSubmit = async (values) => {
-    try {
-      setLoading(true);
-
-      const isEdit = modalState.member;
-
-      const url = isEdit
-        ? `${API}/members/${modalState.member.memberId}`
-        : `${API}/${modalState.familyId}/members`;
-
-      const method = isEdit ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok) throw new Error("Error al guardar");
-
-      await fetchFamilies();
-      setModalState({ open: false, familyId: null, member: null });
-
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
+  const submitMember = async (values) => {
+    setLoading(true);
+    if (memberModal.member) {
+      await updateMember({ ...values, memberId: memberModal.member.memberId });
+    } else {
+      await createMember({ ...values, id: memberModal.id });
     }
+    await fetchFamilies();
+    setMemberModal({ open: false, id: null, member: null });
+    setLoading(false);
   };
 
-  //  Eliminar
-  const deleteMember = async (memberId) => {
-    if (!confirm("¿Seguro que deseas eliminar este miembro?")) return;
+  const removeFamily = async (id) => {
+    if (!confirm("Eliminar familia?")) return;
+    await deleteFamily(id);
+    fetchFamilies();
+  };
 
-    try {
-      setLoading(true);
-
-      const res = await fetch(`${API}/members/${memberId}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Error al eliminar");
-
-      await fetchFamilies();
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
-    }
+  const removeMember = async (id) => {
+    if (!confirm("Eliminar miembro?")) return;
+    await deleteMember(id);
+    fetchFamilies();
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Familias</h1>
+    <div className="p-8 max-w-5xl mx-auto text-gray-900 dark:text-gray-100">
 
-        <div className="flex gap-3">
-          <div className="relative w-64">
-            <Search className="absolute left-2 top-2.5 h-4 w-4" />
+      {/* HEADER */}
+      <div className="flex justify-between mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Familias
+        </h1>
+
+        <div className="flex gap-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-2 h-4 w-4 text-gray-500" />
             <Input
+              className="pl-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               placeholder="Buscar..."
-              className="pl-8 bg-background text-foreground placeholder:text-muted-foreground"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <Button>
-            <Plus className="h-4 w-4 mr-2" /> Nueva Familia
+          <Button onClick={() => openFamily()}>
+            <Plus className="mr-2 h-4 w-4" /> Nueva
           </Button>
         </div>
       </div>
 
-      {/* ESTADOS */}
-      {loading && (
-        <div className="flex justify-center py-10">
-          <Loader2 className="animate-spin" />
-        </div>
-      )}
-
-      {error && <p className="text-red-500">{error}</p>}
+      {loading && <Loader2 className="animate-spin mx-auto" />}
 
       {/* LISTA */}
       <Accordion type="single" collapsible className="space-y-4">
-        {filteredFamilies.map((family) => (
-          <AccordionItem key={family.familyId} value={`f-${family.familyId}`}>
-            <AccordionTrigger>
-              <div>
-                <p className="font-semibold">Familia {family.familyName}</p>
-                <p className="text-sm text-muted-foreground">{family.sector}</p>
-              </div>
-            </AccordionTrigger>
+        {filteredFamilies.map((family, index) => {
+          const id = family.id ?? index;
 
-            <AccordionContent>
-              <div className="flex justify-between mb-4">
-                <h4>Miembros</h4>
-                <Button size="sm" onClick={() => openModal(family.familyId)}>
-                  <Plus className="h-4 w-4 mr-2" /> Agregar
-                </Button>
-              </div>
+          return (
+            <AccordionItem key={`family-${id}-${index}`} value={`f-${id}-${index}`}>
 
-              {family.members?.map((member) => (
-                <div key={member.memberId} className="flex justify-between p-3 border rounded mb-2">
+              <div className="flex justify-between items-center">
+
+                <AccordionTrigger className="flex-1 text-left">
                   <div>
-                    <p>{member.firstName} {member.lastName}</p>
-                    <p className="text-xs">{member.phoneNumber || "Sin teléfono"}</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                      Familia {family.lastName || "Sin nombre"}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {family.sector}
+                    </p>
                   </div>
+                </AccordionTrigger>
 
-                  <div className="flex gap-2">
-                    <Button size="icon" variant="ghost" onClick={() => openModal(family.familyId, member)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                <div className="flex gap-2 ml-2">
+                  <Button size="icon" variant="ghost" onClick={() => openFamily(family)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
 
-                    <Button size="icon" variant="ghost" onClick={() => deleteMember(member.memberId)}>
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
-                  </div>
+                  <Button size="icon" variant="ghost" onClick={() => removeFamily(family.id)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
                 </div>
-              ))}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+
+              </div>
+
+              <AccordionContent>
+
+                <div className="flex justify-between mb-4">
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Miembros
+                  </h4>
+                  <Button size="sm" onClick={() => openMember(family.id)}>
+                    <Plus className="mr-2 h-4 w-4" /> Agregar
+                  </Button>
+                </div>
+
+                {!family.members?.length && (
+                  <p className="text-sm text-gray-500">No hay miembros</p>
+                )}
+
+                {family.members?.map((member, index) => {
+                  const mid = member.memberId ?? index;
+
+                  return (
+                    <div key={`member-${mid}-${index}`}
+                      className="flex justify-between p-3 border rounded mb-2 bg-white dark:bg-gray-900">
+
+                      <div>
+                        <p className="text-gray-900 dark:text-gray-100">
+                          {member.firstName} {member.lastName}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          {member.phoneNumber || "Sin teléfono"}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button size="icon" variant="ghost"
+                          onClick={() => openMember(family.id, member)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+
+                        <Button size="icon" variant="ghost"
+                          onClick={() => removeMember(member.memberId)}>
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+
+                    </div>
+                  );
+                })}
+
+              </AccordionContent>
+
+            </AccordionItem>
+          );
+        })}
       </Accordion>
 
-      {/* MODAL */}
-      <Dialog open={modalState.open} onOpenChange={(open) => setModalState(prev => ({ ...prev, open }))}>
-        <DialogContent>
+      {/* MODAL FAMILIA */}
+      <Dialog open={familyModal.open} onOpenChange={(open) => setFamilyModal({ ...familyModal, open })}>
+        <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
           <DialogHeader>
             <DialogTitle>
-              {modalState.member ? "Editar Miembro" : "Nuevo Miembro"}
+              {familyModal.family ? "Editar Familia" : "Nueva Familia"}
             </DialogTitle>
+            <DialogDescription>
+              Completa la información de la familia.
+            </DialogDescription>
           </DialogHeader>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={familyForm.handleSubmit(submitFamily)} className="space-y-4">
+            <Input placeholder="Apellido" {...familyForm.register("lastName")} />
+            <Input placeholder="Sector" {...familyForm.register("sector")} />
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField name="firstName" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <FormField name="lastName" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Apellido</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-
-              <FormField name="email" control={form.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl><Input type="email" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField name="phoneNumber" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Teléfono</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <FormField name="birthDate" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fecha</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-
-              <DialogFooter>
-                <Button type="submit" disabled={loading} className="w-full">
-                  {loading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
-                  {modalState.member ? "Guardar Cambios" : "Registrar"}
-                </Button>
-              </DialogFooter>
-
-            </form>
-          </Form>
+            <DialogFooter>
+              <Button type="submit" className="w-full">
+                Guardar
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
+
+      {/* MODAL MIEMBRO */}
+      <Dialog open={memberModal.open} onOpenChange={(open) => setMemberModal({ ...memberModal, open })}>
+        <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+          <DialogHeader>
+            <DialogTitle>
+              {memberModal.member ? "Editar Miembro" : "Nuevo Miembro"}
+            </DialogTitle>
+            <DialogDescription>
+              Ingresa los datos del miembro.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={memberForm.handleSubmit(submitMember)} className="space-y-4">
+            <Input placeholder="Nombre" {...memberForm.register("firstName")} />
+            <Input placeholder="Apellido" {...memberForm.register("lastName")} />
+            <Input placeholder="Email" {...memberForm.register("email")} />
+            <Input placeholder="Teléfono" {...memberForm.register("phoneNumber")} />
+
+            <DialogFooter>
+              <Button type="submit" className="w-full">
+                Guardar
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
