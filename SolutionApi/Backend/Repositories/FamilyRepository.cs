@@ -34,6 +34,7 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
 
     public async Task AddAsync(Family family)
     {
+
         await _context.Families.AddAsync(family);
         await _context.SaveChangesAsync();
     }
@@ -62,6 +63,11 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
             return false;
         }
         return await _context.Families.AnyAsync(u => u.Sector == sector);
+    }
+
+    public async Task<List<Member>> GetByIdsAsync(List<int> memberIds)
+    {
+        return await _context.Members.Where(m => memberIds.Contains(m.MemberId)).ToListAsync();
     }
 }
 

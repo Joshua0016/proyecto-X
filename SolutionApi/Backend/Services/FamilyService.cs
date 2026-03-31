@@ -22,7 +22,21 @@ public class FamilyService(FamilyRepository repo) : IFamilyService
 
     public async Task Persist(FamilyCreateDto dto)
     {
+        List<Member>? members = new();
+
+        if (dto.MemberIds != null && dto.MemberIds.Any())
+        {
+            members = await repo.GetByIdsAsync(dto.MemberIds);
+
+            if (members.Count != dto.MemberIds.Count)
+                throw new ArgumentException("Algunos MemberIds no existen");
+
+            if (members.Any(m => m.FamilyId != null))
+                throw new ArgumentException("Algunos MemberIds ya están asociados a una familia");
+
+        }
         var family = dto.Adapt<Family>();
+        family.Members = members;
         family.CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
         await repo.AddAsync(family);
     }
