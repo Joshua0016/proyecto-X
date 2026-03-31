@@ -7,6 +7,7 @@ public record LoginRequestDTO
  );
 
 public record LoginResponseDTO(
+   int UserId,
    string Token,
    string Email,
    string Rol
@@ -21,7 +22,7 @@ public record RegisterRequestDto(
 
 public record UserResponseDTO
 (
-    int IdUsuario,
+    int UserId,
     string Email,
     string RolNombre,
     DateTimeOffset FechaCreacion

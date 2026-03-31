@@ -19,12 +19,12 @@ CREATE TABLE "security"."user" (
     "passwordHash" text NOT NULL,
     "roleId" int NOT NULL REFERENCES "security"."role"("roleId"),
     "active" boolean DEFAULT true NOT NULL,
-    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "security"."auditLog" (
     "logId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "timestamp" timestamp DEFAULT CURRENT_TIMESTAMP,
+    "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "userId" int NOT NULL REFERENCES "security"."user"("userId"),
     "operation" varchar(50) NOT NULL,
     "affectedTable" varchar(100) NOT NULL,
@@ -36,27 +36,11 @@ CREATE TABLE "security"."auditLog" (
 
 CREATE TABLE "membership"."family" (
     "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "familyName" VARCHAR(100) NOT NULL,
-    "relationship" VARCHAR(50) NOT NULL,
-    "firstName" VARCHAR(25) NOT NULL,
-    "lastName" VARCHAR(25) NOT NULL,
-    "nationality" VARCHAR(50) NOT NULL,
-    "sex" VARCHAR(10) CHECK ("sex" IN ('Femenino', 'Masculino')) NOT NULL,
-    "academicLevel" VARCHAR(100),
-    "occupation" VARCHAR(100),
-    "profession" VARCHAR(100),
-    "idCard" VARCHAR(20),
-    "passport" VARCHAR(20),
-    "birthDate" DATE,
+    "lastName" VARCHAR(100) NOT NULL,
+    "address" TEXT,
     "district" VARCHAR(100),
     "sector" VARCHAR(100),
-    "address" TEXT,
-    "phoneNumber" VARCHAR(15),
-    "emergencyNumber" VARCHAR(15),
-    "email" VARCHAR(255),
-    "medicalCondition" TEXT,
-    "photoUrl" text,
-    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "membership"."member" (
@@ -66,7 +50,8 @@ CREATE TABLE "membership"."member" (
     "photoUrl" text,
     "birthDate" date NOT NULL,
     "phoneNumber" varchar(15),
-    "email" varchar(150)
+    "email" varchar(150),
+    "familyId" int NOT NULL REFERENCES "membership"."family"("familyId")
 );
 
 CREATE TABLE "membership"."event" (
@@ -189,6 +174,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- SEED DATA
+
 INSERT INTO "security"."role" ("name", "description")
 VALUES 
     ('admin', 'Administrator with full access'),
@@ -196,6 +182,19 @@ VALUES
     ('staff', 'Personal operativo con permisos de registro'),
     ('auditor', 'Acceso de solo lectura para revisión de registros y logs')
 ON CONFLICT ("name") DO NOTHING;
+
+INSERT INTO "membership"."family" ("lastName","district","address","sector")
+VALUES 
+    ('Romero', 'Sombrero', 'Calle 24, Edificio C4','Villa'),
+    ('Morrobel', 'Boca canasta', 'Calle 3, Edificio B1','Florentino'),
+	('Nivar', 'El llano', 'Calle 5, Edificio A3','La cuca');
+	
+
+INSERT INTO "membership"."member" ("familyId", "firstName", "lastName", "birthDate", "phoneNumber", "email")
+VALUES 
+(1,'Carlos', 'Romero', '4-4-4','8293736456', 'cocofrio@poyectox.com'),
+(3,'Ana', 'Nivar', '3/3/3','8295346787', 'bronx@proyectox.com'),
+(2,'Luis', 'Morrobel', '6/7/7','8093546765', 'kiruleisy@proyectox.com');
 
 
 --  || Insertar usuarios con diferentes roles ||

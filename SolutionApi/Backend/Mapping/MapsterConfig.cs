@@ -23,7 +23,8 @@ public static class MapsterConfig
             .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
             .Map(dest => dest.Email,       src => src.Email)
             .Map(dest => dest.PhotoUrl,    src => src.PhotoUrl)
-            .Map(dest => dest.BirthDate,   src => src.BirthDate);
+            .Map(dest => dest.BirthDate,   src => src.BirthDate)
+            .Map(dest => dest.FamilyId,    src => src.FamilyId);
 
         TypeAdapterConfig<MemberUpdateDTO, Member>.NewConfig()
             .Map(dest => dest.FirstName,   src => src.Name)
@@ -44,5 +45,15 @@ public static class MapsterConfig
         TypeAdapterConfig<LedgerAccountCreateDto, LedgerAccount>.NewConfig()
             .Map(dest => dest.IsActive, src => true)
             .Map(dest => dest.CurrentBalance, src => 0m);
+
+        // Family → FamilyResponseDTO: campos con nombres distintos + MemberCount calculado
+        TypeAdapterConfig<Family, FamilyResponseDTO>.NewConfig()
+            .Map(dest => dest.Id,          src => src.FamilyId)
+            .Map(dest => dest.MemberCount, src => src.Members.Count);
+
+        // Family → FamilyDetailDTO: incluye lista de miembros mapeada
+        TypeAdapterConfig<Family, FamilyDetailDTO>.NewConfig()
+            .Map(dest => dest.Id,      src => src.FamilyId)
+            .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
     }
 }

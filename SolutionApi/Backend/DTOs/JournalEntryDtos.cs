@@ -4,7 +4,8 @@ public record JournalCreateDto(
     DateTime Date,
     string Memo,
     string Reference,
-    List<LedgerTransactionCreateDto> LedgerTransactions
+    List<LedgerTransactionCreateDto> LedgerTransactions,
+    UserDto RecordedByUSer 
 );
 
 
@@ -16,4 +17,9 @@ public record JournalEntryResponseDto(
     string Reference,
     bool? IsBalanced,
     int RecordedByUserId
+);
+
+public record UserDto(
+    int UserId,
+    string Name 
 );

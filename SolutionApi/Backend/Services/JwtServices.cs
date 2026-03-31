@@ -20,10 +20,11 @@ namespace Backend.Services
                 {
                     new Claim(ClaimTypes.Email, dto.Email),
                     new Claim(ClaimTypes.Role, dto.Rol),
-                    new Claim("Token", dto.Token ?? "")
+                    new Claim("Token", dto.Token ?? ""),
+                    new Claim("UserId", dto.UserId.ToString())
                 }),
 
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(5),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
 
