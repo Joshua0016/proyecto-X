@@ -19,12 +19,12 @@ CREATE TABLE "security"."user" (
     "passwordHash" text NOT NULL,
     "roleId" int NOT NULL REFERENCES "security"."role"("roleId"),
     "active" boolean DEFAULT true NOT NULL,
-    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "security"."auditLog" (
     "logId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "timestamp" timestamp DEFAULT CURRENT_TIMESTAMP,
+    "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "userId" int NOT NULL REFERENCES "security"."user"("userId"),
     "operation" varchar(50) NOT NULL,
     "affectedTable" varchar(100) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE "membership"."family" (
     "address" TEXT,
     "district" VARCHAR(100),
     "sector" VARCHAR(100),
-    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "membership"."member" (
