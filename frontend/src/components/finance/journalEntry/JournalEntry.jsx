@@ -42,6 +42,10 @@ import {
 import { useEffect, useState } from "react"
 import { TableCell } from "@mui/material"
 import { Plus, Trash2 } from "lucide-react"
+import getAllAccounts from "@/apiServices/ledgerAccount/getAllAccount"
+import DataTable from "react-data-table-component"
+import journalEntry from "@/apiServices/journalEntry/journalEntryCreate"
+import dayjs from "dayjs"
 
 
 const formSchema = z.object({
@@ -61,7 +65,7 @@ const formSchema = z.object({
         .min(1, "La referencia es obligatoria")
         .max(50, "Solo puede contener un máximo de 50 caracteres")
         .regex(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ-\s]+$/,
             "La referencia solo puede contener letras"
         )
     ,
@@ -74,6 +78,8 @@ const formSchema = z.object({
                     /^[a-zA-Z0-9\s]+$/,
                     "El código de cuetna solo puede contener letras y números"
                 ),
+            debit: z.coerce.number(),
+            credit: z.coerce.number(),
 
         }
         )
@@ -82,9 +88,7 @@ const formSchema = z.object({
 })
 
 export default function JournalEntry() {
-    useEffect(() => {
 
-    })
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -93,7 +97,9 @@ export default function JournalEntry() {
             memo: "",
             reference: "",
             ledgerTransactions: [{
-                accountCode: "", debit: 0, credit: 0
+                accountCode: "",
+                debit: 0,
+                credit: 0,
             }]
 
         },
@@ -105,7 +111,15 @@ export default function JournalEntry() {
     });
 
     function onSubmit(data) {
-        console.log(data)
+        const save = async () => {
+            let newData = { ...data, date: dayjs(data.date).toISOString() }
+            console.log(newData)
+            let response = await journalEntry(newData);
+            if (response) {
+                form.reset();
+            }
+        }
+        save()
     }
 
     return (
@@ -329,8 +343,88 @@ export default function JournalEntry() {
                 </CardFooter>
             </Card>
 
+            <AccountCode></AccountCode>
 
 
+        </>
+    )
+}
+
+function AccountCode() {
+    const [code, setAccountCode] = useState();
+
+    useEffect(() => {
+        async function getCode() {
+            let result = await getAllAccounts();
+            if (result) {
+                setAccountCode(result);
+            }
+        }
+        getCode();
+    }, [])
+
+    const columns = [
+        {
+            name: "Código de cuenta",
+            selector: (row) => row.accountCode,
+            sortable: true,
+        },
+        {
+            name: "Descripción",
+            selector: (row) => row.name,
+        }
+    ];
+    const customStyles = {
+        header: {
+            style: {
+                minHeight: "56px",
+            },
+        },
+        headRow: {
+            style: {
+                borderTopStyle: "solid",
+                borderTopWidth: "1px",
+                borderTopColor: "#e5e7eb",
+                backgroundColor: "#f9fafb",
+            },
+        },
+        headCells: {
+            style: {
+                fontWeight: "bold",
+                fontSize: "14px",
+                color: "#374151",
+            },
+        },
+        cells: {
+            style: {
+                fontSize: "14px",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+            },
+        },
+        rows: {
+            style: {
+                minHeight: "64px", // Filas más altas para que respiren
+                "&:not(:last-of-type)": {
+                    borderBottomStyle: "solid",
+                    borderBottomWidth: "1px",
+                    borderBottomColor: "#e5e7eb",
+                },
+            },
+        },
+    };
+
+    return (
+        <>
+            <Card className="w-[70%] mx-auto mt-8 p-8">
+                <CardTitle>
+                    Cuentas
+                </CardTitle>
+
+                <CardContent>
+                    <DataTable columns={columns} data={code} customStyles={customStyles} pagination paginationPerPage={3} paginationRowsPerPageOptions={[3, 5, 10]} />
+                </CardContent>
+            </Card>
         </>
     )
 }

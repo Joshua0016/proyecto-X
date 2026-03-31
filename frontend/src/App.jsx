@@ -3,7 +3,7 @@ import './App.css'
 import { Routes, Route, Link } from "react-router-dom";
 import Login from './components/login/Login'
 import Home from './components/home/Home'
-import Finance from './components/finance/Finance';
+
 import Members from './components/membersManagment/members/Members';
 import Events from './components/membersManagment/events/Events';
 
@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />}></Route>
         <Route path='/home' element={<Home />}>
-          <Route path="finance" element={<Finance />}></Route>
+
           <Route path="members" element={<Members />}></Route>
           <Route path="events" element={<Events />}></Route>
           <Route path="families" element={<Family />}></Route>
