@@ -36,7 +36,7 @@ CREATE TABLE "security"."auditLog" (
 
 CREATE TABLE "membership"."family" (
     "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "familyName" VARCHAR(100) NOT NULL,
+    "lastName" VARCHAR(100) NOT NULL,
     "address" TEXT,
     "district" VARCHAR(100),
     "sector" VARCHAR(100),
