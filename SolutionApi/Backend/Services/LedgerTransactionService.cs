@@ -15,10 +15,14 @@ public class LedgerTransactionService(
 
     public async Task Persist(LedgerTransactionCreateDto request, int journalEntryId)
     {
+        if (request.Debit == 0 && request.Credit == 0)
+            throw new ArgumentException("La transacción no puede tener débito y crédito en cero");
+
+        if (request.Debit > 0 && request.Credit > 0)
+            throw new ArgumentException("Una transacción no puede tener débito y crédito simultáneamente");
+
         if (!await accountRepo.ExistsAsync(request.AccountCode))
-        {
-            throw new ArgumentException($"La cuenta contable con código '{request.AccountCode}' no existe.");
-        }
+            throw new ArgumentException($"La cuenta contable '{request.AccountCode}' no existe");
 
         var transaction = request.Adapt<LedgerTransaction>();
         transaction.JournalEntryId = journalEntryId;
@@ -27,6 +31,8 @@ public class LedgerTransactionService(
 
     public async Task Delete(int id)
     {
-        await repo.DeleteAsync(id);
+        var transaction = await repo.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException("Transacción no encontrada");
+        await repo.DeleteAsync(transaction.TransactionId);
     }
 }

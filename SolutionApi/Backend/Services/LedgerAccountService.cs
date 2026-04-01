@@ -14,13 +14,19 @@ public class LedgerAccountService(LedgerAccountRepository repo) : ILedgerAccount
     public async Task Persist(LedgerAccountCreateDto request)
     {
         if (await repo.ExistsAsync(request.AccountCode))
-            throw new Exception("La cuenta ya existe");
+            throw new InvalidOperationException($"Ya existe una cuenta con el código '{request.AccountCode}'");
 
-        await repo.AddAsync(request.Adapt<LedgerAccount>());
+        var account = request.Adapt<LedgerAccount>();
+        account.IsActive = true;
+        account.CurrentBalance = 0;
+        await repo.AddAsync(account);
     }
 
     public async Task Delete(string accountCode)
     {
+        if (!await repo.ExistsAsync(accountCode))
+            throw new KeyNotFoundException($"No existe una cuenta con el código '{accountCode}'");
+
         await repo.DeleteByCodeAsync(accountCode);
     }
 }

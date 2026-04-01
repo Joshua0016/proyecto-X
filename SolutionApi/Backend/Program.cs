@@ -69,6 +69,21 @@ namespace Backend
 
             builder.Services.AddScoped<IGenericRepository<Family>, FamilyRepository>();
 
+            builder.Services.AddScoped<VendorRepository>();
+            builder.Services.AddScoped<IVendorService, VendorService>();
+
+            builder.Services.AddScoped<EventRepository>();
+            builder.Services.AddScoped<IEventService, EventService>();
+
+            builder.Services.AddScoped<AttendanceRepository>();
+            builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+
+            builder.Services.AddScoped<TaxReceiptRepository>();
+            builder.Services.AddScoped<ITaxReceiptService, TaxReceiptService>();
+
+            builder.Services.AddScoped<ExpenseInvoiceRepository>();
+            builder.Services.AddScoped<IExpenseInvoiceService, ExpenseInvoiceService>();
+
 
 
 
