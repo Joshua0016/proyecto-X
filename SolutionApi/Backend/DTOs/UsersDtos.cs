@@ -8,6 +8,7 @@ public record LoginRequestDTO
 
 public record LoginResponseDTO(
    int UserId,
+   string Name,
    string Token,
    string Email,
    string Rol

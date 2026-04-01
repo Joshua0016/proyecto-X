@@ -8,7 +8,7 @@ public record MemberCreateDTO(
     string? Email,
     string? PhotoUrl,
     DateTime BirthDate,
-    int FamilyId
+    int? FamilyId
 );
 
 public record MemberResponseDTO(

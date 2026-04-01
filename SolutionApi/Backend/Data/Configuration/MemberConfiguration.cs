@@ -24,6 +24,7 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
             .WithMany(p => p.Members)
             .HasForeignKey(d => d.FamilyId)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName("member_familyId_fkey");
+            .HasConstraintName("member_familyId_fkey")
+            .IsRequired(false);
     }
 }
