@@ -5,7 +5,7 @@ public record JournalCreateDto(
     string Memo,
     string Reference,
     List<LedgerTransactionCreateDto> LedgerTransactions,
-    UserDto RecordedByUSer 
+    int RecordedByUSerId
 );
 
 
@@ -19,7 +19,3 @@ public record JournalEntryResponseDto(
     int RecordedByUserId
 );
 
-public record UserDto(
-    int UserId,
-    string Name 
-);
