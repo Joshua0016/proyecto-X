@@ -15,7 +15,7 @@ public class JournalEntryService(JournalEntryRepository repo) : IJournalEntrySer
     {
         var entry = request.Adapt<JournalEntry>();
         entry.IsBalanced = false;
-        entry.Date = DateTime.SpecifyKind(entry.Date, DateTimeKind.Unspecified);
+        entry.Date = DateTime.UtcNow;
         await repo.AddAsync(entry);
     }
 
