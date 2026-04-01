@@ -51,7 +51,7 @@ CREATE TABLE "membership"."member" (
     "birthDate" date NOT NULL,
     "phoneNumber" varchar(15),
     "email" varchar(150),
-    "familyId" int  NULL REFERENCES "membership"."family"("familyId")
+    "familyId" int REFERENCES "membership"."family"("familyId")
 );
 
 CREATE TABLE "membership"."event" (
