@@ -17,19 +17,21 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
     public async Task<Family?> GetByIdAsync(int id) =>
         await _context.Families.Include(f => f.Members).FirstOrDefaultAsync(f => f.FamilyId == id);
 
-    public async Task<IEnumerable<Family>> SearchAsync(string? lastName, string? memberName)
+    public async Task<IEnumerable<Family>> SearchAsync(string? query)
     {
-        var query = _context.Families.Include(f => f.Members).AsQueryable();
+        var dbQuery = _context.Families.Include(f => f.Members).AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(lastName))
-            query = query.Where(f => f.LastName.ToLower().Contains(lastName.ToLower()));
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var lowerQuery = query.ToLower();
+            dbQuery = dbQuery.Where(f =>
+                f.LastName.ToLower().Contains(lowerQuery) ||
+                f.Members.Any(m =>
+                    m.FirstName.ToLower().Contains(lowerQuery) ||
+                    m.LastName.ToLower().Contains(lowerQuery)));
+        }
 
-        if (!string.IsNullOrWhiteSpace(memberName))
-            query = query.Where(f => f.Members.Any(m =>
-                m.FirstName.ToLower().Contains(memberName.ToLower()) ||
-                m.LastName.ToLower().Contains(memberName.ToLower())));
-
-        return await query.ToListAsync();
+        return await dbQuery.ToListAsync();
     }
 
     public async Task AddAsync(Family family)
