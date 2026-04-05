@@ -66,11 +66,11 @@ const formSchema = z.object({
 export default function FormRhfInput({ setformMember, setRows, rowMember }) {
     const defaultValues = rowMember?.isUpdate
         ? {
-            FirstName: rowMember.name || "",
-            LastName: rowMember.lastName || "",
-            Email: rowMember.email || "",
-            PhoneNumber: rowMember.phoneNumber || "",
-            BirthDate: dayjs(rowMember.birth).format("YYYY-MM-DD") || "",
+            FirstName: rowMember.FirstName || "",
+            LastName: rowMember.LastName || "",
+            Email: rowMember.Email || "",
+            PhoneNumber: rowMember.PhoneNumber || "",
+            BirthDate: dayjs(rowMember.BirthDate).format("YYYY-MM-DD") || "",
         }
         : {
             FirstName: "",
@@ -95,8 +95,6 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                 ...dataUpdate,
                 BirthDate: dayjs(data.BirthDate).toISOString(),
                 PhotoUrl: "text",
-
-                name: data.FirstName //gadiel me pone a coger lucha xdddddddd
             }
 
             if (rowMember?.isUpdate) {

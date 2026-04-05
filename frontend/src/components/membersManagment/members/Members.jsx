@@ -34,12 +34,12 @@ export default function FullFeaturedCridGrid() {
   const columns = [
     {
       name: "ID",
-      selector: (row) => row.id,
+      selector: (row) => row.memberId,
       sortable: true,
     },
     {
       name: "Nombre",
-      selector: (row) => row.name,
+      selector: (row) => row.firstName,
       sortable: true,
     },
     {
@@ -60,7 +60,7 @@ export default function FullFeaturedCridGrid() {
     },
     {
       name: "Cumpleaños",
-      selector: (row) => row.birth,
+      selector: (row) => row.birthDate,
     },
     {
       name: "Acciones",

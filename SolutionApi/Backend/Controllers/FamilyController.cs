@@ -21,10 +21,8 @@ public class FamilyController(IFamilyService service) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search(
-        [FromQuery] string? familyName,
-        [FromQuery] string? memberName)
-        => Ok(await service.Search(familyName, memberName));
+    public async Task<IActionResult> Search([FromQuery] string? query)
+        => Ok(await service.Search(query));
 
     [HttpPost]
     [Authorize(Roles = "1")]

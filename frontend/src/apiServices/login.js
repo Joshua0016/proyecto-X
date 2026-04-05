@@ -18,7 +18,9 @@ export default async function login(username, password) {
             let result = await response.json();
             localStorage.setItem("token", result.token);
             localStorage.setItem("email", result.email);
-            console.log(result)
+            localStorage.setItem("userId", result.userId);
+            localStorage.setItem("name", result.name)
+
             return true;
         }
         else {

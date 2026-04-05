@@ -9,8 +9,8 @@ namespace Backend.Services;
 
 public class FamilyService(FamilyRepository repo, MemberRepository memberRepo) : IFamilyService
 {
-    public async Task<IEnumerable<FamilyResponseDTO>> ListAll() =>
-        (await repo.GetAllAsync()).Adapt<IEnumerable<FamilyResponseDTO>>();
+    public async Task<IEnumerable<FamilyDetailDTO>> ListAll() =>
+        (await repo.GetAllAsync()).Adapt<IEnumerable<FamilyDetailDTO>>();
 
     public async Task<FamilyDetailDTO?> GetById(int id)
     {
@@ -18,8 +18,8 @@ public class FamilyService(FamilyRepository repo, MemberRepository memberRepo) :
         return family?.Adapt<FamilyDetailDTO>();
     }
 
-    public async Task<IEnumerable<FamilyResponseDTO>> Search(string? familyName, string? memberName) =>
-        (await repo.SearchAsync(familyName, memberName)).Adapt<IEnumerable<FamilyResponseDTO>>();
+    public async Task<IEnumerable<FamilyDetailDTO>> Search(string? query) =>
+        (await repo.SearchAsync(query)).Adapt<IEnumerable<FamilyDetailDTO>>();
 
     public async Task Persist(FamilyCreateDto dto)
     {
