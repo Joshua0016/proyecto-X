@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Family from './components/membersManagment/family/Family';
 import LedgerAccount from './components/chartsAccounts/LedgerAccount';
 import JournalEntry from './components/finance/journalEntry/JournalEntry';
+import Donations from './components/finance/donations/Donations';
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />}></Route>
         <Route path='/home' element={<Home />}>
-
+          <Route path='donations' element={<Donations />}></Route>
           <Route path="members" element={<Members />}></Route>
           <Route path="events" element={<Events />}></Route>
           <Route path="families" element={<Family />}></Route>
@@ -41,5 +42,5 @@ function App() {
 }
 
 export default App
-//configuracion de colores MUI
+
 
