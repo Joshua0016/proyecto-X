@@ -7,7 +7,7 @@ public record MemberCreateDTO(
     [StringLength(50, MinimumLength = 2)] string? LastName,
     [Phone][StringLength(15)] string? PhoneNumber,
     [EmailAddress][StringLength(150)] string? Email,
-    [Url] string? PhotoUrl,
+    string? PhotoUrl,
     [Required] DateTime BirthDate,
     int? FamilyId
 );
