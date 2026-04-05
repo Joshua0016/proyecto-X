@@ -40,7 +40,7 @@ CREATE TABLE "membership"."family" (
     "address" TEXT,
     "district" VARCHAR(100),
     "sector" VARCHAR(100),
-    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" date DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "membership"."member" (
