@@ -4,13 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Search, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 
-// UI
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
-// Services
 import getAllFamilies from "@/apiServices/families/getAllFamilies";
 import createFamily from "@/apiServices/families/createFamily";
 import updateFamily from "@/apiServices/families/updateFamily";
@@ -20,19 +18,26 @@ import searchFamilies from "@/apiServices/families/searchFamilies";
 import createMember from "@/apiServices/members/createMember";
 import updateMember from "@/apiServices/members/updateMember";
 import deleteMember from "@/apiServices/members/deleteMember";
+import getAllMembers from "@/apiServices/members/getAllMembers";
 
 // Schemas
 const memberSchema = z.object({
+  memberId: z.number().optional(),
   firstName: z.string().min(2),
   lastName: z.string().min(2),
-  email: z.string().email().optional().or(z.literal("")),
+  email: z.email().optional(),
   phoneNumber: z.string().optional(),
   birthDate: z.string().optional(),
+  familyId: z.number(),
+  photoUrl: z.string().optional(),
 });
 
 const familySchema = z.object({
   lastName: z.string().min(2),
   sector: z.string().optional(),
+  address: z.string().optional(),
+  createdAt: z.string().optional(),
+  familyId: z.number().optional(),
 });
 
 export default function Family() {
@@ -55,7 +60,7 @@ export default function Family() {
 
   useEffect(() => { fetchFamilies(); }, []);
 
-  // 🔍 debounce search
+  //  Busqueda de rebote
   useEffect(() => {
     const delay = setTimeout(() => {
       if (!searchTerm.trim()) {
@@ -125,7 +130,9 @@ export default function Family() {
   return (
     <div className="p-8 max-w-5xl mx-auto text-gray-900 dark:text-gray-100">
 
+
       {/* HEADER */}
+
       <div className="flex justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
           Familias
@@ -150,7 +157,9 @@ export default function Family() {
 
       {loading && <Loader2 className="animate-spin mx-auto" />}
 
+
       {/* LISTA */}
+
       <Accordion type="single" collapsible className="space-y-4">
         {filteredFamilies.map((family, index) => {
           const id = family.id ?? index;
@@ -161,14 +170,31 @@ export default function Family() {
               <div className="flex justify-between items-center">
 
                 <AccordionTrigger className="flex-1 text-left">
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">
-                      Familia {family.lastName || "Sin nombre"}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {family.sector}
-                    </p>
+
+                  <div className="grid grid-cols-12 gap-2">
+
+                    <div className="col-span-2 font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {family.lastName || "Sin nombre"}
+                    </div>
+
+                    <div className="col-span-2 text-sm text-gray-900 dark:text-gray-100 truncate">
+                      {family.sector || "Sin sector"}
+                    </div>
+
+                    <div className="col-span-3 text-sm text-gray-900 dark:text-gray-100 truncate">
+                      {family.address || "Sin dirección"}
+                    </div>
+
+                    <div className="col-span-2 text-sm text-gray-900 dark:text-gray-100 truncate">
+                      {family.createdAt || "Sin fecha"}
+                    </div>
+
+                    <div className="col-span-1 text-sm text-gray-900 dark:text-gray-100 truncate text-center">
+                      {family.familyId || "Sin ID"}
+                    </div>
+
                   </div>
+
                 </AccordionTrigger>
 
                 <div className="flex gap-2 ml-2">
@@ -183,12 +209,36 @@ export default function Family() {
 
               </div>
 
-              <AccordionContent>
+              <AccordionContent className="p-3 border rounded mb-2 bg-white dark:bg-gray-900">
+
 
                 <div className="flex justify-between mb-4">
+
                   <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Miembros
+                    Id
                   </h4>
+
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Nombre
+                  </h4>
+
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Apellido
+                  </h4>
+
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Telefono
+                  </h4>
+
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Correo Electronico
+                  </h4>
+
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Naciomiento
+                  </h4>
+
+
                   <Button size="sm" onClick={() => openMember(family.id)}>
                     <Plus className="mr-2 h-4 w-4" /> Agregar
                   </Button>
@@ -202,28 +252,51 @@ export default function Family() {
                   const mid = member.memberId ?? index;
 
                   return (
-                    <div key={`member-${mid}-${index}`}
-                      className="flex justify-between p-3 border rounded mb-2 bg-white dark:bg-gray-900">
+                    <div key={`member-${mid}-${index}`}>
 
-                      <div>
-                        <p className="text-gray-900 dark:text-gray-100">
-                          {member.firstName} {member.lastName}
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          {member.phoneNumber || "Sin teléfono"}
-                        </p>
-                      </div>
+                      <div className="flex justify-between">
 
-                      <div className="flex gap-2">
-                        <Button size="icon" variant="ghost"
-                          onClick={() => openMember(family.id, member)}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
+                        <div className="flex-1 text-left grid grid-cols-12 gap-2">
 
-                        <Button size="icon" variant="ghost"
-                          onClick={() => removeMember(member.memberId)}>
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
+                          <div className="grid col-span-1 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {member.memberId || "Sin ID"}
+                          </div>
+
+                          <div className="grid col-span-2 text-gray-900 dark:text-gray-100 truncate">
+                            {member.firstName || "Sin nombre"}
+                          </div>
+
+                          <div className="grid col-span-2 text-gray-900 dark:text-gray-100 truncate">
+                            {member.lastName || "Sin apellido"}
+                          </div>
+
+                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {member.phoneNumber || "Sin teléfono"}
+                          </div>
+
+                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {member.email || "Sin email"}
+                          </div>
+
+                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {member.birthDate || "Sin cumpleaños"}
+                          </div>
+
+                        </div>
+
+
+                        <div className="flex gap-2 ml-2">
+                          <Button size="icon" variant="ghost"
+                            onClick={() => openMember(family.id, member)}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+
+                          <Button size="icon" variant="ghost"
+                            onClick={() => removeMember(member.memberId)}>
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+
                       </div>
 
                     </div>
@@ -237,7 +310,9 @@ export default function Family() {
         })}
       </Accordion>
 
+
       {/* MODAL FAMILIA */}
+
       <Dialog open={familyModal.open} onOpenChange={(open) => setFamilyModal({ ...familyModal, open })}>
         <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
           <DialogHeader>
@@ -252,6 +327,7 @@ export default function Family() {
           <form onSubmit={familyForm.handleSubmit(submitFamily)} className="space-y-4">
             <Input placeholder="Apellido" {...familyForm.register("lastName")} />
             <Input placeholder="Sector" {...familyForm.register("sector")} />
+            <Input placeholder="Dirección" {...familyForm.register("address")} />
 
             <DialogFooter>
               <Button type="submit" className="w-full">
@@ -262,7 +338,9 @@ export default function Family() {
         </DialogContent>
       </Dialog>
 
+
       {/* MODAL MIEMBRO */}
+
       <Dialog open={memberModal.open} onOpenChange={(open) => setMemberModal({ ...memberModal, open })}>
         <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
           <DialogHeader>
@@ -279,6 +357,8 @@ export default function Family() {
             <Input placeholder="Apellido" {...memberForm.register("lastName")} />
             <Input placeholder="Email" {...memberForm.register("email")} />
             <Input placeholder="Teléfono" {...memberForm.register("phoneNumber")} />
+            <Input placeholder="ID Familia" {...memberForm.register("familyId")} />
+            <Input placeholder="Cumpleaños" {...memberForm.register("birthday")} />
 
             <DialogFooter>
               <Button type="submit" className="w-full">

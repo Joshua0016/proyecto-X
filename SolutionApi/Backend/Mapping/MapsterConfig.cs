@@ -13,13 +13,13 @@ public static class MapsterConfig
             .Map(dest => dest.RolNombre, src => src.Role != null ? src.Role.Name : string.Empty);
 
         TypeAdapterConfig<Member, MemberResponseDTO>.NewConfig()
-            .Map(dest => dest.Id, src => src.MemberId)
-            .Map(dest => dest.Name, src => src.FirstName)
+            .Map(dest => dest.memberId, src => src.MemberId)
+            .Map(dest => dest.FirstName, src => src.FirstName)
             .Map(dest => dest.LastName, src => src.LastName)
             .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
             .Map(dest => dest.Email, src => src.Email)
             .Map(dest => dest.PhotoUrl, src => src.PhotoUrl)
-            .Map(dest => dest.Birth, src => src.BirthDate);
+            .Map(dest => dest.BirthDate, src => src.BirthDate);
 
         TypeAdapterConfig<MemberCreateDTO, Member>.NewConfig()
             .Map(dest => dest.FirstName, src => src.FirstName)
@@ -31,12 +31,13 @@ public static class MapsterConfig
             .Map(dest => dest.FamilyId, src => src.FamilyId);
 
         TypeAdapterConfig<MemberUpdateDTO, Member>.NewConfig()
-            .Map(dest => dest.FirstName, src => src.Name)
+            .Map(dest => dest.FirstName, src => src.FirstName)
             .Map(dest => dest.LastName, src => src.LastName)
             .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
             .Map(dest => dest.Email, src => src.Email)
             .Map(dest => dest.PhotoUrl, src => src.PhotoUrl)
-            .Map(dest => dest.BirthDate, src => src.Birth);
+            .Map(dest => dest.BirthDate, src => src.BirthDate)
+            .Map(dest => dest.FamilyId, src => src.FamilyId);
 
         TypeAdapterConfig<Role, RolesResponseDTO>.NewConfig()
             .Map(dest => dest.IdRol, src => src.RoleId)
@@ -50,14 +51,23 @@ public static class MapsterConfig
             .Map(dest => dest.IsActive, src => true)
             .Map(dest => dest.CurrentBalance, src => 0m);
 
-        // Family → FamilyResponseDTO: campos con nombres distintos + MemberCount calculado
+        // Family → FamilyResponseDTO: campos con nombres distintos e incluye lista de miembros mapeada
         TypeAdapterConfig<Family, FamilyResponseDTO>.NewConfig()
-            .Map(dest => dest.Id, src => src.FamilyId)
-            .Map(dest => dest.MemberCount, src => src.Members.Count);
+            .Map(dest => dest.FamilyId, src => src.FamilyId)
+            .Map(dest => dest.District, src => src.District)
+            .Map(dest => dest.Sector, src => src.Sector)
+            .Map(dest => dest.Address, src => src.Address)
+            .Map(dest => dest.CreatedAt, src => src.CreatedAt)
+            .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
+
 
         // Family → FamilyDetailDTO: incluye lista de miembros mapeada
         TypeAdapterConfig<Family, FamilyDetailDTO>.NewConfig()
-            .Map(dest => dest.Id, src => src.FamilyId)
+            .Map(dest => dest.FamilyId, src => src.FamilyId)
+            .Map(dest => dest.District, src => src.District)
+            .Map(dest => dest.Sector, src => src.Sector)
+            .Map(dest => dest.Address, src => src.Address)
+            .Map(dest => dest.CreatedAt, src => src.CreatedAt)
             .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
 
         // Vendor → VendorResponseDTO (nombres coinciden, Mapster lo hace automático)

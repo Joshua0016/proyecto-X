@@ -10,18 +10,26 @@ public record FamilyCreateDto(
     string? Sector,
     string? Address,
     DateTime CreatedAt,
+    int? FamilyId,
     List<int>? MemberIds
-
 );
 
 public record FamilyResponseDTO(
-    int Id,
+    int FamilyId,
     string LastName,
-    int MemberCount
+    string? District,
+    string? Sector,
+    string? Address,
+    DateTime CreatedAt,
+    IEnumerable<MemberResponseDTO> Members
 );
 
 public record FamilyDetailDTO(
-    int Id,
+    int FamilyId,
     string LastName,
+    string? District,
+    string? Sector,
+    string? Address,
+    DateTime CreatedAt,
     IEnumerable<MemberResponseDTO> Members
 );
