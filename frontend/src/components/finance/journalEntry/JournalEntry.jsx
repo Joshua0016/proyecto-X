@@ -112,7 +112,8 @@ export default function JournalEntry() {
 
     function onSubmit(data) {
         const save = async () => {
-            let newData = { ...data, date: dayjs(data.date).toISOString() }
+            const userId = parseInt(localStorage.getItem("userId"));
+            let newData = { ...data, date: dayjs(data.date).toISOString(), recordedByUserId: userId }
             console.log(newData)
             let response = await journalEntry(newData);
             if (response) {
@@ -124,17 +125,18 @@ export default function JournalEntry() {
 
     return (
         <>
-            <Card className="w-[80%] mx-auto  flex p-8">
+            <Card className="lg:w-full xl:p-8">
                 <CardHeader>
                     <CardTitle>Diario de entrada</CardTitle>
                     <CardDescription>
                         Ingresa la información del diario a continuación
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="">
                     <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup>
-                            <div className="w-[80%] mx-auto justify-between flex p-8">
+                            <div className="lg:w-full xl:w-[80%] xl:p-8 mx-auto flex justify-between">
+
                                 <div className="flex flex-col w-[25%] gap-8 top-0 bottom-0 my-auto">
                                     <Controller
                                         name="date"
@@ -230,11 +232,11 @@ export default function JournalEntry() {
                                 </div>
 
                                 {/*Tabla de shadcn*/}
-                                <div className="bg-slate-100 border rounded-2xl sm:h-[450px] overflow-auto">
+                                <div className="md:w-[65%] lg:w-[70%]  sm:h-[450px] bg-slate-100 border rounded-2xl overflow-auto">
                                     <Table className="">
                                         <TableHeader className="bg-slate-50">
                                             <TableRow>
-                                                <TableHead className="w-[300px]">Cuenta</TableHead>
+                                                <TableHead className="md:w-[140px] lg:w-[150px] xl:w-[300px]">Cuenta</TableHead>
                                                 <TableHead className="text-right">Débito</TableHead>
                                                 <TableHead className="text-right">Crédito</TableHead>
                                                 <TableHead className="w-[50px]"></TableHead>
