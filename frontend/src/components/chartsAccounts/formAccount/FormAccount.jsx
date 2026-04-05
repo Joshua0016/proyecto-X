@@ -113,7 +113,7 @@ export default function FormAccount({ setRows }) {
                 <CardContent className="">
                     <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup>
-                            <div className="w-[80%] mx-auto flex justify-between gap-7 p-8 ">
+                            <div className="md:w-full xl:w-[80%] mx-auto flex justify-between gap-7 p-8 ">
                                 <div className="w-[45%] flex flex-col gap-8 ">
                                     <Controller
                                         name="accountCode"

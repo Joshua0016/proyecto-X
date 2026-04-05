@@ -14,13 +14,15 @@ export default function Home() {
   const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
-
+  const [name, setName] = useState("");
   useEffect(() => {
     let logged = localStorage.getItem("loggedIn");
+    let name = localStorage.getItem("name");
     if (logged === "false") {
       navigate("/");
     }
     getMessage();
+    setName(name)
 
   }, []);
 
@@ -45,7 +47,7 @@ export default function Home() {
               <SidebarInset>
                 <div className="flex flex-1 flex-col gap-4 p-4">
                   <h1 className="text-2xl font-semibold text-muted-foreground pb-2">
-                    Bienvenido, {message}
+                    Bienvenido {name}, {message}
                   </h1>
                   <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-6">
                     <Outlet />
