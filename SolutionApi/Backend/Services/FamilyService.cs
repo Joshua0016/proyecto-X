@@ -2,11 +2,12 @@ using Backend.DTOs;
 using Backend.interfaces;
 using Backend.Models;
 using Backend.Repositories;
+using Backend.Repositories;
 using Mapster;
 
 namespace Backend.Services;
 
-public class FamilyService(FamilyRepository repo) : IFamilyService
+public class FamilyService(FamilyRepository repo, MemberRepository memberRepo) : IFamilyService
 {
     public async Task<IEnumerable<FamilyResponseDTO>> ListAll() =>
         (await repo.GetAllAsync()).Adapt<IEnumerable<FamilyResponseDTO>>();
@@ -50,4 +51,33 @@ public class FamilyService(FamilyRepository repo) : IFamilyService
     }
 
     public async Task Delete(int id) => await repo.DeleteAsync(id);
+
+    public async Task AddMemberToFamily(int familyId, int memberId)
+    {
+        var family = await repo.GetByIdAsync(familyId)
+            ?? throw new KeyNotFoundException("Familia no encontrada");
+        var member = await memberRepo.GetByIdAsync(memberId)
+            ?? throw new KeyNotFoundException("Miembro no encontrado");
+
+        if (member.FamilyId != null)
+            throw new ArgumentException("El miembro ya está asociado a una familia");
+
+        member.FamilyId = familyId;
+        await memberRepo.UpdateAsync(member);
+    }
+
+    public async Task RemoveMemberFromFamily(int familyId, int memberId)
+    {
+        var family = await repo.GetByIdAsync(familyId)
+            ?? throw new KeyNotFoundException("Familia no encontrada");
+        var member = await memberRepo.GetByIdAsync(memberId)
+            ?? throw new KeyNotFoundException("Miembro no encontrado");
+
+        if (member.FamilyId == null)
+            throw new ArgumentException("El miembro no está asociado a una familia");
+
+        member.FamilyId = null;
+        await memberRepo.UpdateAsync(member);
+    }
+
 }

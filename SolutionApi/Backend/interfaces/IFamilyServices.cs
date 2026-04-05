@@ -13,6 +13,12 @@ public interface IFamilyService
     Task Persist(FamilyCreateDto request);
     Task Update(int id, FamilyCreateDto request);
     Task Delete(int id);
+
+    Task AddMemberToFamily(int familyId, int memberId);
+
+    Task RemoveMemberFromFamily(int familyId, int memberId);
+
+
 }
 
 
