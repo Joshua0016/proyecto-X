@@ -71,7 +71,7 @@ const data = {
         },
         {
           title: "Donaciones",
-          url: "#",
+          url: "donations",
         },
       ],
     },

@@ -7,7 +7,7 @@ using Mapster;
 
 namespace Backend.Services;
 
-public class MemberService(IGenericRepository<Member> repo) : IMemberService
+public class MemberService(IGenericRepository<Member> repo, IGenericRepository<Family> familyRepo) : IMemberService
 {
 
     // use Mapster
@@ -17,19 +17,15 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
 
     public async Task Persist(MemberCreateDTO request)
     {
-        if (await repo.ExistsAsync(request.PhoneNumber))
-
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber) && await repo.ExistsAsync(request.PhoneNumber))
             throw new Exception("Ya existe un miembro con este telefono");
 
-        if (request.FamilyId == 0)
+        if (request.FamilyId == null || request.FamilyId == 0)
             throw new Exception("El miembro debe pertenecer a una familia");
 
-        if (request.FamilyId != null)
-        {
-            var familyExists = await repo.ExistsAsync(request.LastName);
-            if (!familyExists)
-                throw new Exception("La familia especificada no existe");
-        }
+        var familyExists = await familyRepo.GetByIdAsync(request.FamilyId.Value) != null;
+        if (!familyExists)
+            throw new Exception("La familia especificada no existe");
 
 
 
@@ -39,11 +35,11 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         await repo.AddAsync(member);
     }
 
-    public async Task Update(int id, MemberUpdateDTO request)
+    public async Task Update(int memberId, MemberUpdateDTO request)
     {
         try
         {
-            var miembro = await repo.GetByIdAsync(id) ?? throw new Exception("Miembro no encontrado");
+            var miembro = await repo.GetByIdAsync(memberId) ?? throw new Exception("Miembro no encontrado");
 
             request.Adapt(miembro);
             await repo.UpdateAsync(miembro);
@@ -54,11 +50,11 @@ public class MemberService(IGenericRepository<Member> repo) : IMemberService
         }
     }
 
-    public async Task Delete(int id_)
+    public async Task Delete(int memberId)
     {
         try
         {
-            await repo.DeleteAsync(id_);
+            await repo.DeleteAsync(memberId);
         }
         catch (System.Exception ex)
         {
