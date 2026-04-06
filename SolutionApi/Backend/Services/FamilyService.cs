@@ -11,9 +11,9 @@ public class FamilyService(FamilyRepository repo) : IFamilyService
     public async Task<IEnumerable<FamilyDetailDTO>> ListAll() =>
         (await repo.GetAllAsync()).Adapt<IEnumerable<FamilyDetailDTO>>();
 
-    public async Task<FamilyDetailDTO?> GetById(int id)
+    public async Task<FamilyDetailDTO?> GetById(int familyId)
     {
-        var family = await repo.GetByIdAsync(id);
+        var family = await repo.GetByIdAsync(familyId);
         return family?.Adapt<FamilyDetailDTO>();
     }
 
@@ -41,13 +41,13 @@ public class FamilyService(FamilyRepository repo) : IFamilyService
         await repo.AddAsync(family);
     }
 
-    public async Task Update(int id, FamilyCreateDto dto)
+    public async Task Update(int familyId, FamilyCreateDto dto)
     {
-        var family = await repo.GetByIdAsync(id)
+        var family = await repo.GetByIdAsync(familyId)
             ?? throw new KeyNotFoundException("Familia no encontrada");
         dto.Adapt(family);
         await repo.UpdateAsync(family);
     }
 
-    public async Task Delete(int id) => await repo.DeleteAsync(id);
+    public async Task Delete(int familyId) => await repo.DeleteAsync(familyId);
 }

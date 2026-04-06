@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import dayjs from "dayjs";
 import { Search, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -27,8 +28,8 @@ const memberSchema = z.object({
   lastName: z.string().min(2),
   email: z.email().optional(),
   phoneNumber: z.string().optional(),
-  birthDate: z.string().optional(),
-  familyId: z.number(),
+  birthDate: z.coerce.date("Fecha requerida"),
+  familyId: z.coerce.number(),
   photoUrl: z.string().optional(),
 });
 
@@ -88,13 +89,21 @@ export default function Family() {
 
   const openMember = (id, member = null) => {
     setMemberModal({ open: true, id, member });
-    member ? memberForm.reset(member) : memberForm.reset({});
+    if (member) {
+      memberForm.reset({
+        ...member,
+        birthDate: dayjs(member.birthDate ?? member.BirthDate).format("YYYY-MM-DD"),
+        familyId: member.familyId ?? member.FamilyId ?? id,
+      });
+    } else {
+      memberForm.reset({ familyId: id });
+    }
   };
 
   const submitFamily = async (values) => {
     setLoading(true);
     if (familyModal.family) {
-      await updateFamily(familyModal.family.id, values);
+      await updateFamily(familyModal.family.familyId, values);
     } else {
       await createFamily(values);
     }
@@ -105,10 +114,16 @@ export default function Family() {
 
   const submitMember = async (values) => {
     setLoading(true);
+    const dataToSend = {
+      ...values,
+      familyId: Number(memberModal.id ?? values.familyId),
+      birthDate: dayjs(values.birthDate).toISOString(),
+      photoUrl: "text",
+    };
     if (memberModal.member) {
-      await updateMember({ ...values, memberId: memberModal.member.memberId });
+      await updateMember(memberModal.member.memberId, dataToSend);
     } else {
-      await createMember({ ...values, id: memberModal.id });
+      await createMember(dataToSend);
     }
     await fetchFamilies();
     setMemberModal({ open: false, id: null, member: null });
@@ -162,7 +177,7 @@ export default function Family() {
 
       <Accordion type="single" collapsible className="space-y-4">
         {filteredFamilies.map((family, index) => {
-          const id = family.id ?? index;
+          const id = family.familyId ?? index;
 
           return (
             <AccordionItem key={`family-${id}-${index}`} value={`f-${id}-${index}`}>
@@ -171,22 +186,22 @@ export default function Family() {
 
                 <AccordionTrigger className="flex-1 text-left">
 
-                  <div className="grid grid-cols-12 gap-2">
+                  <div className="grid grid-cols-20 gap-8">
 
-                    <div className="col-span-2 font-semibold text-gray-900 dark:text-gray-100 truncate">
+                    <div className="col-span-3 font-semibold text-gray-900 dark:text-gray-100 truncate">
                       {family.lastName || "Sin nombre"}
                     </div>
 
-                    <div className="col-span-2 text-sm text-gray-900 dark:text-gray-100 truncate">
+                    <div className="col-span-3 text-sm text-gray-900 dark:text-gray-100 truncate">
                       {family.sector || "Sin sector"}
                     </div>
 
-                    <div className="col-span-3 text-sm text-gray-900 dark:text-gray-100 truncate">
+                    <div className="col-span-5 text-sm text-gray-900 dark:text-gray-100 truncate">
                       {family.address || "Sin dirección"}
                     </div>
 
-                    <div className="col-span-2 text-sm text-gray-900 dark:text-gray-100 truncate">
-                      {family.createdAt || "Sin fecha"}
+                    <div className="col-span-4 text-sm text-gray-900 dark:text-gray-100 truncate">
+                      {family.createdAt ||family.CreatedAt ? dayjs(family.createdAt ?? family.CreatedAt).format("YYYY-MM-DD") : "Sin fecha"}
                     </div>
 
                     <div className="col-span-1 text-sm text-gray-900 dark:text-gray-100 truncate text-center">
@@ -202,7 +217,7 @@ export default function Family() {
                     <Pencil className="h-4 w-4" />
                   </Button>
 
-                  <Button size="icon" variant="ghost" onClick={() => removeFamily(family.id)}>
+                  <Button size="icon" variant="ghost" onClick={() => removeFamily(family.familyId)}>
                     <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 </div>
@@ -239,7 +254,7 @@ export default function Family() {
                   </h4>
 
 
-                  <Button size="sm" onClick={() => openMember(family.id)}>
+                  <Button size="sm" onClick={() => openMember(family.familyId)}>
                     <Plus className="mr-2 h-4 w-4" /> Agregar
                   </Button>
                 </div>
@@ -256,30 +271,30 @@ export default function Family() {
 
                       <div className="flex justify-between">
 
-                        <div className="flex-1 text-left grid grid-cols-12 gap-2">
+                        <div className="flex-1 text-left grid grid-cols-30 gap-2">
 
-                          <div className="grid col-span-1 text-xs text-gray-600 dark:text-gray-400 truncate">
+                          <div className="col-span-3 text-xs text-gray-600 dark:text-gray-400 truncate">
                             {member.memberId || "Sin ID"}
                           </div>
 
-                          <div className="grid col-span-2 text-gray-900 dark:text-gray-100 truncate">
-                            {member.firstName || "Sin nombre"}
+                          <div className="col-span-4 text-gray-900 dark:text-gray-100 truncate">
+                            {(member.firstName ?? member.FirstName) || "Sin nombre"}
                           </div>
 
-                          <div className="grid col-span-2 text-gray-900 dark:text-gray-100 truncate">
-                            {member.lastName || "Sin apellido"}
+                          <div className="col-span-5 text-gray-900 dark:text-gray-100 truncate">
+                            {(member.lastName ?? member.LastName) || "Sin apellido"}
                           </div>
 
-                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
-                            {member.phoneNumber || "Sin teléfono"}
+                          <div className="col-span-5 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {(member.phoneNumber ?? member.PhoneNumber) || "Sin teléfono"}
                           </div>
 
-                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
-                            {member.email || "Sin email"}
+                          <div className="col-span-7 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {(member.email ?? member.Email) || "Sin email"}
                           </div>
 
-                          <div className="grid col-span-2 text-xs text-gray-600 dark:text-gray-400 truncate">
-                            {member.birthDate || "Sin cumpleaños"}
+                          <div className="col-span-3 text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {member.birthDate || member.BirthDate ? dayjs(member.birthDate ?? member.BirthDate).format("YYYY-MM-DD") : "Sin cumpleaños"}
                           </div>
 
                         </div>
@@ -287,7 +302,7 @@ export default function Family() {
 
                         <div className="flex gap-2 ml-2">
                           <Button size="icon" variant="ghost"
-                            onClick={() => openMember(family.id, member)}>
+                            onClick={() => openMember(family.familyId, member)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
 
@@ -357,8 +372,8 @@ export default function Family() {
             <Input placeholder="Apellido" {...memberForm.register("lastName")} />
             <Input placeholder="Email" {...memberForm.register("email")} />
             <Input placeholder="Teléfono" {...memberForm.register("phoneNumber")} />
-            <Input placeholder="ID Familia" {...memberForm.register("familyId")} />
-            <Input placeholder="Cumpleaños" {...memberForm.register("birthday")} />
+            <Input type="number" readOnly {...memberForm.register("familyId")} />
+            <Input type="date" {...memberForm.register("birthDate")} />
 
             <DialogFooter>
               <Button type="submit" className="w-full">
