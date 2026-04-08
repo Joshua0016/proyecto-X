@@ -28,12 +28,12 @@ public partial class Donation
     public string Type { get; set; } = null!;
 
     [Required(ErrorMessage = "El método de pago es obligatorio.")]
-    [RegularExpression(@"^(Cash|Transfer|Check|CreditCard|DebitCard)$", 
+    [RegularExpression(@"^(Cash|Transfer|Check|CreditCard|DebitCard)$",
         ErrorMessage = "Método de pago no válido.")]
     public string PaymentMethod { get; set; } = null!;
 
     [Required]
-    [RegularExpression(@"^(Pending|Completed|Cancelled)$", 
+    [RegularExpression(@"^(Pending|Completed|Cancelled)$",
         ErrorMessage = "El estado debe ser: Pendiente, Completado o Cancelado.")]
     public string Status { get; set; } = "Completed";
 

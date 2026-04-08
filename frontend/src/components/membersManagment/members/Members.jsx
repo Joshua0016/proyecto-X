@@ -9,8 +9,8 @@ import FormRhfInput from "./formCreate/Form";
 //apiService
 import getAllMembers from "../../../apiServices/members/getAllMembers";
 import CardActions from "./cardActions/CardActions";
-
 import dayjs from "dayjs";
+
 
 
 
@@ -32,11 +32,6 @@ export default function FullFeaturedCridGrid() {
   }, []);
 
   const columns = [
-    /*{
-      name: "ID",
-      selector: (row) => row.memberId,
-      sortable: true,
-    },*/
     {
       name: "Nombre",
       selector: (row) => row.firstName,
@@ -54,13 +49,13 @@ export default function FullFeaturedCridGrid() {
       name: "Telefono",
       selector: (row) => row.phoneNumber,
     },
-    {
-      name: "Foto",
-      selector: (row) => row.photoUrl,
-    },
+    // {
+    //   name: "Foto",
+    //   selector: (row) => row.photoUrl,
+    // },
     {
       name: "Cumpleaños",
-      selector: (row) => dayjs(row.birthDate).format("YYYY-MM-DD"),
+      selector: (row) => dayjs(row.birthDate).format("YYYY-MM-DDDD"),
     },
     {
       name: "Acciones",
