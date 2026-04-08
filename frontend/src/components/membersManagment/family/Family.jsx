@@ -201,7 +201,7 @@ export default function Family() {
                     </div>
 
                     <div className="col-span-4 text-sm text-gray-900 dark:text-gray-100 truncate">
-                      {family.createdAt ||family.CreatedAt ? dayjs(family.createdAt ?? family.CreatedAt).format("YYYY-MM-DD") : "Sin fecha"}
+                      {family.createdAt || family.CreatedAt ? dayjs(family.createdAt ?? family.CreatedAt).format("YYYY-MM-DD") : "Sin fecha"}
                     </div>
 
                     <div className="col-span-1 text-sm text-gray-900 dark:text-gray-100 truncate text-center">
@@ -213,6 +213,7 @@ export default function Family() {
                 </AccordionTrigger>
 
                 <div className="flex gap-2 ml-2">
+
                   <Button size="icon" variant="ghost" onClick={() => openFamily(family)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -225,34 +226,16 @@ export default function Family() {
               </div>
 
               <AccordionContent className="p-3 border rounded mb-2 bg-white dark:bg-gray-900">
+                <div className="flex justify-between">
 
-
-                <div className="flex justify-between mb-4">
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Id
-                  </h4>
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Nombre
-                  </h4>
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Apellido
-                  </h4>
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Telefono
-                  </h4>
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Correo Electronico
-                  </h4>
-
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                    Naciomiento
-                  </h4>
-
+                  <div className="flex-1 text-left grid grid-cols-30 gap-2">
+                    
+                    <h4 className="col-span-4 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Nombre</h4>
+                    <h4 className="col-span-5 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Apellido</h4>
+                    <h4 className="col-span-5 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Teléfono</h4>
+                    <h4 className="col-span-7 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Correo</h4>
+                    <h4 className="col-span-3 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Cumpleaños</h4>
+                  </div>
 
                   <Button size="sm" onClick={() => openMember(family.familyId)}>
                     <Plus className="mr-2 h-4 w-4" /> Agregar
@@ -269,13 +252,12 @@ export default function Family() {
                   return (
                     <div key={`member-${mid}-${index}`}>
 
+
                       <div className="flex justify-between">
 
                         <div className="flex-1 text-left grid grid-cols-30 gap-2">
 
-                          <div className="col-span-3 text-xs text-gray-600 dark:text-gray-400 truncate">
-                            {member.memberId || "Sin ID"}
-                          </div>
+                         
 
                           <div className="col-span-4 text-gray-900 dark:text-gray-100 truncate">
                             {(member.firstName ?? member.FirstName) || "Sin nombre"}

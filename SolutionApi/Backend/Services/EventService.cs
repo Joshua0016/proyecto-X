@@ -53,4 +53,7 @@ public class EventService(EventRepository repo) : IEventService
 
         await repo.DeleteAsync(ev.EventId);
     }
+
+    public async Task<IEnumerable<EventResponseDTO>> Search(string query) =>
+        (await repo.SearchAsync(query)).Adapt<IEnumerable<EventResponseDTO>>();
 }

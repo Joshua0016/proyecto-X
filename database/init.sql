@@ -175,49 +175,6 @@ $$ LANGUAGE plpgsql;
 
 -- SEED DATA
 
-INSERT INTO "membership"."event" 
-    ("title", "type", "description", "startDate", "endDate", "organizerUserId")
-VALUES
-    (
-        'Congreso de Damas', 
-        'Congreso', 
-        'El evento anual más esperado de las damas.', 
-        '2026-09-05 02:00:00+00', 
-        '2026-09-05 13:30:00+00', 
-        1
-    ),
-    (
-        'Culto DominicaL', 
-        'Culto', 
-        'Reunion congregacional para alabanzas y enseñanza biblica.', 
-        '2026-09-05 04:00:00+00', 
-        '2026-09-05 07:30:00+00', 
-        2
-    ),
-    (
-        'Congreso de caballleros', 
-        'Congreso', 
-        'El evento anual más esperado de los Caballeros.', 
-        '2026-09-05 12:00:00+00', 
-        '2026-09-05 17:30:00+00', 
-        1
-    ),
-    (
-        'Culto unido Previsterial', 
-        'Reunion entre iglesias seccion Bani-Ocoa', 
-        'Reunion congregacional para alabanzas, enseñanza biblica e informaciones.', 
-        '2026-09-05 16:00:00+00', 
-        '2026-09-05 19:30:00+00',
-        3
-    ),
-    (
-        'EBDV', 
-        'Escuela biblica para niños', 
-        'Escuela biblica de verano para niños de 4 a 12 años.', 
-        '2026-09-05 05:00:00+00', 
-        '2026-09-05 10:30:00+00', 
-        2
-    );
 
 INSERT INTO "security"."role" ("name", "description")
 VALUES 
@@ -280,3 +237,47 @@ BEGIN
     ON CONFLICT ("email") DO NOTHING;
 
 END $$;
+
+INSERT INTO "membership"."event" 
+    ("title", "type", "description", "startDate", "endDate", "organizerUserId")
+VALUES
+    (
+        'Congreso de Damas', 
+        'Congreso', 
+        'El evento anual más esperado de las damas.', 
+        '2026-09-05 02:00:00+00', 
+        '2026-09-05 13:30:00+00', 
+        1
+    ),
+    (
+        'Culto DominicaL', 
+        'Culto', 
+        'Reunion congregacional para alabanzas y enseñanza biblica.', 
+        '2026-09-05 04:00:00+00', 
+        '2026-09-05 07:30:00+00', 
+        2
+    ),
+    (
+        'Congreso de caballleros', 
+        'Congreso', 
+        'El evento anual más esperado de los Caballeros.', 
+        '2026-09-05 12:00:00+00', 
+        '2026-09-05 17:30:00+00', 
+        1
+    ),
+    (
+        'Culto unido Previsterial', 
+        'Reunion entre iglesias seccion Bani-Ocoa', 
+        'Reunion congregacional para alabanzas, enseñanza biblica e informaciones.', 
+        '2026-09-05 16:00:00+00', 
+        '2026-09-05 19:30:00+00',
+        3
+    ),
+    (
+        'EBDV', 
+        'Escuela biblica para niños', 
+        'Escuela biblica de verano para niños de 4 a 12 años.', 
+        '2026-09-05 05:00:00+00', 
+        '2026-09-05 10:30:00+00', 
+        2
+    );

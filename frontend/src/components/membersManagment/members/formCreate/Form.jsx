@@ -93,7 +93,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
 
             const finalData = {
                 ...dataUpdate,
-                BirthDate: dayjs(data.BirthDate).toISOString(),
+                BirthDate: dayjs(data.BirthDate).format("YYYY-MM-DD"),
                 PhotoUrl: "text",
             }
 
