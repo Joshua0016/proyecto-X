@@ -12,4 +12,9 @@ public class AuditLogService(AuditLogRepository repository) : IAuditLogService
     {
         await _repository.AddAsync(entry);
     }
+
+    public async Task<IEnumerable<AuditLog>> GetAllAsync()
+    {
+        return await _repository.GetAllAsync();
+    }
 }

@@ -41,5 +41,12 @@ public class EventRepository(DbProyectoXContext context) : IGenericRepository<Ev
         }
     }
 
+    public async Task<IEnumerable<Event>> SearchAsync(string query) =>
+        await context.Events
+            .Include(e => e.OrganizerUser)
+            .Include(e => e.Attendances)
+            .Where(e => e.Title.Contains(query) || e.Type.Contains(query))
+            .ToListAsync();
+
     public Task<bool> ExistsAsync(string value) => Task.FromResult(false);
 }

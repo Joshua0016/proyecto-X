@@ -10,14 +10,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
-// Importaciones de servicios API (Asegúrate de crear estos archivos siguiendo la misma estructura que en Families)
+// Importaciones de servicios API
 import getAllEvents from "@/apiServices/events/getAllEvents";
 import createEvent from "@/apiServices/events/createEvent";
 import updateEvent from "@/apiServices/events/updateEvent";
 import deleteEvent from "@/apiServices/events/deleteEvent";
 import searchEvents from "@/apiServices/events/searchEvents";
 
-// Schema adaptado al modelo de C# y SQL
+// Schema
 const eventSchema = z.object({
   eventId: z.number().optional(),
   title: z.string().min(5, "Mínimo 5 caracteres").max(150, "Máximo 150 caracteres"),
@@ -50,7 +50,7 @@ export default function Events() {
 
   useEffect(() => { fetchEvents(); }, []);
 
-  // Busqueda con rebote (Debounce)
+  // Busqueda con rebote
   useEffect(() => {
     const delay = setTimeout(() => {
       if (!searchTerm.trim()) {
@@ -78,7 +78,7 @@ export default function Events() {
   const openEvent = (event = null) => {
     setEventModal({ open: true, event });
     if (event) {
-      // Formatear fechas para los inputs datetime-local (YYYY-MM-DDThh:mm)
+      // fechas para los inputs datetime-local (YYYY-MM-DDThh:mm)
       const formattedEvent = {
         ...event,
         startDate: event.startDate ? new Date(event.startDate).toISOString().slice(0, 16) : "",
@@ -116,7 +116,7 @@ export default function Events() {
     }
   };
 
-  // Helper para formatear visualmente las fechas en la lista
+  //para formatear visualmente las fechas en la lista
   const formatDate = (dateString) => {
     if (!dateString) return "Sin fecha";
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -129,7 +129,7 @@ export default function Events() {
       {/* HEADER */}
       <div className="flex justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <Calendar className="h-8 w-8" /> Eventos
+          Eventos
         </h1>
 
         <div className="flex gap-2">
@@ -158,20 +158,11 @@ export default function Events() {
 
           return (
             <AccordionItem key={`event-${id}-${index}`} value={`e-${id}-${index}`}>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <AccordionTrigger className="flex-1 text-left">
-                  <div className="grid grid-cols-12 gap-2 w-full pr-4">
-                    <div className="col-span-4 font-semibold text-gray-900 dark:text-gray-100 truncate">
+                  <div className="">
+                    <div className="font-semibold text-gray-900 dark:text-gray-100">
                       {event.title || "Sin título"}
-                    </div>
-                    <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300 truncate">
-                      {event.type || "Sin tipo"}
-                    </div>
-                    <div className="col-span-3 text-sm text-gray-600 dark:text-gray-400 truncate">
-                      Inicio: {formatDate(event.startDate)}
-                    </div>
-                    <div className="col-span-3 text-sm text-gray-600 dark:text-gray-400 truncate">
-                      Fin: {formatDate(event.endDate)}
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -187,25 +178,45 @@ export default function Events() {
               </div>
 
               <AccordionContent className="p-4 border rounded mb-2 bg-gray-50 dark:bg-gray-800">
+
+                  <div className="flex-1 text-left grid grid-cols-30 gap-2">
+                    <h4 className="col-span-3 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Id</h4>
+                    <h4 className="col-span-4 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Nombre</h4>
+                    <h4 className="col-span-5 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Apellido</h4>
+                    <h4 className="col-span-5 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Teléfono</h4>
+                    <h4 className="col-span-7 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Correo</h4>
+                    <h4 className="col-span-3 font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Cumpleaños</h4>
+                  </div>
+                
+                
                 <div className="space-y-2">
                   <div>
-                    <h4 className="font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase">Descripción</h4>
                     <p className="text-gray-900 dark:text-gray-100 text-sm">
                       {event.description || "Este evento no tiene descripción."}
                     </p>
                   </div>
+                  {/*Utilizar esta manera en todos los demas, para que no muestre nada si esta vacio, estaria bien?*/}
                   {event.organizerUserId && (
                     <div>
-                      <h4 className="font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase mt-2">ID Organizador</h4>
+                      
                       <p className="text-gray-900 dark:text-gray-100 text-sm">{event.organizerUserId}</p>
                     </div>
                   )}
+                  <div className="col-span-3 text-sm text-gray-600 dark:text-gray-400 truncate">
+                      Inicio: {formatDate(event.startDate)}
+                    </div>
+                    <div className="col-span-3 text-sm text-gray-600 dark:text-gray-400 truncate">
+                      Fin: {formatDate(event.endDate)}
+                    </div>
+                    <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300 truncate">
+                      {event.type || "Sin tipo"}
+                    </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
           );
         })}
-        
+
         {!loading && filteredEvents.length === 0 && (
           <div className="text-center text-gray-500 mt-8">No se encontraron eventos.</div>
         )}
@@ -224,7 +235,7 @@ export default function Events() {
           </DialogHeader>
 
           <form onSubmit={eventForm.handleSubmit(submitEvent)} className="space-y-4 mt-4">
-            
+
             <div className="space-y-1">
               <label className="text-sm font-medium">Título</label>
               <Input placeholder="Ej: Retiro de Jóvenes" {...eventForm.register("title")} />
@@ -258,11 +269,11 @@ export default function Events() {
 
             <div className="space-y-1">
               <label className="text-sm font-medium">Descripción</label>
-              <Textarea 
-                placeholder="Detalles sobre el evento..." 
-                className="resize-none" 
-                rows={3} 
-                {...eventForm.register("description")} 
+              <Textarea
+                placeholder="Detalles sobre el evento..."
+                className="resize-none"
+                rows={3}
+                {...eventForm.register("description")}
               />
               {eventForm.formState.errors.description && <p className="text-xs text-red-500">{eventForm.formState.errors.description.message}</p>}
             </div>

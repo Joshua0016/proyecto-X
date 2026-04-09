@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { NavMain } from "@/components/barMenu/nav-main";
-import { NavProjects } from "@/components/barMenu/nav-projects";
+
 import { NavSecondary } from "@/components/barMenu/nav-secondary";
 import { NavUser } from "@/components/barMenu/nav-user";
 import {
@@ -31,7 +31,7 @@ import {
 
 const data = {
   user: {
-    name: "User Logged",
+    name: localStorage.getItem("name"),
     email: localStorage.getItem("email"),
     avatar: "/avatars/shadcn.jpg",
   },
@@ -123,7 +123,7 @@ const data = {
     },
   ],
   navSecondary: [],
-  projects: [],
+
 };
 
 export function AppSidebar({ ...props }) {
@@ -152,7 +152,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

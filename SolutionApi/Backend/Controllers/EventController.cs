@@ -57,4 +57,14 @@ public class EventController(IEventService service) : ControllerBase
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
     }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return BadRequest(new { message = "El parámetro 'query' es requerido y no puede estar vacío." });
+
+        var results = await service.Search(query);
+        return Ok(results);
+    }
 }
