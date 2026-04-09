@@ -405,7 +405,7 @@ VALUES
     INSERT INTO "membership"."member" ("familyId", "firstName", "lastName", "gender", "birthDate", "maritalStatus", "phoneNumber", "email")
     VALUES 
     (1,'Carlos', 'Romero', 'Masculino', '1994-04-04','Soltero','8293736456', 'cocofrio@poyectox.com'),
-    (3,'Ana', 'Nivar', 'Femenino', '1993-03-03','Soltera','8295346787', 'bronx@proyectox.com'),
+    (3,'Ana', 'Nivar', 'Femenino', '1993-03-03','Soltero','8295346787', 'bronx@proyectox.com'),
     (2,'Luis', 'Morrobel', 'Masculino', '1997-07-07','Soltero','8093546765', 'kiruleisy@proyectox.com')
     ON CONFLICT DO NOTHING;
 
