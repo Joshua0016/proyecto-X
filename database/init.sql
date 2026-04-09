@@ -54,55 +54,6 @@ CREATE TABLE "security"."auditLog" (
 
 -- ESQUEMA MEMBRESÍA
 
-CREATE TABLE "membership"."churchRole" ( 
-    "churchRoleId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" varchar(100) NOT NULL, -- (Enum) agregar todos los departamentos de la iglesia local.
-    "description" text
-);
-
-CREATE TABLE "membership"."memberChurchRole" ( -- INTERMEDIA member y churchRole.
-    "churchRoleId" int NOT NULL,
-    "memberId" int NOT NULL,
-    "assignedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
-
-     PRIMARY KEY ("churchRoleId", "memberId"),
-    CONSTRAINT fk_churchRole FOREIGN KEY ("churchRoleId") REFERENCES "membership"."churchRole"("churchRoleId") ON DELETE CASCADE,
-    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
-);
-
-
-CREATE TABLE "membership"."smallGroup" (
-    "smallGroupId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" varchar(100) UNIQUE NOT NULL,
-    "description" text
-);
-
-CREATE TABLE "membership"."memberSmallGroup" ( -- INTERMEDIA member y smallGroup.
-    "smallGroupId" int NOT NULL,
-    "memberId" int NOT NULL,
-    "assignedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
-
-     PRIMARY KEY ("smallGroupId", "memberId"),
-    CONSTRAINT fk_smallGroup FOREIGN KEY ("smallGroupId") REFERENCES "membership"."smallGroup"("smallGroupId") ON DELETE CASCADE,
-    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
-);
-
-CREATE TABLE "membership"."courtCaseInfo" (
-    "courtCaseInfoId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
-    "caseDetails" text NOT NULL,
-    "status" varchar(20) NOT NULL, -- (ENUM) En proceso, Resuelto, Apelado, etc.
-    "lastUpdated" timestamptz DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE "membership"."disciplinaryInfo" (
-    "disciplinaryInfoId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
-    "caseDetails" text NOT NULL,
-    "status" varchar(20) NOT NULL, -- (ENUM) En proceso, Resuelto, Apelado, etc.
-    "lastUpdated" timestamptz DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE "membership"."sector" (
     "sectorId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "name" varchar(100) NOT NULL, -- (ENUM) Villa, Florentino, La cuca, etc. Y si es necesario agregar más sectores, se puede crear una tabla de sectores y referenciarla aquí.
@@ -110,11 +61,22 @@ CREATE TABLE "membership"."sector" (
     "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-
 CREATE TABLE "membership"."family" (
     "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "lastName" VARCHAR(100) UNIQUE NOT NULL, -- Primer y segundo apellido aqui mismo, para poder utilizar UNIQUE y evitar duplicados.
-    "createdAt" date DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE "membership"."churchRole" ( 
+    "churchRoleId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(100) NOT NULL, -- (Enum) agregar todos los departamentos de la iglesia local.
+    "description" text
+);
+
+CREATE TABLE "membership"."smallGroup" (
+    "smallGroupId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(100) UNIQUE NOT NULL,
+    "description" text
 );
 
 -- Tener en cuenta la privacidad de datos.
@@ -162,14 +124,50 @@ CREATE TABLE "membership"."member" (
     "academicLevel" academicLevelEnum, -- (ENUM) Primaria, Secundaria, Universitaria, Postgrado.
     "profession" varchar(100), 
     "occupation" varchar(100), -- Donde labora actualmente, Desempleado, Estudiante, Jubilado, etc.
-    "memberCourses" text -- Cursos o capacitaciones que el miembro ha recibido, como liderazgo, enseñanza bíblica o seculares, etc.
+    "memberCourses" text, -- Cursos o capacitaciones que el miembro ha recibido, como liderazgo, enseñanza bíblica o seculares, etc.
 
-    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" timestamp,
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" timestamptz
     -- "frecuenciaAsistencia" varchar(50), -- regular, ocasional.
     -- "requiereSeguimiento" boolean DEFAULT false,
     -- "ultimaVisitaPastoral" date,
     -- "notasPastorales" text, 
+);
+
+CREATE TABLE "membership"."memberChurchRole" ( -- INTERMEDIA member y churchRole.
+    "churchRoleId" int NOT NULL,
+    "memberId" int NOT NULL,
+    "assignedAt" timestamptz DEFAULT CURRENT_TIMESTAMP,
+
+     PRIMARY KEY ("churchRoleId", "memberId"),
+    CONSTRAINT fk_churchRole FOREIGN KEY ("churchRoleId") REFERENCES "membership"."churchRole"("churchRoleId") ON DELETE CASCADE,
+    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
+);
+
+CREATE TABLE "membership"."memberSmallGroup" ( -- INTERMEDIA member y smallGroup.
+    "smallGroupId" int NOT NULL,
+    "memberId" int NOT NULL,
+    "assignedAt" timestamptz DEFAULT CURRENT_TIMESTAMP,
+
+     PRIMARY KEY ("smallGroupId", "memberId"),
+    CONSTRAINT fk_smallGroup FOREIGN KEY ("smallGroupId") REFERENCES "membership"."smallGroup"("smallGroupId") ON DELETE CASCADE,
+    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
+);
+
+CREATE TABLE "membership"."courtCaseInfo" (
+    "courtCaseInfoId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
+    "caseDetails" text NOT NULL,
+    "status" varchar(20) NOT NULL, -- (ENUM) En proceso, Resuelto, Apelado, etc.
+    "lastUpdated" timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "membership"."disciplinaryInfo" (
+    "disciplinaryInfoId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
+    "caseDetails" text NOT NULL,
+    "status" varchar(20) NOT NULL, -- (ENUM) En proceso, Resuelto, Apelado, etc.
+    "lastUpdated" timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "membership"."event" (
@@ -280,8 +278,8 @@ CREATE OR REPLACE FUNCTION "finances"."registerDonation"(
     "pAmount" decimal,
     "pAccountCode" varchar,
     "pUserId" int,
-    "pPaymentMethod" varchar,
-    "pType" varchar
+    "pPaymentMethod" paymentMethodEnum,
+    "pDonationItemTypeId" int
 )
 RETURNS int AS $$
 DECLARE
@@ -299,9 +297,12 @@ BEGIN
     SET "currentBalance" = "currentBalance" + "pAmount"
     WHERE "accountCode" = "pAccountCode";
 
-    INSERT INTO "finances"."donation" ("memberId", "amount", "type", "paymentMethod", "status")
-    VALUES ("pMemberId", "pAmount", "pType", "pPaymentMethod", 'CONFIRMED')
+    INSERT INTO "finances"."donation" ("memberId", "observation")
+    VALUES ("pMemberId", 'Registro automático vía función')
     RETURNING "donationId" INTO "vDonationId";
+
+    INSERT INTO "finances"."donationItem" ("donationId", "donationItemTypeId", "amount", "paymentMethod", "status")
+    VALUES ("vDonationId", "pDonationItemTypeId", "pAmount", "pPaymentMethod", 'Confirmado');
 
     RETURN "vDonationId";
 END;
@@ -333,28 +334,59 @@ BEGIN
     SELECT "roleId" INTO "vStaffId" FROM "security"."role" WHERE "name" = 'staff';
     SELECT "roleId" INTO "vAuditorId" FROM "security"."role" WHERE "name" = 'auditor';
 
-    -- Insertar Administradores adicionales (si no existen)
-    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Admin 01', 'joshua@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true),
-    ('Admin 02', 'elias@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true),
-    ('Admin 03', 'gadiel@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAdminId", true)
-    ON CONFLICT ("email") DO NOTHING;
+-- insertar solo usuarios.
+    INSERT INTO "security"."user" ("name", "email", "passwordHash", "active") VALUES
+    ('Admin 01', 'joshua@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
+    ('Admin 02', 'elias@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
+    ('Admin 03', 'gadiel@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
 
-    -- Insertar Gerente de Finanzas
-    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Finance Manager', 'finance_mgr@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vManagerId", true)
-    ON CONFLICT ("email") DO NOTHING;
+    ('Finance Manager', 'finance_mgr@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
 
-    -- Insertar Staff Operativo
-    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Operativo 01', 'operaciones_01@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vStaffId", true),
-    ('Operativo 02', 'operaciones_02@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vStaffId", true)
-    ON CONFLICT ("email") DO NOTHING;
+    ('Operativo 01', 'operaciones_01@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
+    ('Operativo 02', 'operaciones_02@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
 
-    -- Insertar Auditor Externo
-    INSERT INTO "security"."user" ("name", "email", "passwordHash", "roleId", "active") VALUES
-    ('Auditor Externo', 'auditoria_externa@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', "vAuditorId", true)
-    ON CONFLICT ("email") DO NOTHING;
+    ('Auditor Externo', 'auditoria_externa@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true)
+
+ON CONFLICT ("email") DO NOTHING;
+
+-- insertar roles a los usuarios.
+INSERT INTO "security"."userRoles" ("userId", "roleId")
+SELECT u."userId", r."roleId"
+FROM "security"."user" u
+JOIN "security"."role" r ON r."name" = 'admin'
+WHERE u."email" IN (
+    'joshua@proyectox.com',
+    'elias@proyectox.com',
+    'gadiel@proyectox.com'
+)
+ON CONFLICT DO NOTHING;
+
+
+INSERT INTO "security"."userRoles" ("userId", "roleId")
+SELECT u."userId", r."roleId"
+FROM "security"."user" u
+JOIN "security"."role" r ON r."name" = 'manager'
+WHERE u."email" = 'finance_mgr@proyectox.com'
+ON CONFLICT DO NOTHING;
+
+
+INSERT INTO "security"."userRoles" ("userId", "roleId")
+SELECT u."userId", r."roleId"
+FROM "security"."user" u
+JOIN "security"."role" r ON r."name" = 'staff'
+WHERE u."email" IN (
+    'operaciones_01@proyectox.com',
+    'operaciones_02@proyectox.com'
+)
+ON CONFLICT DO NOTHING;
+
+
+INSERT INTO "security"."userRoles" ("userId", "roleId")
+SELECT u."userId", r."roleId"
+FROM "security"."user" u
+JOIN "security"."role" r ON r."name" = 'auditor'
+WHERE u."email" = 'auditoria_externa@proyectox.com'
+ON CONFLICT DO NOTHING;
 
 END $$;
 
@@ -365,22 +397,21 @@ VALUES
     ('Escuela Bíblica Infantil', 'Encargados de la enseñanza y cuidado de los niños, divididos por grupos de edad.'),
     ('Departamento de Diaconado', 'Servidores dedicados al orden del templo, atención de visitas y logística de eventos.');
 
-    INSERT INTO "membership"."family" ("lastName","district","address","sector")
-VALUES 
-    ('Romero', 'Sombrero', 'Calle 24, Edificio C4','Villa'),
-    ('Morrobel', 'Boca canasta', 'Calle 3, Edificio B1','Florentino'),
-	('Nivar', 'El llano', 'Calle 5, Edificio A3','La cuca');
+    INSERT INTO "membership"."family" ("lastName") 
+    VALUES 
+    ('Romero'), ('Morrobel'), ('Nivar');
 	
 
-INSERT INTO "membership"."member" ("familyId", "firstName", "lastName", "birthDate", "phoneNumber", "email")
-VALUES 
-(1,'Carlos', 'Romero', '4-4-4','8293736456', 'cocofrio@poyectox.com'),
-(3,'Ana', 'Nivar', '3/3/3','8295346787', 'bronx@proyectox.com'),
-(2,'Luis', 'Morrobel', '6/7/7','8093546765', 'kiruleisy@proyectox.com');
+    INSERT INTO "membership"."member" ("familyId", "firstName", "lastName", "gender", "birthDate", "maritalStatus", "phoneNumber", "email")
+    VALUES 
+    (1,'Carlos', 'Romero', 'Masculino', '1994-04-04','Soltero','8293736456', 'cocofrio@poyectox.com'),
+    (3,'Ana', 'Nivar', 'Femenino', '1993-03-03','Soltera','8295346787', 'bronx@proyectox.com'),
+    (2,'Luis', 'Morrobel', 'Masculino', '1997-07-07','Soltero','8093546765', 'kiruleisy@proyectox.com')
+    ON CONFLICT DO NOTHING;
 
-INSERT INTO "membership"."event" 
+    INSERT INTO "membership"."event" 
     ("title", "type", "description", "startDate", "endDate", "organizerUserId")
-VALUES
+    VALUES
     (
         'Congreso de Damas', 
         'Congreso', 
