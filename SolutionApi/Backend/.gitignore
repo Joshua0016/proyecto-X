@@ -21,3 +21,5 @@ obj/
 # 🔹 Archivos del sistema
 .DS_Store
 Thumbs.db
+
+../Backend.Tests/
