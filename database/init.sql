@@ -55,7 +55,6 @@ CREATE TABLE "security"."auditLog" (
     "sourceIp" varchar(50) NOT NULL,
     "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "userId" int NOT NULL REFERENCES "security"."user"("userId"),
-    "user" varchar(100) NOT NULL
 );
 
 -- ESQUEMA MEMBRESÍA
@@ -282,7 +281,8 @@ CREATE TABLE "finances"."expenseInvoice" (
 CREATE OR REPLACE FUNCTION "finances"."registerDonation"(
     "pMemberId" int,
     "pAmount" decimal,
-    "pAccountCode" varchar,
+    "pAccountCode" varchar,      -- Cuenta de Activo (Caja/Banco)
+    "pIncomeAccountCode" varchar, -- Cuenta de Ingreso (Donaciones)
     "pUserId" int,
     "pPaymentMethod" paymentMethodEnum,
     "pDonationItemTypeId" int
@@ -292,22 +292,31 @@ DECLARE
     "vJournalEntryId" int;
     "vDonationId" int;
 BEGIN
-    INSERT INTO "finances"."journalEntry" ("memo", "reference", "recordedByUserId")
-    VALUES ('Donation Received', 'DON-MB-' || "pMemberId", "pUserId")
+    -- Crear el asiento
+    INSERT INTO "finances"."journalEntry" ("memo", "reference", "recordedByUserId", "isBalanced")
+    VALUES ('Donación Recibida - Miembro ' || "pMemberId", 'DON-AUTO', "pUserId", true)
     RETURNING "journalEntryId" INTO "vJournalEntryId";
 
+    -- Movimiento de Débito (Entra dinero)
     INSERT INTO "finances"."ledgerTransaction" ("journalEntryId", "accountCode", "debit", "credit")
     VALUES ("vJournalEntryId", "pAccountCode", "pAmount", 0);
 
+    -- Movimiento de Crédito (Se registra el ingreso)
+    INSERT INTO "finances"."ledgerTransaction" ("journalEntryId", "accountCode", "debit", "credit")
+    VALUES ("vJournalEntryId", "pIncomeAccountCode", 0, "pAmount");
+
+    -- Actualizar saldo de cuenta de activo
     UPDATE "finances"."ledgerAccount"
     SET "currentBalance" = "currentBalance" + "pAmount"
     WHERE "accountCode" = "pAccountCode";
 
+    -- Registrar la donación administrativa
     INSERT INTO "finances"."donation" ("memberId", "observation")
-    VALUES ("pMemberId", 'Registro automático vía función')
+    VALUES ("pMemberId", 'Registro automático vía función financiera')
     RETURNING "donationId" INTO "vDonationId";
 
-    INSERT INTO "finances"."donationItem" ("donationId", "donationItemTypeId", "amount", "paymentMethod", "status")
+    -- Detalle de la donación 
+    INSERT INTO "finances"."donationItem" ("donationId", "donationItemType", "amount", "paymentMethod", "status")
     VALUES ("vDonationId", "pDonationItemTypeId", "pAmount", "pPaymentMethod", 'Confirmado');
 
     RETURN "vDonationId";
