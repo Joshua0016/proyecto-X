@@ -51,8 +51,8 @@ CREATE TABLE "security"."auditLog" (
     "newValues" text,
     "httpMethod" varchar(10) NOT NULL,
     "endPoint" varchar(255) NOT NULL,
-    "detail" text NOT NULL,
-    "sourceIp" varchar(50) NOT NULL,
+    "detail" text ,
+    "sourceIp" varchar(50) ,
     "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "userId" int NOT NULL REFERENCES "security"."user"("userId")
 );

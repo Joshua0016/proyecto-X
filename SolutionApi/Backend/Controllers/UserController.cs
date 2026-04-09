@@ -16,12 +16,13 @@ public class UserController(IService userService, IJwtService jwtService) : Cont
         try
         {
             var user = await userService.LoginAsync(request);
+            var roleId = user.UserRoles.FirstOrDefault()?.RoleId.ToString() ?? "0";
             var token = jwtService.GenerateToken(new LoginResponseDTO(
                 UserId: user.UserId,
                 Name: user.Name,
                 Token: "",
                 Email: user.Email,
-                Rol: user.RoleId.ToString()
+                Rol: roleId
             ));
 
             return Ok(new LoginResponseDTO(
@@ -29,7 +30,7 @@ public class UserController(IService userService, IJwtService jwtService) : Cont
                 Name: user.Name,
                 Token: token,
                 Email: user.Email,
-                Rol: user.RoleId.ToString()
+                Rol: roleId
             ));
         }
         catch (UnauthorizedAccessException ex) { return Unauthorized(new { message = ex.Message }); }

@@ -81,6 +81,36 @@ public partial class DbProyectoXContext : DbContext
             .HasPostgresEnum<DonationStatus>("statusenum")
             .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
 
+
+
+
+
+
+        modelBuilder.Entity<UserRole>()
+        .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+        // Configure the many-to-many relationship
+        modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.User)
+            .WithMany(u => u.UserRoles)
+            .HasForeignKey(ur => ur.UserId);
+
+        modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.Role)
+            .WithMany(r => r.UserRoles)
+            .HasForeignKey(ur => ur.RoleId);
+
+        // Ensure table names match your schema
+        modelBuilder.Entity<User>().ToTable("user", "security");
+        modelBuilder.Entity<Role>().ToTable("role", "security");
+        modelBuilder.Entity<UserRole>().ToTable("userRoles", "security");
+
+
+
+
+
+
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
 
         OnModelCreatingPartial(modelBuilder);

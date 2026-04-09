@@ -23,7 +23,7 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
         entity.Property(e => e.OldValues).HasColumnName("oldValues");
         entity.Property(e => e.NewValues).HasColumnName("newValues");
         entity.Property(e => e.HttpMethod).HasMaxLength(10).HasColumnName("httpMethod");
-        entity.Property(e => e.Endpoint).HasColumnName("endpoint");
+        entity.Property(e => e.Endpoint).HasColumnName("endPoint");
         entity.Property(e => e.Detail).HasColumnName("detail");
         entity.Property(e => e.SourceIp).HasMaxLength(50).HasColumnName("sourceIp");
 
