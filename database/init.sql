@@ -10,6 +10,10 @@ CREATE TYPE genderEnum AS ENUM ('Masculino', 'Femenino');
 CREATE TYPE maritalStatusEnum AS ENUM ('Soltero', 'Casado', 'Viudo', 'Divorciado');
 CREATE TYPE memberTypeEnum AS ENUM ('Comunion', 'Activos', 'Pasivos', 'Visitantes', 'Ministeriales', 'Catecumenos', 'Adherentes');
 CREATE TYPE academicLevelEnum AS ENUM ('Primaria', 'Secundaria', 'Grado', 'Postgrado');
+CREATE TYPE statusEnum AS ENUM ('Pendiente', 'Confirmado', 'Rechazado');
+CREATE TYPE paymentMethodEnum AS ENUM ('Efectivo', 'Transferencia', 'Cheque', 'Deposito');
+create type unitOfMeasureEnum as enum ('libras', 'galones', 'unidades', 'litros', 'kilogramos', 'otros' );
+CREATE TYPE categoryItemEnum AS ENUM ('Dinero', 'Comida', 'Ropa', 'Combustible', 'Medicamentos', 'Materiales de construcción', 'Muebles', 'Electrodomésticos', 'Juguetes', 'Libros', 'Otros');
 
 --  ESQUEMA SEGURIDAD
 
@@ -50,9 +54,9 @@ CREATE TABLE "security"."auditLog" (
 
 -- ESQUEMA MEMBRESÍA
 
-CREATE TABLE "membership"."churchRole" ( -- agregar todos los departamentos de la iglesia local.
+CREATE TABLE "membership"."churchRole" ( 
     "churchRoleId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" varchar(100) NOT NULL,
+    "name" varchar(100) NOT NULL, -- (Enum) agregar todos los departamentos de la iglesia local.
     "description" text
 );
 
@@ -66,38 +70,6 @@ CREATE TABLE "membership"."memberChurchRole" ( -- INTERMEDIA member y churchRole
     CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
 );
 
-CREATE TABLE "membership"."district" (
-    "districtId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" varchar(100) NOT NULL,
-    "sector" varchar(100) NOT NULL,
-    "description" text
-);
-
-CREATE TABLE "membership"."memberDistrict" ( -- INTERMEDIA member y district.
-    "districtId" int NOT NULL,
-    "memberId" int NOT NULL,
-    "assignedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
-
-     PRIMARY KEY ("districtId", "memberId"),
-    CONSTRAINT fk_district FOREIGN KEY ("districtId") REFERENCES "membership"."district"("districtId") ON DELETE CASCADE,
-    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
-);
-
-CREATE TABLE "membership"."sector" (
-   "sectorId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-   "name" varchar(100) NOT NULL,
-   "description" text
-);
-
-CREATE TABLE "membership"."memberSector" ( -- INTERMEDIA member y sector.
-    "sectorId" int NOT NULL,
-    "memberId" int NOT NULL,
-    "assignedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
-
-     PRIMARY KEY ("sectorId", "memberId"),
-    CONSTRAINT fk_sector FOREIGN KEY ("sectorId") REFERENCES "membership"."sector"("sectorId") ON DELETE CASCADE,
-    CONSTRAINT fk_member FOREIGN KEY ("memberId") REFERENCES "membership"."member"("memberId") ON DELETE CASCADE
-);
 
 CREATE TABLE "membership"."smallGroup" (
     "smallGroupId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -131,6 +103,14 @@ CREATE TABLE "membership"."disciplinaryInfo" (
     "lastUpdated" timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "membership"."sector" (
+    "sectorId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" varchar(100) NOT NULL, -- (ENUM) Villa, Florentino, La cuca, etc. Y si es necesario agregar más sectores, se puede crear una tabla de sectores y referenciarla aquí.
+    "district" varchar(100) NOT NULL, -- (ENUM) Sombrero, Boca canasta, El llano, etc. (Que al colocar nombre se coloque el id por default)
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
 CREATE TABLE "membership"."family" (
     "familyId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "lastName" VARCHAR(100) UNIQUE NOT NULL, -- Primer y segundo apellido aqui mismo, para poder utilizar UNIQUE y evitar duplicados.
@@ -156,10 +136,7 @@ CREATE TABLE "membership"."member" (
     "phoneNumber" varchar(15),
     "email" varchar(150) UNIQUE CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     "address" text,
-    "district" int REFERENCES "membership"."district"("districtId"), 
-    -- (Que al colocar nombre se coloque el id por default) Sombrero, Boca canasta, El llano, etc.
-    "sector" int REFERENCES "membership"."sector"("sectorId"), 
-    -- (Que al colocar nombre se coloque el id por default) Villa, Florentino, La cuca, etc. Y si es necesario agregar más sectores, se puede crear una tabla de sectores y referenciarla aquí.
+    "sector" int REFERENCES "membership"."sector"("sectorId"), -- (Que al colocar nombre se coloque el id por default) Villa, Florentino, La cuca, etc. Y si es necesario agregar más sectores, se puede crear una tabla de sectores y referenciarla aquí.
     "emergencyContactName" varchar(100),
     "emergencyContactPhone" varchar(15),
     "familyId" int REFERENCES "membership"."family"("familyId"),
@@ -243,14 +220,31 @@ CREATE TABLE "finances"."ledgerTransaction" (
     "credit" decimal(12,2) DEFAULT 0 NOT NULL
 );
 
-CREATE TABLE "finances"."donation" (
+CREATE TABLE "finances"."donationItemType" (
+    "donationItemTypeId" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" VARCHAR(100) NOT NULL, -- Arroz, Habichuelas, Gasolina
+    "category" categoryItemEnum NOT NULL, -- (ENUM) 'Efectivo', 'Comida', 'Ropa', 'Combustible' etc    
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- 1. Tabla principal de la donación
+CREATE TABLE "finances"."donation" ( -- este viene siendo el id principal, que se puede utilizar para generar el recibo de donación y el comprobante fiscal.
     "donationId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "memberId" int NOT NULL REFERENCES "membership"."member"("memberId"),
-    "amount" decimal (12,2) NOT NULL,
     "date" timestamptz DEFAULT NOW() NOT NULL,
-    "type" varchar(50) NOT NULL,
-    "paymentMethod" varchar(50) NOT NULL,
-    "status" varchar(20) NOT NULL
+    "observation" text  -- Notas: "Donación para el evento de jóvenes" (Luego deberia ser por fk id.)
+);
+
+-- 2. Tabla para detalles (aquí va la comida, ropa, etc.)
+CREATE TABLE "finances"."donationItem" (
+    "donationItemId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "donationId" int NOT NULL REFERENCES "finances"."donation"("donationId") ON DELETE CASCADE,
+    "donationItemType" int NOT NULL REFERENCES "finances"."donationItemType"("donationItemTypeId"),
+    "quantity" decimal(10,2),        -- cantidad de lo donado (dinero no va aqui).
+    "unitOfMeasure" unitOfMeasureEnum,   -- (ENUM)'libras', 'galones', 'unidades', etc
+    "amount" decimal(12,2),           -- Solo si es dinero, aquí va el valor
+    "paymentMethod" paymentMethodEnum, -- (ENUM) Efectivo, Transferencia, Cheque, etc.
+    "status" statusEnum -- (ENUM) Pendiente, Confirmado, Rechazado, etc.
 );
 
 CREATE TABLE "finances"."taxReceipt" (
