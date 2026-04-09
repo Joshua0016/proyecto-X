@@ -46,10 +46,16 @@ CREATE TABLE "security"."auditLog" (
     "logId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "operation" varchar(50) NOT NULL,
     "affectedTable" varchar(100) NOT NULL,
+    "entityId" int,
+    "oldValues" text,
+    "newValues" text,
+    "httpMethod" varchar(10) NOT NULL,
+    "endPoint" varchar(255) NOT NULL,
     "detail" text NOT NULL,
     "sourceIp" varchar(50) NOT NULL,
     "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    "userId" int NOT NULL REFERENCES "security"."user"("userId")
+    "userId" int NOT NULL REFERENCES "security"."user"("userId"),
+    "user" varchar(100) NOT NULL
 );
 
 -- ESQUEMA MEMBRESÍA
