@@ -31,12 +31,12 @@ namespace Backend.Repositories
             var normalizedEmail = email.ToLower();
 
             return await _context.Users
-                .Include(u => u.Role)
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
         }
 
         public async Task<User?> GetByIdAsync(int id) =>
-            await _context.Users.Include(u => u.Role)
+            await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
         public async Task AddAsync(User usuario)

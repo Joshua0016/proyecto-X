@@ -28,10 +28,17 @@ public class AuditLogMiddleware(RequestDelegate next, ILogger<AuditLogMiddleware
         if (method is "POST" or "PUT" or "PATCH")
             body = await ReadBodyAsync(context.Request);
 
+        var userId = GetUserId(context);
+        if (userId == 0)
+        {
+            _logger.LogWarning("AuditLogMiddleware: skipping audit log for {Method} {Path} — no authenticated user", method, path);
+            return;
+        }
+
         var entry = new AuditLog
         {
             Timestamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified),
-            UserId = GetUserId(context),
+            UserId = userId,
             Operation = GetOperation(method),
             AffectedTable = GetAffectedTable(path),
             NewValues = body,

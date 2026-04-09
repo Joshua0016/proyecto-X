@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Services;
 
-public class UserService(IGenericRepository<User> userRepository, IPasswordHasher<User> hasher) : IService
+public class UserService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IPasswordHasher<User> hasher) : IService
 {
     public async Task<IEnumerable<UserResponseDTO>> ListAllAsync() =>
         (await userRepository.GetAllAsync()).Adapt<IEnumerable<UserResponseDTO>>();
@@ -23,16 +23,19 @@ public class UserService(IGenericRepository<User> userRepository, IPasswordHashe
         if (await userRepository.ExistsAsync(request.Email))
             throw new InvalidOperationException("Ya existe un usuario con ese correo");
 
+        var role = await roleRepository.GetByIdAsync(request.IdRol)
+            ?? throw new ArgumentException($"El rol con ID {request.IdRol} no existe");
+
         var user = new User
         {
             Name      = request.Name,
             Email     = request.Email,
-            RoleId    = request.IdRol,
             Active    = true,
             CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         user.Password = hasher.HashPassword(user, request.Password);
+        user.UserRoles.Add(new UserRole { RoleId = request.IdRol });
         await userRepository.AddAsync(user);
         return "Usuario registrado exitosamente";
     }
@@ -69,7 +72,15 @@ public class UserService(IGenericRepository<User> userRepository, IPasswordHashe
 
         user.Name    = request.Name;
         user.Email   = request.Email;
-        user.RoleId  = request.IdRol;
+        // Validate role exists
+        _ = await roleRepository.GetByIdAsync(request.IdRol)
+            ?? throw new ArgumentException($"El rol con ID {request.IdRol} no existe");
+        // Update role via UserRoles junction table
+        var existingRole = user.UserRoles.FirstOrDefault();
+        if (existingRole != null)
+            existingRole.RoleId = request.IdRol;
+        else
+            user.UserRoles.Add(new UserRole { RoleId = request.IdRol });
         await userRepository.UpdateAsync(user);
     }
 

@@ -81,6 +81,11 @@ public partial class DbProyectoXContext : DbContext
             .HasPostgresEnum<DonationStatus>("statusenum")
             .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
 
+
+
+
+
+
         modelBuilder.Entity<UserRole>()
         .HasKey(ur => new { ur.UserId, ur.RoleId });
 
@@ -99,6 +104,12 @@ public partial class DbProyectoXContext : DbContext
         modelBuilder.Entity<User>().ToTable("user", "security");
         modelBuilder.Entity<Role>().ToTable("role", "security");
         modelBuilder.Entity<UserRole>().ToTable("userRoles", "security");
+
+
+
+
+
+
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
 

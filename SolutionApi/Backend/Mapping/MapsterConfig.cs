@@ -10,7 +10,8 @@ public static class MapsterConfig
     {
         // User → UserResponseDTO
         TypeAdapterConfig<User, UserResponseDTO>.NewConfig()
-            .Map(dest => dest.RolNombre, src => src.Role != null ? src.Role.Name : string.Empty);
+            .Map(dest => dest.RolNombre, src => src.UserRoles.FirstOrDefault() != null && src.UserRoles.First().Role != null
+                ? src.UserRoles.First().Role.Name : string.Empty);
 
         // // AuditLog → AuditLogResponseDTO
         // TypeAdapterConfig<AuditLog, AuditLogResponseDTO>.NewConfig()
