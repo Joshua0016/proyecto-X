@@ -12,7 +12,7 @@ CREATE TYPE memberTypeEnum AS ENUM ('Comunion', 'Activos', 'Pasivos', 'Visitante
 CREATE TYPE academicLevelEnum AS ENUM ('Primaria', 'Secundaria', 'Grado', 'Postgrado');
 CREATE TYPE statusEnum AS ENUM ('Pendiente', 'Confirmado', 'Rechazado');
 CREATE TYPE paymentMethodEnum AS ENUM ('Efectivo', 'Transferencia', 'Cheque', 'Deposito');
-create type unitOfMeasureEnum as enum ('libras', 'galones', 'unidades', 'litros', 'kilogramos', 'otros' );
+create type unitOfMeasureEnum as ENUM ('libras', 'galones', 'unidades', 'litros', 'kilogramos', 'otros' );
 CREATE TYPE categoryItemEnum AS ENUM ('Dinero', 'Comida', 'Ropa', 'Combustible', 'Medicamentos', 'Materiales de construcción', 'Muebles', 'Electrodomésticos', 'Juguetes', 'Libros', 'Otros');
 
 --  ESQUEMA SEGURIDAD
@@ -54,7 +54,7 @@ CREATE TABLE "security"."auditLog" (
     "detail" text NOT NULL,
     "sourceIp" varchar(50) NOT NULL,
     "timestamp" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    "userId" int NOT NULL REFERENCES "security"."user"("userId"),
+    "userId" int NOT NULL REFERENCES "security"."user"("userId")
 );
 
 -- ESQUEMA MEMBRESÍA
@@ -343,65 +343,55 @@ DECLARE
     "vStaffId" int;
     "vAuditorId" int;
 BEGIN
-    -- Obtener IDs de los roles de forma dinámica
+    -- 1. Obtener IDs de los roles 
     SELECT "roleId" INTO "vAdminId" FROM "security"."role" WHERE "name" = 'admin';
     SELECT "roleId" INTO "vManagerId" FROM "security"."role" WHERE "name" = 'manager';
     SELECT "roleId" INTO "vStaffId" FROM "security"."role" WHERE "name" = 'staff';
     SELECT "roleId" INTO "vAuditorId" FROM "security"."role" WHERE "name" = 'auditor';
 
--- insertar solo usuarios.
+    -- 2. Insertar los usuarios
+   
     INSERT INTO "security"."user" ("name", "email", "passwordHash", "active") VALUES
     ('Admin 01', 'joshua@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
     ('Admin 02', 'elias@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
     ('Admin 03', 'gadiel@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
-
     ('Finance Manager', 'finance_mgr@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
-
     ('Operativo 01', 'operaciones_01@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
     ('Operativo 02', 'operaciones_02@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true),
-
     ('Auditor Externo', 'auditoria_externa@proyectox.com', 'AQAAAAIAAYagAAAAEIh2ZC2Q6PPYhs2tRldCDoUJSXbLl7ge9QTvSs0GAtXQRirFnFmbLDW9naNQmwRv2g==', true)
+    ON CONFLICT ("email") DO NOTHING;
 
-ON CONFLICT ("email") DO NOTHING;
+    -- 3. Insertar roles a los usuarios (Cada bloque debe terminar en ;)
+    
+    -- Admin
+    INSERT INTO "security"."userRoles" ("userId", "roleId")
+    SELECT u."userId", "vAdminId"
+    FROM "security"."user" u
+    WHERE u."email" IN ('joshua@proyectox.com', 'elias@proyectox.com', 'gadiel@proyectox.com')
+    ON CONFLICT DO NOTHING;
 
--- insertar roles a los usuarios.
-INSERT INTO "security"."userRoles" ("userId", "roleId")
-SELECT u."userId", r."roleId"
-FROM "security"."user" u
-JOIN "security"."role" r ON r."name" = 'admin'
-WHERE u."email" IN (
-    'joshua@proyectox.com',
-    'elias@proyectox.com',
-    'gadiel@proyectox.com'
-)
-ON CONFLICT DO NOTHING;
+    -- Manager
+    INSERT INTO "security"."userRoles" ("userId", "roleId")
+    SELECT u."userId", "vManagerId"
+    FROM "security"."user" u
+    WHERE u."email" = 'finance_mgr@proyectox.com'
+    ON CONFLICT DO NOTHING;
 
+    -- Staff
+    INSERT INTO "security"."userRoles" ("userId", "roleId")
+    SELECT u."userId", "vStaffId"
+    FROM "security"."user" u
+    WHERE u."email" IN ('operaciones_01@proyectox.com', 'operaciones_02@proyectox.com')
+    ON CONFLICT DO NOTHING;
 
-INSERT INTO "security"."userRoles" ("userId", "roleId")
-SELECT u."userId", r."roleId"
-FROM "security"."user" u
-JOIN "security"."role" r ON r."name" = 'manager'
-WHERE u."email" = 'finance_mgr@proyectox.com'
-ON CONFLICT DO NOTHING;
+    -- Auditor
+    INSERT INTO "security"."userRoles" ("userId", "roleId")
+    SELECT u."userId", "vAuditorId"
+    FROM "security"."user" u
+    WHERE u."email" = 'auditoria_externa@proyectox.com'
+    ON CONFLICT DO NOTHING;
 
-
-INSERT INTO "security"."userRoles" ("userId", "roleId")
-SELECT u."userId", r."roleId"
-FROM "security"."user" u
-JOIN "security"."role" r ON r."name" = 'staff'
-WHERE u."email" IN (
-    'operaciones_01@proyectox.com',
-    'operaciones_02@proyectox.com'
-)
-ON CONFLICT DO NOTHING;
-
-
-INSERT INTO "security"."userRoles" ("userId", "roleId")
-SELECT u."userId", r."roleId"
-FROM "security"."user" u
-JOIN "security"."role" r ON r."name" = 'auditor'
-WHERE u."email" = 'auditoria_externa@proyectox.com'
-ON CONFLICT DO NOTHING;
+    RAISE NOTICE 'Seed de usuarios y roles completado con éxito.';
 
 END $$;
 
