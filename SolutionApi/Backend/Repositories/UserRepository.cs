@@ -17,7 +17,7 @@ namespace Backend.Repositories
         // }
 
         public async Task<IEnumerable<User>> GetAllAsync() =>
-            await _context.Users.Include(u => u.Role)
+            await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .ToListAsync();
 
 

@@ -14,7 +14,7 @@ public class RolesRepository(DbProyectoXContext context) : IGenericRepository<Ro
 
 
     public async Task<IEnumerable<Role>> GetAllAsync() =>
-        await _context.Roles.ToListAsync();
+        await _context.Roles.Include(r => r.UserRoles).ThenInclude(ur => ur.User).ToListAsync();
 
     public async Task<Role?> GetByIdAsync(int id) =>
         await _context.Roles.FirstOrDefaultAsync(u => u.RoleId == id);

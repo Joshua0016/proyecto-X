@@ -9,6 +9,7 @@ public class AuditLogController(IAuditLogService auditLogService) : ControllerBa
 {
     private readonly IAuditLogService _auditLogService = auditLogService;
 
+    [Authorize(Roles = "1")]
     [HttpGet]
     public async Task<IActionResult> GetAuditLogs()
     {

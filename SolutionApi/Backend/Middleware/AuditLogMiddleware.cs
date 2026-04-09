@@ -30,7 +30,7 @@ public class AuditLogMiddleware(RequestDelegate next, ILogger<AuditLogMiddleware
 
         var entry = new AuditLog
         {
-            Timestamp = DateTime.UtcNow,
+            Timestamp = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified),
             UserId = GetUserId(context),
             Operation = GetOperation(method),
             AffectedTable = GetAffectedTable(path),
