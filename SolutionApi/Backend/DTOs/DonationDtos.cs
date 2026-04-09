@@ -3,28 +3,47 @@ using Backend.commons;
 
 namespace Backend.DTOs;
 
-public record DonationCreateDto(
-    [Required] int MemberId,
+// --- DonationItem DTOs ---
+
+public record DonationItemCreateDTO(
+    [Required] int DonationItemTypeId,
+    int? Quantity,
+    UnitOfMeasure? UnitOfMeasure,
     [Required][Range(0.01, 999999999.99)] decimal Amount,
+    [Required] PaymentMethod PaymentMethod,
+    DonationStatus? Status
+);
+
+public record DonationItemResponseDTO(
+    int DonationItemId,
+    int DonationId,
+    int DonationItemTypeId,
+    int? Quantity,
+    UnitOfMeasure? UnitOfMeasure,
+    decimal Amount,
+    PaymentMethod PaymentMethod,
+    DonationStatus? Status
+);
+
+// --- Donation DTOs ---
+
+public record DonationCreateDTO(
+    [Required] int MemberId,
     [Required] DateTime Date,
-    [Required] DonationType Type,
-    [Required] DonationPaymentMethod PaymentMethod,
-    DonationStatus Status = DonationStatus.Completed
+    string? Observation,
+    List<DonationItemCreateDTO>? Items
 );
 
 public record DonationResponseDTO(
     int DonationId,
     int MemberId,
-    string MemberName,
-    decimal Amount,
     DateTime Date,
-    string Type,
-    string PaymentMethod,
-    string Status,
-    string? TaxReceiptCode
+    string? Observation,
+    List<DonationItemResponseDTO>? Items
 );
 
-public record DonationUpdateDto(
-    [Required][Range(0.01, 999999999.99)] decimal Amount,
-    [Required] DonationStatus Status
+public record DonationUpdateDTO(
+    [Required] int MemberId,
+    [Required] DateTime Date,
+    string? Observation
 );

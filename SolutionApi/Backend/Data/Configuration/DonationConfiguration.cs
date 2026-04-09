@@ -13,19 +13,16 @@ namespace Backend.Data.Configuration
             entity.ToTable("donation", "finances");
 
             entity.Property(e => e.DonationId).UseIdentityAlwaysColumn().HasColumnName("donationId");
-            entity.Property(e => e.Amount).HasPrecision(12, 2).HasColumnName("amount");
             entity.Property(e => e.Date)
-                .HasDefaultValueSql("now()")
-                .HasColumnType("timestamp with time zone")
+                .HasDefaultValueSql("CURRENT_DATE")
+                .HasColumnType("date")
                 .HasColumnName("date");
             entity.Property(e => e.MemberId).HasColumnName("memberId");
-            entity.Property(e => e.PaymentMethod).HasMaxLength(50).HasColumnName("paymentMethod");
-            entity.Property(e => e.Status).HasMaxLength(20).HasColumnName("status");
-            entity.Property(e => e.Type).HasMaxLength(50).HasColumnName("type");
+            entity.Property(e => e.Observation).HasColumnName("observation");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.MemberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("donation_memberId_fkey");
         }
     }

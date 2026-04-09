@@ -10,12 +10,14 @@ public class DonationRepository(DbProyectoXContext context) : IGenericRepository
     public async Task<IEnumerable<Donation>> GetAllAsync() =>
         await context.Donations
             .Include(d => d.Member)
+            .Include(d => d.DonationItems)
             .Include(d => d.TaxReceipts)
             .ToListAsync();
 
     public async Task<IEnumerable<Donation>> GetByMemberAsync(int memberId) =>
         await context.Donations
             .Include(d => d.Member)
+            .Include(d => d.DonationItems)
             .Include(d => d.TaxReceipts)
             .Where(d => d.MemberId == memberId)
             .OrderByDescending(d => d.Date)
@@ -24,6 +26,7 @@ public class DonationRepository(DbProyectoXContext context) : IGenericRepository
     public async Task<Donation?> GetByIdAsync(int id) =>
         await context.Donations
             .Include(d => d.Member)
+            .Include(d => d.DonationItems)
             .Include(d => d.TaxReceipts)
             .FirstOrDefaultAsync(d => d.DonationId == id);
 

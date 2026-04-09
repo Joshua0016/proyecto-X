@@ -58,18 +58,13 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
         }
     }
 
-    public async Task<bool> ExistsAsync(string sector)
+    public async Task<bool> ExistsAsync(string lastName)
     {
-        if (string.IsNullOrEmpty(sector))
+        if (string.IsNullOrEmpty(lastName))
         {
             return false;
         }
-        return await _context.Families.AnyAsync(u => u.Sector == sector);
-    }
-
-    public async Task<List<Member>> GetByIdsAsync(List<int> memberIds)
-    {
-        return await _context.Members.Where(m => memberIds.Contains(m.MemberId)).ToListAsync();
+        return await _context.Families.AnyAsync(f => f.LastName == lastName);
     }
 }
 

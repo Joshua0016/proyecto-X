@@ -8,6 +8,14 @@
 		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
 	</PropertyGroup>
 
+	<!-- Excluir el proyecto de tests que vive dentro del directorio -->
+	<ItemGroup>
+		<Compile Remove="Backend.Tests\**" />
+		<Content Remove="Backend.Tests\**" />
+		<EmbeddedResource Remove="Backend.Tests\**" />
+		<None Remove="Backend.Tests\**" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />

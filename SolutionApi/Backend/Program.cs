@@ -1,5 +1,6 @@
 
 using Backend.Data;
+using Backend.Middleware;
 using Backend.commons;
 using Backend.Repositories;
 using Backend.Models;
@@ -46,6 +47,9 @@ namespace Backend
             builder.Services.AddScoped<IRole, RoleService>();
 
             builder.Services.AddScoped<IMemberService, MemberService>();
+
+            builder.Services.AddScoped<AuditLogRepository>();
+            builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
             builder.Services.AddScoped<DonationRepository>();
             builder.Services.AddScoped<IDonationService, DonationService>();
@@ -188,6 +192,7 @@ namespace Backend
 
             app.UseAuthorization();
 
+            app.UseMiddleware<AuditLogMiddleware>();
 
             app.MapControllers();
 

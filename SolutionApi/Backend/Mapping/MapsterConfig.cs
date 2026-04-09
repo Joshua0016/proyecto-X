@@ -12,32 +12,14 @@ public static class MapsterConfig
         TypeAdapterConfig<User, UserResponseDTO>.NewConfig()
             .Map(dest => dest.RolNombre, src => src.Role != null ? src.Role.Name : string.Empty);
 
-        TypeAdapterConfig<Member, MemberResponseDTO>.NewConfig()
-            .Map(dest => dest.memberId, src => src.MemberId)
-            .Map(dest => dest.FirstName, src => src.FirstName)
-            .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
-            .Map(dest => dest.Email, src => src.Email)
-            .Map(dest => dest.PhotoUrl, src => src.PhotoUrl)
-            .Map(dest => dest.BirthDate, src => src.BirthDate);
+        // // AuditLog → AuditLogResponseDTO
+        // TypeAdapterConfig<AuditLog, AuditLogResponseDTO>.NewConfig()
+        //     .Map(dest => dest.UserName, src => src.User != null ? src.User.Name : string.Empty);
 
-        TypeAdapterConfig<MemberCreateDTO, Member>.NewConfig()
-            .Map(dest => dest.FirstName, src => src.FirstName)
-            .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
-            .Map(dest => dest.Email, src => src.Email)
-            .Map(dest => dest.PhotoUrl, src => src.PhotoUrl)
-            .Map(dest => dest.BirthDate, src => src.BirthDate)
-            .Map(dest => dest.FamilyId, src => src.FamilyId);
-
-        TypeAdapterConfig<MemberUpdateDTO, Member>.NewConfig()
-            .Map(dest => dest.FirstName, src => src.FirstName)
-            .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
-            .Map(dest => dest.Email, src => src.Email)
-            .Map(dest => dest.PhotoUrl, src => src.PhotoUrl)
-            .Map(dest => dest.BirthDate, src => src.BirthDate)
-            .Map(dest => dest.FamilyId, src => src.FamilyId);
+        // Member mappings: all property names match by convention
+        TypeAdapterConfig<Member, MemberResponseDTO>.NewConfig();
+        TypeAdapterConfig<MemberCreateDTO, Member>.NewConfig();
+        TypeAdapterConfig<MemberUpdateDTO, Member>.NewConfig();
 
         TypeAdapterConfig<Role, RolesResponseDTO>.NewConfig()
             .Map(dest => dest.IdRol, src => src.RoleId)
@@ -51,22 +33,18 @@ public static class MapsterConfig
             .Map(dest => dest.IsActive, src => true)
             .Map(dest => dest.CurrentBalance, src => 0m);
 
-        // Family → FamilyResponseDTO: campos con nombres distintos e incluye lista de miembros mapeada
+        // Family → FamilyResponseDTO: includes mapped member list
         TypeAdapterConfig<Family, FamilyResponseDTO>.NewConfig()
             .Map(dest => dest.FamilyId, src => src.FamilyId)
-            .Map(dest => dest.District, src => src.District)
-            .Map(dest => dest.Sector, src => src.Sector)
-            .Map(dest => dest.Address, src => src.Address)
+            .Map(dest => dest.LastName, src => src.LastName)
             .Map(dest => dest.CreatedAt, src => src.CreatedAt)
             .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
 
 
-        // Family → FamilyDetailDTO: incluye lista de miembros mapeada
+        // Family → FamilyDetailDTO: includes mapped member list
         TypeAdapterConfig<Family, FamilyDetailDTO>.NewConfig()
             .Map(dest => dest.FamilyId, src => src.FamilyId)
-            .Map(dest => dest.District, src => src.District)
-            .Map(dest => dest.Sector, src => src.Sector)
-            .Map(dest => dest.Address, src => src.Address)
+            .Map(dest => dest.LastName, src => src.LastName)
             .Map(dest => dest.CreatedAt, src => src.CreatedAt)
             .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
 
@@ -85,7 +63,6 @@ public static class MapsterConfig
             .Map(dest => dest.StartDate, src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Utc))
             .Map(dest => dest.EndDate,   src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc));
 
-        // Attendance → AttendanceResponseDTO: campos calculados de navegación
         TypeAdapterConfig<Attendance, AttendanceResponseDTO>.NewConfig()
             .Map(dest => dest.EventTitle,  src => src.Event != null ? src.Event.Title : string.Empty)
             .Map(dest => dest.MemberName,  src => src.Member != null
@@ -98,15 +75,27 @@ public static class MapsterConfig
             .Map(dest => dest.ExitTime, src => src.ExitTime.HasValue
                 ? DateTime.SpecifyKind(src.ExitTime.Value, DateTimeKind.Utc) : (DateTime?)null);
 
-        // TaxReceipt → TaxReceiptResponseDTO: campos calculados de navegación
+        // Donation → DonationResponseDTO: map DonationItems collection to Items
+        TypeAdapterConfig<Donation, DonationResponseDTO>.NewConfig()
+            .Map(dest => dest.Items, src => src.DonationItems);
+
+        // DonationCreateDTO → Donation: map Items to DonationItems
+        TypeAdapterConfig<DonationCreateDTO, Donation>.NewConfig()
+            .Map(dest => dest.DonationItems, src => src.Items);
+
+        // DonationItem ↔ DonationItem DTOs: all property names match by convention
+        TypeAdapterConfig<DonationItem, DonationItemResponseDTO>.NewConfig();
+        TypeAdapterConfig<DonationItemCreateDTO, DonationItem>.NewConfig();
+
         TypeAdapterConfig<TaxReceipt, TaxReceiptResponseDTO>.NewConfig()
             .Map(dest => dest.DonorName, src => src.Donation != null && src.Donation.Member != null
                 ? $"{src.Donation.Member.FirstName} {src.Donation.Member.LastName}".Trim()
                 : null)
-            .Map(dest => dest.DonationAmount, src => src.Donation != null ? src.Donation.Amount : 0)
+            .Map(dest => dest.DonationAmount, src => src.Donation != null
+                ? src.Donation.DonationItems.Sum(i => i.Amount)
+                : 0)
             .Map(dest => dest.IssueDate, src => DateOnly.FromDateTime(src.IssueDate));
 
-        // ExpenseInvoice → ExpenseInvoiceResponseDTO
         TypeAdapterConfig<ExpenseInvoice, ExpenseInvoiceResponseDTO>.NewConfig()
             .Map(dest => dest.VendorName, src => src.Vendor != null ? src.Vendor.Name : string.Empty)
             .Map(dest => dest.IssueDate,  src => DateOnly.FromDateTime(src.IssueDate))
