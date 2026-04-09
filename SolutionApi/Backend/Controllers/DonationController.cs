@@ -26,7 +26,7 @@ public class DonationController(IDonationService service) : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "1")]
-    public async Task<IActionResult> Create([FromBody] DonationCreateDto dto)
+    public async Task<IActionResult> Create([FromBody] DonationCreateDTO dto)
     {
         try
         {
@@ -38,7 +38,7 @@ public class DonationController(IDonationService service) : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "1")]
-    public async Task<IActionResult> Update(int id, [FromBody] DonationUpdateDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] DonationUpdateDTO dto)
     {
         try
         {
@@ -47,7 +47,6 @@ public class DonationController(IDonationService service) : ControllerBase
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
-        catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
     }
 
     [HttpDelete("{id}")]

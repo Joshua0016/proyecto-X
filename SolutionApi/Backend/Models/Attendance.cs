@@ -16,9 +16,6 @@ public partial class Attendance
     [Required(ErrorMessage = "El miembro es obligatorio.")]
     public int MemberId { get; set; }
 
-    [Required(ErrorMessage = "La fecha de asistencia es obligatoria.")]
-    public DateOnly Date { get; set; }
-
     [Required]
     public bool IsPresent { get; set; } = false;
 

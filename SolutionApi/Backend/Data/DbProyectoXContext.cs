@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend.commons;
 using Backend.Models;
-using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -21,7 +21,17 @@ public partial class DbProyectoXContext : DbContext
 
     public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
+    public virtual DbSet<ChurchRole> ChurchRoles { get; set; }
+
+    public virtual DbSet<CourtCaseInfo> CourtCaseInfos { get; set; }
+
+    public virtual DbSet<DisciplinaryInfo> DisciplinaryInfos { get; set; }
+
     public virtual DbSet<Donation> Donations { get; set; }
+
+    public virtual DbSet<DonationItem> DonationItems { get; set; }
+
+    public virtual DbSet<DonationItemType> DonationItemTypes { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
 
@@ -37,23 +47,44 @@ public partial class DbProyectoXContext : DbContext
 
     public virtual DbSet<Member> Members { get; set; }
 
+    public virtual DbSet<MemberChurchRole> MemberChurchRoles { get; set; }
+
+    public virtual DbSet<MemberSmallGroup> MemberSmallGroups { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Sector> Sectors { get; set; }
+
+    public virtual DbSet<SmallGroup> SmallGroups { get; set; }
 
     public virtual DbSet<TaxReceipt> TaxReceipts { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserRole> UserRoles { get; set; }
+
     public virtual DbSet<Vendor> Vendors { get; set; }
 
-
-
-
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=dbProyectoX;Username=admin;Password=123987456");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder
+            .HasPostgresEnum<AcademicLevel>("academiclevelenum")
+            .HasPostgresEnum<CategoryItem>("categoryitemenum")
+            .HasPostgresEnum<Gender>("genderenum")
+            .HasPostgresEnum<MaritalStatus>("maritalstatusenum")
+            .HasPostgresEnum<MemberType>("membertypeenum")
+            .HasPostgresEnum<PaymentMethod>("paymentmethodenum")
+            .HasPostgresEnum<DonationStatus>("statusenum")
+            .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
 
+        OnModelCreatingPartial(modelBuilder);
     }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

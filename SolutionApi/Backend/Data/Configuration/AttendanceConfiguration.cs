@@ -13,7 +13,6 @@ namespace Backend.Data.Configuration
             entity.ToTable("attendance", "membership");
 
             entity.Property(e => e.AttendanceId).UseIdentityAlwaysColumn().HasColumnName("attendanceId");
-            entity.Property(e => e.Date).HasDefaultValueSql("CURRENT_DATE").HasColumnName("date");
             entity.Property(e => e.EntryTime).HasColumnName("entryTime");
             entity.Property(e => e.EventId).HasColumnName("eventId");
             entity.Property(e => e.ExitTime).HasColumnName("exitTime");
