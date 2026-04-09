@@ -17,15 +17,17 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { ChevronRightIcon } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function NavMain({ items }) {
+  const [openItem, setOpenItem] = useState(null);
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Gestion</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+          <Collapsible key={item.title} asChild open={openItem === item.title} onOpenChange={(isOpen) => { setOpenItem(isOpen ? item.title : null) }}>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <a href={item.url}>
