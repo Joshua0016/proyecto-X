@@ -171,28 +171,18 @@ namespace Backend
 
 
 
-            // Add services to the container.
+            // servicio para mapear enums a a su valor string
 
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddControllers()
+                .AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
 
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.MapOpenApi();
-            //}
-
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI(c =>
-            //    {
-            //        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API v1");
-            //    });
-            //}
+            
 
             app.UseSwagger();
             app.UseSwaggerUI();
