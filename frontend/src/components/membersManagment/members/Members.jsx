@@ -26,6 +26,8 @@ export default function FullFeaturedCridGrid() {
     async function allMembers() {
       const rows = await getAllMembers();
       setRows(rows);
+      console.log(rows)
+
 
     }
     allMembers();
@@ -40,6 +42,18 @@ export default function FullFeaturedCridGrid() {
     {
       name: "Apellido",
       selector: (row) => row.lastName,
+    },
+    {
+      name: "Direccón",
+      selector: (row) => row.address,
+    },
+    {
+      name: "Género",
+      selector: (row) => row.gender,
+    },
+    {
+      name: "Estado civil",
+      selector: (row) => row.maritalStatus,
     },
     {
       name: "Correo",

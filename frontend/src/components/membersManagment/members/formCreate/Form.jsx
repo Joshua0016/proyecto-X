@@ -20,7 +20,17 @@ import {
     FieldError,
     FieldGroup,
     FieldLabel,
+    FieldContent,
 } from "@/components/ui/field";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectSeparator,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
 import { Input } from "@/components/ui/input";
 import dayjs from "dayjs";
 import createMember from "@/apiServices/members/createMember";
@@ -28,27 +38,38 @@ import { useState } from "react";
 import getAllMembers from "@/apiServices/members/getAllMembers";
 import updateMember from "@/apiServices/members/updateMember";
 
+const gender = [
+    { label: "Masculino", value: "0" },
+    { label: "Femenino", value: "1" },
+];
+const maritalStatus = [
+    { label: "Soltero", value: "0" },
+    { label: "Casado", value: "1" },
+    { label: "Viudo", value: "2" },
+    { label: "Divorciado", value: "3" }
+]
+
 const formSchema = z.object({
     FirstName: z
         .string()
-        .min(3, "name must be at least 3 characters.")
-        .max(20, "Username must be at most 10 characters.")
+        .min(3, "El nombre debe tener al menos 3 caracteres.")
+        .max(20, "El nombre solo puede tener un máximo de 50 caracteres.")
         .regex(
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Solo puede contener letras y espacios."
         ),
     LastName: z
         .string()
-        .min(3, "Last Name must be at least 3 characters.")
-        .max(20, "Last name must be at most 10 characters.")
+        .min(3, "Apellido debe tener al menos 3 caracteres.")
+        .max(20, "Apellido solo puede tener un máximo de 50 caracteres.")
         .regex(
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             "Only letters and spaces are allowed."
         ),
     Email: z
         .string()
-        .min(5, "email must be at least 5 characters.")
-        .max(150, "Email must be at most 150 characters."),
+        .min(5, "Email debe tener un mínimo de 5 caracteres.")
+        .max(150, "Email debe tener un máximo de 150 caracteres."),
 
     PhoneNumber: z
         .string()
@@ -59,8 +80,19 @@ const formSchema = z.object({
             "El número de teléfono debe comenzar con: 829/809/849 seguido de 7 digitos"
         ),
     BirthDate: z.coerce
-        .date("Fecha requerida")
+        .date("Fecha requerida"),
 
+    address: z
+        .string()
+        .regex(
+            /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ#\s.,\-\/]*$/,
+            "Solo permite letras, números, espacios, acentos y símbolos básicos (# . , - /)"
+        ),
+    gender: z
+        .coerce.number("seleccionar el género correspondiente"),
+
+    maritalStatus: z
+        .coerce.number("seleccionar estado civil"),
 })
 
 export default function FormRhfInput({ setformMember, setRows, rowMember }) {
@@ -71,6 +103,9 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
             Email: rowMember.Email || "",
             PhoneNumber: rowMember.PhoneNumber || "",
             BirthDate: dayjs(rowMember.BirthDate).format("YYYY-MM-DD") || "",
+            address: rowMember.address || "",
+            gender: rowMember.gender || "",
+            maritalStatus: rowMember.maritalStatus || "",
         }
         : {
             FirstName: "",
@@ -78,6 +113,9 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
             Email: "",
             PhoneNumber: "",
             BirthDate: "",
+            address: "",
+            gender: "select",
+            maritalStatus: "select"
         };
 
     const form = useForm(
@@ -88,7 +126,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
 
     function onSubmit(data) {
         const Save = async () => {
-
+            console.log(data)
             const { isUpdate, ...dataUpdate } = data;
 
             const finalData = {
@@ -137,7 +175,7 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
     return (
         <>
             <div className="fixed z-50 inset-0 bg-black/70 backdrop-blur-[5px] flex p-2">
-                <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-auto overflow-auto">
+                <Card className="w-[90%] h-[85%] md:h-[70%] lg:w-[90%] lg:h-[90%] xl:w-[20%] xl:h-[58%] mx-auto my-auto overflow-y-auto">
                     <CardHeader>
                         <CardTitle>Configuración de miembro</CardTitle>
                         <CardDescription>
@@ -196,6 +234,126 @@ export default function FormRhfInput({ setformMember, setRows, rowMember }) {
                                     Este es tu nombre y apllido. deben contener entre 3 y 10
                                     caracteres. Solo debe contener letras.
                                 </FieldDescription>
+                                <Controller
+                                    name="address"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field data-invalid={fieldState.invalid}>
+                                            <FieldLabel htmlFor="form-rhf-input-address">
+                                                Dirección
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="form-rhf-input-address"
+                                                aria-invalid={fieldState.invalid}
+                                                placeholder="Dirección"
+                                                autoComplete="direccion"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError errors={[fieldState.error]} />
+                                            )}
+                                        </Field>
+                                    )}
+
+
+                                />
+                                <FieldDescription>
+                                    Esta es tu dirección de vivienda.
+                                </FieldDescription>
+                                <Controller
+                                    name="gender"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            orientation="responsive"
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldContent>
+                                                <FieldLabel htmlFor="form-rhf-select-gender">
+                                                    Género
+                                                </FieldLabel>
+                                                <FieldDescription>
+                                                    Selecciona el sexo
+                                                </FieldDescription>
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                                <Select
+                                                    name={field.name}
+                                                    value={field.value}
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger
+                                                        id="form-rhf-select-gender"
+                                                        aria-invalid={fieldState.invalid}
+                                                        className="min-w-[80px]"
+                                                    >
+                                                        <SelectValue placeholder="Select" />
+                                                    </SelectTrigger>
+                                                    <SelectContent position="item-aligned">
+                                                        <SelectItem value="select">Select</SelectItem>
+                                                        <SelectSeparator />
+                                                        {gender.map((element) => (
+                                                            <SelectItem key={element.value} value={element.value}>
+                                                                {element.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FieldContent>
+                                        </Field>
+                                    )}
+                                />
+                                <FieldDescription>
+                                    Masculino o Femenino
+                                </FieldDescription>
+
+                                <Controller
+                                    name="maritalStatus"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            orientation="responsive"
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldContent>
+                                                <FieldLabel htmlFor="form-rhf-select-maritalStatus">
+                                                    Estado civil
+                                                </FieldLabel>
+                                                <FieldDescription>
+                                                    Selecciona el estado civil del miembro
+                                                </FieldDescription>
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                                <Select
+                                                    name={field.name}
+                                                    value={field.value}
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger
+                                                        id="form-rhf-select-maritalStatus"
+                                                        aria-invalid={fieldState.invalid}
+                                                        className="min-w-[80px]"
+                                                    >
+                                                        <SelectValue placeholder="Select" />
+                                                    </SelectTrigger>
+                                                    <SelectContent position="item-aligned">
+                                                        <SelectItem value="select">Select</SelectItem>
+                                                        <SelectSeparator />
+                                                        {maritalStatus.map((element) => (
+                                                            <SelectItem key={element.value} value={element.value}>
+                                                                {element.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+
+                                            </FieldContent>
+
+                                        </Field>
+                                    )}
+                                />
                                 <Controller
                                     name="Email"
                                     control={form.control}

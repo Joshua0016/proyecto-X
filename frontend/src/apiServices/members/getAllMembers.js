@@ -16,7 +16,7 @@ export default async function getAllMembers() {
         }
         else {
             let result = await response.json();
-            console.log("Error al obtener los miembros", result);
+            console.log("Error al obtener los miembros", result.message);
         }
 
     } catch (error) {
