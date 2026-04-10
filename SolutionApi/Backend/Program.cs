@@ -28,8 +28,20 @@ namespace Backend
 
 
             //registrar DbContext con PostgreSQL
+            var dataSourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(
+                builder.Configuration.GetConnectionString("DefaultConnection"));
+            dataSourceBuilder.MapEnum<Gender>("genderenum");
+            dataSourceBuilder.MapEnum<MaritalStatus>("maritalstatusenum");
+            dataSourceBuilder.MapEnum<MemberType>("membertypeenum");
+            dataSourceBuilder.MapEnum<AcademicLevel>("academiclevelenum");
+            dataSourceBuilder.MapEnum<DonationStatus>("statusenum");
+            dataSourceBuilder.MapEnum<PaymentMethod>("paymentmethodenum");
+            dataSourceBuilder.MapEnum<UnitOfMeasure>("unitofmeasureenum");
+            dataSourceBuilder.MapEnum<CategoryItem>("categoryitemenum");
+            var dataSource = dataSourceBuilder.Build();
+
             builder.Services.AddDbContext<DbProyectoXContext>(opts =>
-                opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                opts.UseNpgsql(dataSource));
 
 
             //registrar repositorios 
