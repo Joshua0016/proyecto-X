@@ -76,14 +76,14 @@ public partial class DbProyectoXContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .HasPostgresEnum<AcademicLevel>("academiclevelenum")
-            .HasPostgresEnum<CategoryItem>("categoryitemenum")
-            .HasPostgresEnum<Gender>("genderenum")
-            .HasPostgresEnum<MaritalStatus>("maritalstatusenum")
-            .HasPostgresEnum<MemberType>("membertypeenum")
-            .HasPostgresEnum<PaymentMethod>("paymentmethodenum")
-            .HasPostgresEnum<DonationStatus>("statusenum")
-            .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
+            .HasPostgresEnum<AcademicLevel>("academiclevelenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<CategoryItem>("categoryitemenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<Gender>("genderenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<MaritalStatus>("maritalstatusenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<MemberType>("membertypeenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<PaymentMethod>("paymentmethodenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<DonationStatus>("statusenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+            .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator());
 
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);

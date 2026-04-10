@@ -30,14 +30,15 @@ namespace Backend
             //registrar DbContext con PostgreSQL
             var dataSourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(
                 builder.Configuration.GetConnectionString("DefaultConnection"));
-            dataSourceBuilder.MapEnum<Gender>("genderenum");
-            dataSourceBuilder.MapEnum<MaritalStatus>("maritalstatusenum");
-            dataSourceBuilder.MapEnum<MemberType>("membertypeenum");
-            dataSourceBuilder.MapEnum<AcademicLevel>("academiclevelenum");
-            dataSourceBuilder.MapEnum<DonationStatus>("statusenum");
-            dataSourceBuilder.MapEnum<PaymentMethod>("paymentmethodenum");
-            dataSourceBuilder.MapEnum<UnitOfMeasure>("unitofmeasureenum");
-            dataSourceBuilder.MapEnum<CategoryItem>("categoryitemenum");
+            var nameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
+            dataSourceBuilder.MapEnum<Gender>("genderenum", nameTranslator);
+            dataSourceBuilder.MapEnum<MaritalStatus>("maritalstatusenum", nameTranslator);
+            dataSourceBuilder.MapEnum<MemberType>("membertypeenum", nameTranslator);
+            dataSourceBuilder.MapEnum<AcademicLevel>("academiclevelenum", nameTranslator);
+            dataSourceBuilder.MapEnum<DonationStatus>("statusenum", nameTranslator);
+            dataSourceBuilder.MapEnum<PaymentMethod>("paymentmethodenum", nameTranslator);
+            dataSourceBuilder.MapEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator);
+            dataSourceBuilder.MapEnum<CategoryItem>("categoryitemenum", nameTranslator);
             var dataSource = dataSourceBuilder.Build();
 
             builder.Services.AddDbContext<DbProyectoXContext>(opts =>
