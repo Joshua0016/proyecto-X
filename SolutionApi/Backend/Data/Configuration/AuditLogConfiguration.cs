@@ -14,7 +14,7 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
         entity.Property(e => e.LogId).UseIdentityAlwaysColumn().HasColumnName("logId");
         entity.Property(e => e.Timestamp)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .HasColumnName("timestamp");
         entity.Property(e => e.UserId).HasColumnName("userId");
         entity.Property(e => e.Operation).HasMaxLength(50).HasColumnName("operation");

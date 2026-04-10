@@ -67,25 +67,11 @@ public partial class DbProyectoXContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=dbProyectoX;Username=admin;Password=123987456");
-        }
+        // Connection is configured via DI in Program.cs
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .HasPostgresEnum<AcademicLevel>("academiclevelenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<CategoryItem>("categoryitemenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<Gender>("genderenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<MaritalStatus>("maritalstatusenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<MemberType>("membertypeenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<PaymentMethod>("paymentmethodenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<DonationStatus>("statusenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
-            .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator());
-
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
 
         OnModelCreatingPartial(modelBuilder);

@@ -28,21 +28,20 @@ namespace Backend
 
 
             //registrar DbContext con PostgreSQL
-            var dataSourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(
-                builder.Configuration.GetConnectionString("DefaultConnection"));
-            var nameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
-            dataSourceBuilder.MapEnum<Gender>("genderenum", nameTranslator);
-            dataSourceBuilder.MapEnum<MaritalStatus>("maritalstatusenum", nameTranslator);
-            dataSourceBuilder.MapEnum<MemberType>("membertypeenum", nameTranslator);
-            dataSourceBuilder.MapEnum<AcademicLevel>("academiclevelenum", nameTranslator);
-            dataSourceBuilder.MapEnum<DonationStatus>("statusenum", nameTranslator);
-            dataSourceBuilder.MapEnum<PaymentMethod>("paymentmethodenum", nameTranslator);
-            dataSourceBuilder.MapEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator);
-            dataSourceBuilder.MapEnum<CategoryItem>("categoryitemenum", nameTranslator);
-            var dataSource = dataSourceBuilder.Build();
-
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+            var nt = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
             builder.Services.AddDbContext<DbProyectoXContext>(opts =>
-                opts.UseNpgsql(dataSource));
+                opts.UseNpgsql(connStr, o =>
+                {
+                    o.MapEnum<Gender>("genderenum", nameTranslator: nt);
+                    o.MapEnum<MaritalStatus>("maritalstatusenum", nameTranslator: nt);
+                    o.MapEnum<MemberType>("membertypeenum", nameTranslator: nt);
+                    o.MapEnum<AcademicLevel>("academiclevelenum", nameTranslator: nt);
+                    o.MapEnum<DonationStatus>("statusenum", nameTranslator: nt);
+                    o.MapEnum<PaymentMethod>("paymentmethodenum", nameTranslator: nt);
+                    o.MapEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator: nt);
+                    o.MapEnum<CategoryItem>("categoryitemenum", nameTranslator: nt);
+                }));
 
 
             //registrar repositorios 

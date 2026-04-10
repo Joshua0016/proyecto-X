@@ -25,10 +25,10 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
         entity.Property(e => e.SecondLastName).HasMaxLength(50).HasColumnName("secondLastName");
 
         // Enum properties
-        entity.Property(e => e.Gender).HasColumnName("gender");
-        entity.Property(e => e.MaritalStatus).HasColumnName("maritalStatus");
-        entity.Property(e => e.MemberType).HasColumnName("memberType");
-        entity.Property(e => e.AcademicLevel).HasColumnName("academicLevel");
+        entity.Property(e => e.Gender).HasColumnName("gender").HasColumnType("genderenum");
+        entity.Property(e => e.MaritalStatus).HasColumnName("maritalStatus").HasColumnType("maritalstatusenum");
+        entity.Property(e => e.MemberType).HasColumnName("memberType").HasColumnType("membertypeenum");
+        entity.Property(e => e.AcademicLevel).HasColumnName("academicLevel").HasColumnType("academiclevelenum");
 
         // Personal info
         entity.Property(e => e.BirthDate).HasColumnName("birthDate");

@@ -15,12 +15,13 @@ public class DonationItemConfiguration : IEntityTypeConfiguration<DonationItem>
         entity.Property(e => e.DonationId).HasColumnName("donationId");
         entity.Property(e => e.DonationItemTypeId).HasColumnName("donationItemType");
         entity.Property(e => e.Quantity).HasColumnName("quantity");
-        entity.Property(e => e.UnitOfMeasure).HasColumnName("unitOfMeasure");
+        entity.Property(e => e.UnitOfMeasure).HasColumnName("unitOfMeasure").HasColumnType("unitofmeasureenum");
         entity.Property(e => e.Amount).HasPrecision(12, 2).HasColumnName("amount");
-        entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
+        entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod").HasColumnType("paymentmethodenum");
         entity.Property(e => e.Status)
             .HasDefaultValue(Backend.commons.DonationStatus.Pendiente)
-            .HasColumnName("status");
+            .HasColumnName("status")
+            .HasColumnType("statusenum");
 
         entity.HasOne(d => d.Donation)
             .WithMany(p => p.DonationItems)

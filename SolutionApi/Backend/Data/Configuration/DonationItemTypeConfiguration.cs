@@ -13,7 +13,7 @@ public class DonationItemTypeConfiguration : IEntityTypeConfiguration<DonationIt
 
         entity.Property(e => e.DonationItemTypeId).UseIdentityAlwaysColumn().HasColumnName("donationItemTypeId");
         entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("name");
-        entity.Property(e => e.Category).HasColumnName("category");
+        entity.Property(e => e.Category).HasColumnName("category").HasColumnType("categoryitemenum");
         entity.Property(e => e.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .HasColumnType("timestamp with time zone")
