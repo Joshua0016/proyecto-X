@@ -66,8 +66,12 @@ public partial class DbProyectoXContext : DbContext
     public virtual DbSet<Vendor> Vendors { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=dbProyectoX;Username=admin;Password=123987456");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=dbProyectoX;Username=admin;Password=123987456");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,35 +84,6 @@ public partial class DbProyectoXContext : DbContext
             .HasPostgresEnum<PaymentMethod>("paymentmethodenum")
             .HasPostgresEnum<DonationStatus>("statusenum")
             .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
-
-
-
-
-
-
-        modelBuilder.Entity<UserRole>()
-        .HasKey(ur => new { ur.UserId, ur.RoleId });
-
-        // Configure the many-to-many relationship
-        modelBuilder.Entity<UserRole>()
-            .HasOne(ur => ur.User)
-            .WithMany(u => u.UserRoles)
-            .HasForeignKey(ur => ur.UserId);
-
-        modelBuilder.Entity<UserRole>()
-            .HasOne(ur => ur.Role)
-            .WithMany(r => r.UserRoles)
-            .HasForeignKey(ur => ur.RoleId);
-
-        // Ensure table names match your schema
-        modelBuilder.Entity<User>().ToTable("user", "security");
-        modelBuilder.Entity<Role>().ToTable("role", "security");
-        modelBuilder.Entity<UserRole>().ToTable("userRoles", "security");
-
-
-
-
-
 
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
