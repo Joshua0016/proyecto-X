@@ -20,8 +20,8 @@ public class MemberService(IGenericRepository<Member> repo, IGenericRepository<F
         if (!string.IsNullOrWhiteSpace(request.PhoneNumber) && await repo.ExistsAsync(request.PhoneNumber))
             throw new Exception("Ya existe un miembro con este telefono");
 
-        if (request.FamilyId == null || request.FamilyId == 0)
-            throw new Exception("El miembro debe pertenecer a una familia");
+        // if (request.FamilyId == null || request.FamilyId == 0)
+        //     throw new Exception("El miembro debe pertenecer a una familia");
 
         var familyExists = await familyRepo.GetByIdAsync(request.FamilyId.Value) != null;
         if (!familyExists)
