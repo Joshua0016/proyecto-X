@@ -25,7 +25,7 @@ public partial class Event
 
     public string? Location { get; set; } // Nuevo
 
-    public int Capacity { get; set; } // Nuevo
+    public int? Capacity { get; set; } // Nuevo
 
     public bool IsOrdinary { get; set; } // Nuevo
 
