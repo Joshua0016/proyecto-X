@@ -12,6 +12,8 @@ public partial class Donation
     [Required(ErrorMessage = "El miembro es obligatorio.")]
     public int MemberId { get; set; }
 
+    public int EventId { get; set; }
+
     [Required(ErrorMessage = "La fecha de la donación es obligatoria.")]
     [DataType(DataType.Date)]
     public DateTime Date { get; set; }
@@ -19,6 +21,8 @@ public partial class Donation
     public string? Observation { get; set; }
 
     public virtual Member Member { get; set; } = null!;
+
+    public virtual Event Event { get; set; } = null!;
 
     public virtual ICollection<DonationItem> DonationItems { get; set; } = new List<DonationItem>();
 

@@ -14,7 +14,7 @@ public class CourtCaseInfoConfiguration : IEntityTypeConfiguration<CourtCaseInfo
         entity.Property(e => e.CourtCaseInfoId).UseIdentityAlwaysColumn().HasColumnName("courtCaseInfoId");
         entity.Property(e => e.MemberId).HasColumnName("memberId");
         entity.Property(e => e.CaseDetails).HasColumnName("caseDetails");
-        entity.Property(e => e.Status).HasMaxLength(50).HasColumnName("status");
+        entity.Property(e => e.Status).HasMaxLength(50).HasColumnName("status").HasColumnType("casestatusenum");
         entity.Property(e => e.LastUpdated)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .HasColumnType("timestamp with time zone")

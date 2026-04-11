@@ -27,5 +27,9 @@ public partial class Vendor
     [RegularExpression(@"^\d{11}$", ErrorMessage = "El número de teléfono debe tener 11 dígitos")]
     public string PhoneNumber { get; set; } = null!;
 
+    public string Email { get; set; } = null!; // Nuevo
+
+    public string ContactName { get; set; } // Nuevo
+
     public virtual ICollection<ExpenseInvoice> ExpenseInvoices { get; set; } = new List<ExpenseInvoice>();
 }

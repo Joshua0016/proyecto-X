@@ -4,8 +4,8 @@ namespace Backend.commons;
 
 public enum Gender
 {
-    Masculino,
-    Femenino
+    M,
+    F
 }
 
 public enum MaritalStatus
@@ -79,4 +79,50 @@ public enum CategoryItem
     Juguetes,
     Libros,
     Otros
+}
+
+public enum CaseStatus
+{
+    EnProceso,
+    Resuelto,
+    apelado,
+    archivado
+}
+
+public enum EventStatus
+{
+    Programado,
+    EnCurso,
+    Finalizado,
+    Cancelado
+}
+
+public enum Municipio
+{
+    Bani,
+    Matanzas,
+    Nizao
+}
+
+public enum Distrito
+{
+    Baní,
+    Catalina,
+    ElCarreton,
+    ElLimonal,
+    Paya,
+    VillaFundacion,
+    Matanzas,
+    SabanaBuey,
+    VillaSombrero,
+    Nizao,
+    Pizarrete,
+    Santana
+}
+
+public enum RelationShip
+{
+    Padre, Madre, Hijo, Hija, Abuelo, Abuela, Nieto, Nieta,
+    Hermano, Hermana, Tío, Tía, Sobrino, Sobrina, Primo, Prima, Cónyuge, Suegro, Suegra, Yerno, Nuera,
+    Cuñado, Cuñada, Padrastro, Madrastra, Hijastro, Hijastra, Tutor, Pupilo, Otro
 }

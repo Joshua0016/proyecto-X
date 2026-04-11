@@ -41,6 +41,12 @@ namespace Backend
                     o.MapEnum<PaymentMethod>("paymentmethodenum", nameTranslator: nt);
                     o.MapEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator: nt);
                     o.MapEnum<CategoryItem>("categoryitemenum", nameTranslator: nt);
+                    o.MapEnum<CaseStatus>("casestatusenum", nameTranslator: nt);
+                    o.MapEnum<EventStatus>("evenstatusenum", nameTranslator: nt);
+                    o.MapEnum<Municipio>("municipioenum", nameTranslator: nt);
+                    o.MapEnum<Distrito>("distritoenum", nameTranslator: nt);
+                    o.MapEnum<RelationShip>("relationshipenum", nameTranslator: nt);
+
                 }));
 
 
@@ -182,7 +188,7 @@ namespace Backend
 
             var app = builder.Build();
 
-            
+
 
             app.UseSwagger();
             app.UseSwaggerUI();

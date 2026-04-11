@@ -17,6 +17,8 @@ namespace Backend.Data.Configuration
             entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("name");
             entity.Property(e => e.PhoneNumber).HasMaxLength(12).HasColumnName("phoneNumber");
             entity.Property(e => e.TaxId).HasMaxLength(20).HasColumnName("taxId");
+            entity.Property(e => e.Email).HasMaxLength(100).HasColumnName("email");
+            entity.Property(e => e.ContactName).HasMaxLength(100).HasColumnName("contactName");
         }
     }
 }

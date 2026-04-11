@@ -18,12 +18,18 @@ namespace Backend.Data.Configuration
                 .HasColumnType("date")
                 .HasColumnName("date");
             entity.Property(e => e.MemberId).HasColumnName("memberId");
+            entity.Property(e => e.EventId).HasColumnName("eventId");
             entity.Property(e => e.Observation).HasColumnName("observation");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("donation_memberId_fkey");
+
+            entity.HasOne(d => d.Event).WithMany(p => p.Donations)
+                .HasForeignKey(d => d.EventId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("donation_eventId_fkey");
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Backend.commons;
 
 namespace Backend.Models;
 
@@ -13,7 +14,7 @@ public partial class CourtCaseInfo
     public string? CaseDetails { get; set; }
 
     [StringLength(50)]
-    public string? Status { get; set; }
+    public CaseStatus? Status { get; set; }
 
     public DateTime? LastUpdated { get; set; }
 

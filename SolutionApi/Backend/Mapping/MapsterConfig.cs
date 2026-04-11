@@ -38,16 +38,16 @@ public static class MapsterConfig
         TypeAdapterConfig<Family, FamilyResponseDTO>.NewConfig()
             .Map(dest => dest.FamilyId, src => src.FamilyId)
             .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.CreatedAt, src => src.CreatedAt)
-            .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
+            .Map(dest => dest.CreatedAt, src => src.CreatedAt);
+        // .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
 
 
         // Family → FamilyDetailDTO: includes mapped member list
         TypeAdapterConfig<Family, FamilyDetailDTO>.NewConfig()
             .Map(dest => dest.FamilyId, src => src.FamilyId)
             .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.CreatedAt, src => src.CreatedAt)
-            .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
+            .Map(dest => dest.CreatedAt, src => src.CreatedAt);
+        // .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
 
         // Vendor → VendorResponseDTO (nombres coinciden, Mapster lo hace automático)
         TypeAdapterConfig<VendorCreateDto, Vendor>.NewConfig();
@@ -58,15 +58,15 @@ public static class MapsterConfig
 
         TypeAdapterConfig<EventCreateDto, Event>.NewConfig()
             .Map(dest => dest.StartDate, src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Utc))
-            .Map(dest => dest.EndDate,   src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc));
+            .Map(dest => dest.EndDate, src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc));
 
         TypeAdapterConfig<EventUpdateDto, Event>.NewConfig()
             .Map(dest => dest.StartDate, src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Utc))
-            .Map(dest => dest.EndDate,   src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc));
+            .Map(dest => dest.EndDate, src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc));
 
         TypeAdapterConfig<Attendance, AttendanceResponseDTO>.NewConfig()
-            .Map(dest => dest.EventTitle,  src => src.Event != null ? src.Event.Title : string.Empty)
-            .Map(dest => dest.MemberName,  src => src.Member != null
+            .Map(dest => dest.EventTitle, src => src.Event != null ? src.Event.Title : string.Empty)
+            .Map(dest => dest.MemberName, src => src.Member != null
                 ? $"{src.Member.FirstName} {src.Member.LastName}".Trim()
                 : string.Empty);
 
@@ -99,7 +99,7 @@ public static class MapsterConfig
 
         TypeAdapterConfig<ExpenseInvoice, ExpenseInvoiceResponseDTO>.NewConfig()
             .Map(dest => dest.VendorName, src => src.Vendor != null ? src.Vendor.Name : string.Empty)
-            .Map(dest => dest.IssueDate,  src => DateOnly.FromDateTime(src.IssueDate))
-            .Map(dest => dest.DueDate,    src => DateOnly.FromDateTime(src.DueDate));
+            .Map(dest => dest.IssueDate, src => DateOnly.FromDateTime(src.IssueDate))
+            .Map(dest => dest.DueDate, src => DateOnly.FromDateTime(src.DueDate));
     }
 }

@@ -12,23 +12,24 @@ public class FamilyRepository(DbProyectoXContext context) : IGenericRepository<F
     private readonly DbProyectoXContext _context = context;
 
     public async Task<IEnumerable<Family>> GetAllAsync() =>
-        await _context.Families.Include(f => f.Members).ToListAsync();
+        await _context.Families.Include(f => f.FamilyMembers).ThenInclude(fm => fm.Member).ToListAsync();
 
     public async Task<Family?> GetByIdAsync(int id) =>
-        await _context.Families.Include(f => f.Members).FirstOrDefaultAsync(f => f.FamilyId == id);
+        await _context.Families.Include(f => f.FamilyMembers).ThenInclude(fm => fm.Member).FirstOrDefaultAsync(f => f.FamilyId == id);
 
     public async Task<IEnumerable<Family>> SearchAsync(string? query)
     {
-        var dbQuery = _context.Families.Include(f => f.Members).AsQueryable();
+        var dbQuery = _context.Families.Include(f => f.FamilyMembers).ThenInclude(fm => fm.Member).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query))
         {
             var lowerQuery = query.ToLower();
             dbQuery = dbQuery.Where(f =>
                 f.LastName.ToLower().Contains(lowerQuery) ||
-                f.Members.Any(m =>
-                    m.FirstName.ToLower().Contains(lowerQuery) ||
-                    m.LastName.ToLower().Contains(lowerQuery)));
+                f.FamilyMembers.Any(fm =>
+                    fm.Member != null && (
+                        fm.Member.FirstName.ToLower().Contains(lowerQuery) ||
+                        fm.Member.LastName.ToLower().Contains(lowerQuery))));
         }
 
         return await dbQuery.ToListAsync();

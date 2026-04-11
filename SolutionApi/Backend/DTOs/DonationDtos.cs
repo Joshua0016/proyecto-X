@@ -30,6 +30,7 @@ public record DonationItemResponseDTO(
 public record DonationCreateDTO(
     [Required] int MemberId,
     [Required] DateTime Date,
+    int? EventId,
     string? Observation,
     List<DonationItemCreateDTO>? Items
 );
@@ -37,6 +38,7 @@ public record DonationCreateDTO(
 public record DonationResponseDTO(
     int DonationId,
     int MemberId,
+    int? EventId,
     DateTime Date,
     string? Observation,
     List<DonationItemResponseDTO>? Items
@@ -44,6 +46,7 @@ public record DonationResponseDTO(
 
 public record DonationUpdateDTO(
     [Required] int MemberId,
+    int? EventId,
     [Required] DateTime Date,
     string? Observation
 );

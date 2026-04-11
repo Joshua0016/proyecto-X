@@ -5,7 +5,8 @@ using Backend.Models;
 namespace Backend.DTOs;
 
 public record FamilyCreateDto(
-    [Required] string LastName
+    [Required] string LastName,
+    List<int>? MemberIds
 );
 
 public record FamilyResponseDTO(

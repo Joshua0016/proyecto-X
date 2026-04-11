@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Backend.commons;
 
 namespace Backend.Models;
 
@@ -22,6 +23,20 @@ public partial class Event
     [StringLength(1000, ErrorMessage = "La descripción no puede exceder los 1000 caracteres.")]
     public string? Description { get; set; }
 
+    public string? Location { get; set; } // Nuevo
+
+    public int Capacity { get; set; } // Nuevo
+
+    public bool IsOrdinary { get; set; } // Nuevo
+
+    public EventStatus Status { get; set; } // Nuevo
+
+    public int? OrganizerUserId { get; set; }
+
+    public Boolean IsRecurring { get; set; } // Nuevo
+
+
+
     [Required(ErrorMessage = "La fecha de inicio es obligatoria.")]
     [DataType(DataType.DateTime)]
     [Display(Name = "Fecha de Inicio")]
@@ -32,10 +47,13 @@ public partial class Event
     [Display(Name = "Fecha de Fin")]
     public DateTime EndDate { get; set; }
 
-    public int? OrganizerUserId { get; set; }
+    public DateTime CreatedAt { get; set; }  // Nuevo
+
 
     public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
 
     [ForeignKey("OrganizerUserId")]
     public virtual User? OrganizerUser { get; set; }
+
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 }

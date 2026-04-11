@@ -11,6 +11,8 @@ public partial class Sector
     [StringLength(100)]
     public string Name { get; set; } = null!;
 
+    public string Municipio { get; set; }
+
     [StringLength(100)]
     public string? District { get; set; }
 

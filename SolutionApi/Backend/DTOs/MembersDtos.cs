@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 using Backend.commons;
 
 namespace Backend.DTOs;
@@ -15,14 +16,13 @@ public record MemberCreateDTO(
     [StringLength(20)] string? PassportNumber,
     [StringLength(50)] string? BirthPlace,
     [StringLength(50)] string? Nationality,
-    string? PhotoUrl,
     [Phone][StringLength(15)] string? PhoneNumber,
     [EmailAddress][StringLength(150)] string? Email,
     string? Address,
     int? SectorId,
     [StringLength(100)] string? EmergencyContactName,
     [StringLength(15)] string? EmergencyContactPhone,
-    int? FamilyId,
+    List<int>? FamilyIds,
     string? MedicalCondition,
     [StringLength(5)] string? BloodType,
     MemberType? MemberType,

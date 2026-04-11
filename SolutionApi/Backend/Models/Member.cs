@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -65,7 +65,7 @@ public partial class Member
     [StringLength(15)]
     public string? EmergencyContactPhone { get; set; }
 
-    public int? FamilyId { get; set; }
+    // public int? FamilyId { get; set; }
 
     public string? MedicalCondition { get; set; }
 
@@ -73,6 +73,8 @@ public partial class Member
     public string? BloodType { get; set; }
 
     public MemberType? MemberType { get; set; }
+
+    public bool? IsActive { get; set; } = null!; // Nuevo
 
     public DateTime? JoinDate { get; set; }
 
@@ -101,6 +103,11 @@ public partial class Member
 
     public bool CourtCase { get; set; }
 
+
+    public DateTime? TransferDate { get; set; } // Nuevos
+
+    public string? TransferDestination { get; set; } //Nuevos
+
     public AcademicLevel? AcademicLevel { get; set; }
 
     [StringLength(100)]
@@ -116,7 +123,7 @@ public partial class Member
     public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
-    public virtual Family? Family { get; set; }
+    // public virtual Family? Family { get; set; }
     public virtual Sector? Sector { get; set; }
     public virtual SmallGroup? SmallGroup { get; set; }
     public virtual ChurchRole? ChurchRole { get; set; }
@@ -128,4 +135,7 @@ public partial class Member
     public virtual ICollection<MemberChurchRole> MemberChurchRoles { get; set; } = new List<MemberChurchRole>();
     public virtual ICollection<CourtCaseInfo> CourtCaseInfos { get; set; } = new List<CourtCaseInfo>();
     public virtual ICollection<DisciplinaryInfo> DisciplinaryInfos { get; set; } = new List<DisciplinaryInfo>();
+
+    public virtual ICollection<FamilyMember> FamilyMembers { get; set; } = new List<FamilyMember>();
+
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Backend.commons;
 
 namespace Backend.Models;
 
@@ -17,10 +18,16 @@ public partial class ExpenseInvoice
     [StringLength(50, ErrorMessage = "El número de factura no puede exceder los 50 caracteres.")]
     public string InvoiceNumber { get; set; } = null!;
 
+    public string Description { get; set; } = string.Empty; // Nuevo
+
+
+
     [Required]
     [Range(0.01, 999999999.99, ErrorMessage = "El total debe ser mayor a cero.")]
     [Column(TypeName = "decimal(18,2)")]
     public decimal Total { get; set; }
+
+    public PaymentMethod PaymentMethod { get; set; }  // Nuevo
 
     [Required(ErrorMessage = "La fecha de emisión es obligatoria.")]
     [DataType(DataType.Date)]
@@ -31,7 +38,7 @@ public partial class ExpenseInvoice
     public DateTime DueDate { get; set; }
 
     [Required]
-    [RegularExpression(@"^(Pending|Paid|Cancelled|Overdue)$", 
+    [RegularExpression(@"^(Pending|Paid|Cancelled|Overdue)$",
         ErrorMessage = "El estado debe ser: Pendiente, Pagado, Cancelado o Vencido.")]
     public string Status { get; set; } = "Pending";
 

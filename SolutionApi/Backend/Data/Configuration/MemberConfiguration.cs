@@ -81,18 +81,18 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
             .HasColumnName("updatedAt");
 
         // Foreign keys
-        entity.Property(e => e.FamilyId).HasColumnName("familyId");
-        entity.Property(e => e.SectorId).HasColumnName("sector");
-        entity.Property(e => e.SmallGroupId).HasColumnName("smallGroupId");
-        entity.Property(e => e.ChurchRoleId).HasColumnName("churchRoleId");
+        // entity.Property(e => e.FamilyId).HasColumnName("familyId");
+        // entity.Property(e => e.SectorId).HasColumnName("sector");
+        // entity.Property(e => e.SmallGroupId).HasColumnName("smallGroupId");
+        // entity.Property(e => e.ChurchRoleId).HasColumnName("churchRoleId");
 
-        // FK relationship: Family
-        entity.HasOne(d => d.Family)
-            .WithMany(p => p.Members)
-            .HasForeignKey(d => d.FamilyId)
-            .OnDelete(DeleteBehavior.SetNull)
-            .HasConstraintName("member_familyId_fkey")
-            .IsRequired(false);
+        // // FK relationship: Family
+        // entity.HasOne(d => d.Family)
+        //     .WithMany(p => p.Members)
+        //     .HasForeignKey(d => d.FamilyId)
+        //     .OnDelete(DeleteBehavior.SetNull)
+        //     .HasConstraintName("member_familyId_fkey")
+        //     .IsRequired(false);
 
         // FK relationship: Sector
         entity.HasOne(d => d.Sector)

@@ -15,10 +15,12 @@ namespace Backend.Data.Configuration
             entity.Property(e => e.ExpenseInvoiceId).UseIdentityAlwaysColumn().HasColumnName("expenseInvoiceId");
             entity.Property(e => e.DueDate).HasColumnName("dueDate");
             entity.Property(e => e.InvoiceNumber).HasMaxLength(50).HasColumnName("invoiceNumber");
+            entity.Property(e => e.Description).HasMaxLength(200).HasColumnName("description");
+            entity.Property(e => e.Total).HasPrecision(12, 2).HasColumnName("total");
+            entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod").HasColumnType("paymentmethodenum");
             entity.Property(e => e.IssueDate).HasColumnName("issueDate");
             entity.Property(e => e.JournalEntryId).HasColumnName("journalEntryId");
             entity.Property(e => e.Status).HasMaxLength(20).HasColumnName("status");
-            entity.Property(e => e.Total).HasPrecision(12, 2).HasColumnName("total");
             entity.Property(e => e.VendorId).HasColumnName("vendorId");
 
             entity.HasOne(d => d.JournalEntry).WithMany(p => p.ExpenseInvoices)

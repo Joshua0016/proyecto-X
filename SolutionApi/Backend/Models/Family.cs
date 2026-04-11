@@ -9,6 +9,6 @@ public partial class Family
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<Member> Members { get; set; } = new List<Member>();
+    public virtual ICollection<FamilyMember> FamilyMembers { get; set; } = new List<FamilyMember>();
 }
 
