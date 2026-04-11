@@ -21,6 +21,7 @@ export default async function login(username, password) {
             localStorage.setItem("userId", result.userId);
             localStorage.setItem("name", result.name)
 
+            console.log(result)
             return true;
         }
         else {

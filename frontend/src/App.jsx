@@ -12,6 +12,7 @@ import Family from './components/membersManagment/family/Family';
 import LedgerAccount from './components/chartsAccounts/LedgerAccount';
 import JournalEntry from './components/finance/journalEntry/JournalEntry';
 import Donations from './components/finance/donations/Donations';
+import Profile from './components/security/Profile';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="report"></Route>
           <Route path='ledgerAccount' element={<LedgerAccount />} ></Route>
           <Route path='journalEntry' element={<JournalEntry />} ></Route>
+          <Route path='profile' element={<Profile />}></Route>
         </Route>
 
 
