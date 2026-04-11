@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Search, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
-// Importaciones de servicios API
 import getAllEvents from "@/apiServices/events/getAllEvents";
 import createEvent from "@/apiServices/events/createEvent";
 import updateEvent from "@/apiServices/events/updateEvent";
 import deleteEvent from "@/apiServices/events/deleteEvent";
 import searchEvents from "@/apiServices/events/searchEvents";
 
-// Schema
 const eventSchema = z.object({
   eventId: z.number().optional(),
   title: z.string().min(5, "Mínimo 5 caracteres").max(150, "Máximo 150 caracteres"),
@@ -28,87 +26,101 @@ const eventSchema = z.object({
   organizerUserId: z.coerce.number().optional().or(z.literal("")),
 });
 
+const formatDate = (dateString) => {
+  if (!dateString) return "Sin fecha";
+  const options = { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" };
+  return new Date(dateString).toLocaleDateString("es-ES", options);
+};
+
 export default function Events() {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [eventModal, setEventModal] = useState({ open: false, event: null });
   const eventForm = useForm({ resolver: zodResolver(eventSchema) });
+  const location = useLocation();
 
-  // FETCH
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const data = await getAllEvents();
       setEvents(data || []);
-    } catch (error) {
-      console.error("Error fetching events:", error);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      setError("No se pudieron cargar los eventos.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, []);
 
-  useEffect(() => { fetchEvents(); }, []);
-
-  // BUSQUEDA
+  // Abre el modal de edición si EventDetails redirigió con state.editEvent
   useEffect(() => {
-    const delay = setTimeout(() => {
-      if (!searchTerm.trim()) fetchEvents();
-      else handleSearch(searchTerm);
+    if (location.state?.editEvent) {
+      openEvent(location.state.editEvent);
+      // Limpia el state para no re-abrir al navegar
+      window.history.replaceState({}, "");
+    }
+  }, [location.state]);
+
+  useEffect(() => { fetchEvents(); }, [fetchEvents]);
+
+  useEffect(() => {
+    const delay = setTimeout(async () => {
+      if (!searchTerm.trim()) {
+        fetchEvents();
+      } else {
+        try {
+          const results = await searchEvents(searchTerm);
+          setEvents(results || []);
+        } catch (err) {
+          console.error("Error searching events:", err);
+          setError("Error al buscar eventos.");
+        }
+      }
     }, 400);
     return () => clearTimeout(delay);
-  }, [searchTerm]);
+  }, [searchTerm, fetchEvents]);
 
-  const handleSearch = async (term) => {
-    try {
-      const results = await searchEvents(term);
-      setEvents(results || []);
-    } catch (error) {
-      console.error("Error searching events:", error);
-    }
-  };
-
-  const filteredEvents = useMemo(() => events, [events]);
-
-  // CRUD
   const openEvent = (event = null) => {
     setEventModal({ open: true, event });
     if (event) {
-      const formattedEvent = {
+      eventForm.reset({
         ...event,
         startDate: event.startDate ? new Date(event.startDate).toISOString().slice(0, 16) : "",
         endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : "",
-      };
-      eventForm.reset(formattedEvent);
-    } else eventForm.reset({});
+      });
+    } else {
+      eventForm.reset({});
+    }
   };
 
   const submitEvent = async (values) => {
     setLoading(true);
+    setError(null);
     try {
       if (eventModal.event) await updateEvent(eventModal.event.eventId, values);
       else await createEvent(values);
       await fetchEvents();
       setEventModal({ open: false, event: null });
-    } catch (error) {
-      console.error("Error saving event:", error);
+    } catch (err) {
+      console.error("Error saving event:", err);
+      setError("No se pudo guardar el evento.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const removeEvent = async (id) => {
     if (!window.confirm("¿Estás seguro de eliminar este evento?")) return;
     try {
       await deleteEvent(id);
-      fetchEvents();
-    } catch (error) {
-      console.error("Error deleting event:", error);
+      await fetchEvents();
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("No se pudo eliminar el evento.");
     }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "Sin fecha";
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString('es-ES', options);
   };
 
   return (
@@ -134,42 +146,40 @@ export default function Events() {
         </div>
       </div>
 
+      {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
       {loading && <Loader2 className="animate-spin mx-auto my-4 h-8 w-8 text-blue-500" />}
 
       {/* LISTA */}
-
-      {filteredEvents.map((event, index) => {
-        const id = event.eventId ?? index;
-
-        return (
-
-          <div className="flex justify-between">
-            <div className="">
-              <div className="font-semibold text-gray-900 dark:text-gray-100">
-                <Link to={`/home/event/${event.eventId}`} state={{ event }}>
-                  {event.title || "Sin título"}
-                </Link>
-              </div>
+      {events.map((event) => (
+        <div key={event.eventId} className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <div className="font-semibold text-gray-900 dark:text-gray-100">
+              <Link to={`/home/event/${event.eventId}`} state={{ event }}>
+                {event.title || "Sin título"}
+              </Link>
             </div>
-
-            <div className="flex gap-2 ml-2">
-              <Button size="icon" variant="ghost" onClick={() => openEvent(event)}>
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button size="icon" variant="ghost" onClick={() => removeEvent(event.eventId)}>
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </Button>
+            <div className="text-xs text-gray-500 mt-0.5">
+              {formatDate(event.startDate)} — {formatDate(event.endDate)}
             </div>
           </div>
-        );
-      })}
 
-      {!loading && filteredEvents.length === 0 && (
+          <div className="flex gap-2 ml-2">
+            <Button size="icon" variant="ghost" onClick={() => openEvent(event)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={() => removeEvent(event.eventId)}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
+        </div>
+      ))}
+
+      {!loading && events.length === 0 && (
         <div className="text-center text-gray-500 mt-8">No se encontraron eventos.</div>
       )}
 
       {/* MODAL EVENTO */}
-      <Dialog open={eventModal.open} onOpenChange={(open) => setEventModal({ ...eventModal, open })}>
+      <Dialog open={eventModal.open} onOpenChange={(open) => setEventModal((prev) => ({ ...prev, open }))}>
         <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 max-w-md">
           <DialogHeader>
             <DialogTitle>{eventModal.event ? "Editar Evento" : "Nuevo Evento"}</DialogTitle>
