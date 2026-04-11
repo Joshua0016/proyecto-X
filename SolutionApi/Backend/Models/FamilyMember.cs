@@ -6,8 +6,8 @@ namespace Backend.Models;
 
 public partial class FamilyMember
 {
-    [Key]
-    public int FamilyMemberId { get; set; }
+    // [Key]
+    // public int FamilyMemberId { get; set; }
 
     public int MemberId { get; set; }
 
