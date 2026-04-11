@@ -9,7 +9,7 @@ public record EventCreateDto(
     [Required][StringLength(50)] string Type,
     [StringLength(1000)] string? Description,
     string? Location,
-    int capacity,
+    int Capacity,
     bool IsOrdinary,
     EventStatus Status,
     bool IsRecurring,
