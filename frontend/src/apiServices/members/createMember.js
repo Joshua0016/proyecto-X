@@ -16,8 +16,8 @@ export default async function createMember(dto) {
         }
         else {
             let result = await response.json();
-            alert(result.message);
-
+            alert("No se ha podido crear al miembro");
+            console.log(result)
             return false;
         }
     } catch (error) {

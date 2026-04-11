@@ -67,25 +67,11 @@ public partial class DbProyectoXContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=dbProyectoX;Username=admin;Password=123987456");
-        }
+        // Connection is configured via DI in Program.cs
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .HasPostgresEnum<AcademicLevel>("academiclevelenum")
-            .HasPostgresEnum<CategoryItem>("categoryitemenum")
-            .HasPostgresEnum<Gender>("genderenum")
-            .HasPostgresEnum<MaritalStatus>("maritalstatusenum")
-            .HasPostgresEnum<MemberType>("membertypeenum")
-            .HasPostgresEnum<PaymentMethod>("paymentmethodenum")
-            .HasPostgresEnum<DonationStatus>("statusenum")
-            .HasPostgresEnum<UnitOfMeasure>("unitofmeasureenum");
-
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbProyectoXContext).Assembly);
 
         OnModelCreatingPartial(modelBuilder);

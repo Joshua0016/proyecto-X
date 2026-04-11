@@ -72,10 +72,10 @@ export function NavUser({
             </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {/* <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("profile")} className="cursor-pointer">
                 <BadgeCheckIcon />
-                Account
-              </DropdownMenuItem> */}
+                Perfil de usuario
+              </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing

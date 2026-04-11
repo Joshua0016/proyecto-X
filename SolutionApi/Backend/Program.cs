@@ -28,20 +28,20 @@ namespace Backend
 
 
             //registrar DbContext con PostgreSQL
-            var dataSourceBuilder = new Npgsql.NpgsqlDataSourceBuilder(
-                builder.Configuration.GetConnectionString("DefaultConnection"));
-            dataSourceBuilder.MapEnum<Gender>("genderenum");
-            dataSourceBuilder.MapEnum<MaritalStatus>("maritalstatusenum");
-            dataSourceBuilder.MapEnum<MemberType>("membertypeenum");
-            dataSourceBuilder.MapEnum<AcademicLevel>("academiclevelenum");
-            dataSourceBuilder.MapEnum<DonationStatus>("statusenum");
-            dataSourceBuilder.MapEnum<PaymentMethod>("paymentmethodenum");
-            dataSourceBuilder.MapEnum<UnitOfMeasure>("unitofmeasureenum");
-            dataSourceBuilder.MapEnum<CategoryItem>("categoryitemenum");
-            var dataSource = dataSourceBuilder.Build();
-
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+            var nt = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
             builder.Services.AddDbContext<DbProyectoXContext>(opts =>
-                opts.UseNpgsql(dataSource));
+                opts.UseNpgsql(connStr, o =>
+                {
+                    o.MapEnum<Gender>("genderenum", nameTranslator: nt);
+                    o.MapEnum<MaritalStatus>("maritalstatusenum", nameTranslator: nt);
+                    o.MapEnum<MemberType>("membertypeenum", nameTranslator: nt);
+                    o.MapEnum<AcademicLevel>("academiclevelenum", nameTranslator: nt);
+                    o.MapEnum<DonationStatus>("statusenum", nameTranslator: nt);
+                    o.MapEnum<PaymentMethod>("paymentmethodenum", nameTranslator: nt);
+                    o.MapEnum<UnitOfMeasure>("unitofmeasureenum", nameTranslator: nt);
+                    o.MapEnum<CategoryItem>("categoryitemenum", nameTranslator: nt);
+                }));
 
 
             //registrar repositorios 
@@ -171,28 +171,18 @@ namespace Backend
 
 
 
-            // Add services to the container.
+            // servicio para mapear enums a a su valor string
 
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddControllers()
+                .AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
 
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.MapOpenApi();
-            //}
-
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI(c =>
-            //    {
-            //        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API v1");
-            //    });
-            //}
+            
 
             app.UseSwagger();
             app.UseSwaggerUI();
