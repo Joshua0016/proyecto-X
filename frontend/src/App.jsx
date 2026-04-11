@@ -6,12 +6,14 @@ import Home from './components/home/Home'
 
 import Members from './components/membersManagment/members/Members';
 import Events from './components/membersManagment/events/Events';
+import EventDetails from './components/membersManagment/events/EventDetails';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Family from './components/membersManagment/family/Family';
 import LedgerAccount from './components/chartsAccounts/LedgerAccount';
 import JournalEntry from './components/finance/journalEntry/JournalEntry';
 import Donations from './components/finance/donations/Donations';
+import FamilyDetails from './components/membersManagment/family/FamilyDetails';
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
           <Route path="report"></Route>
           <Route path='ledgerAccount' element={<LedgerAccount />} ></Route>
           <Route path='journalEntry' element={<JournalEntry />} ></Route>
+          <Route path="event/:id" element={<EventDetails />}></Route>
+          <Route path="family/:id" element={<FamilyDetails />}></Route>
         </Route>
 
 

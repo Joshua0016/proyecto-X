@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import dayjs from "dayjs";
 import { Search, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
