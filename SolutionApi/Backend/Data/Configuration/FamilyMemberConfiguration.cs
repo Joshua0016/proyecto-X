@@ -11,12 +11,10 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
 {
     public void Configure(EntityTypeBuilder<FamilyMember> entity)
     {
-        entity.HasKey(e => e.FamilyMemberId).HasName("familyMember_pkey");
-
+        entity.HasKey(e => new { e.MemberId, e.FamilyId }).HasName("familyMember_pkey");
 
         entity.ToTable("familyMember", "membership");
 
-        entity.Property(e => e.FamilyMemberId).UseIdentityAlwaysColumn().HasColumnName("familyMemberId");
         entity.Property(e => e.MemberId).HasColumnName("memberId");
         entity.Property(e => e.FamilyId).HasColumnName("familyId");
         entity.Property(e => e.Relationship).HasMaxLength(50).HasColumnName("relationship");
