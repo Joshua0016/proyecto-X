@@ -14,7 +14,8 @@ export default function CardActions({ setRows, setViewCardAction, rowMember }) {
     const handleDelete = async (row) => {
 
         try {
-            const response = await deleteMember(row.id);
+
+            const response = await deleteMember(row.memberId);
             if (response) {
                 setRows(await getAllMembers());
                 setViewCardAction(false);

@@ -18,7 +18,6 @@ import dayjs from "dayjs";
 
 export default function FullFeaturedCridGrid() {
   const [rows, setRows] = useState([]);
-  const [originalList, setOriginalList] = useState([])
   const [formMember, setformMember] = useState(false);
   const [rowMember, setRowMember] = useState({});
   const [searchFilter, setSearch] = useState("");
@@ -29,7 +28,8 @@ export default function FullFeaturedCridGrid() {
     async function allMembers() {
       const rows = await getAllMembers();
       setRows(rows);
-      setOriginalList(rows);
+      console.log(rows)
+
 
     }
     allMembers();
@@ -38,13 +38,10 @@ export default function FullFeaturedCridGrid() {
   const columns = [
     {
       name: "Nombre",
-      selector: (row) => row.firstName,
+      selector: (row) => `${row.firstName} ${row.lastName}`,
       sortable: true,
     },
-    {
-      name: "Apellido",
-      selector: (row) => row.lastName,
-    },
+
     {
       name: "Direccón",
       selector: (row) => row.address,
@@ -132,7 +129,7 @@ export default function FullFeaturedCridGrid() {
       },
     },
   };
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
 
     const value = e.target.value;
 
@@ -140,7 +137,11 @@ export default function FullFeaturedCridGrid() {
 
     if (value == "") {
 
-      setRows(originalList);
+      const updateRows = await getAllMembers();
+      if (updateRows) {
+        setRows(updateRows);
+
+      }
 
     } else {
       const newRows = rows.filter((data) => data.firstName.includes(e.target.value));

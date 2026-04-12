@@ -2,6 +2,7 @@ import { getToken } from "../getToken";
 
 export default async function deleteMember(id) {
     try {
+        console.log(id);
         let response = await fetch(`/api/Member/${id}`, {
             method: "DELETE",
             headers: {
