@@ -1,7 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
 import { NavMain } from "@/components/barMenu/nav-main";
-
 import { NavSecondary } from "@/components/barMenu/nav-secondary";
 import { NavUser } from "@/components/barMenu/nav-user";
 import {
@@ -15,118 +13,71 @@ import {
 } from "@/components/ui/sidebar";
 import {
   TerminalSquareIcon,
-  BotIcon,
-  BookOpenIcon,
-  Settings2Icon,
-  LifeBuoyIcon,
-  SendIcon,
-  FrameIcon,
   PieChartIcon,
-  MapIcon,
   TerminalIcon,
   LucideBook,
-  LucideGoal,
   LucideGem,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
-const data = {
-  user: {
-    name: localStorage.getItem("name"),
-    email: localStorage.getItem("email"),
-    avatar: "/avatars/shadcn.jpg",
+const allNavMain = [
+  {
+    title: "Gestión de miembros",
+    url: "#",
+    icon: <TerminalSquareIcon />,
+    isActive: true,
+    items: [
+      { title: "Miembros", url: "members" },
+      { title: "Eventos", url: "events" },
+      { title: "Familias", url: "families" },
+    ],
   },
-  navMain: [
-    {
-      title: "Gestión de miembros",
-      url: "#",
-      icon: <TerminalSquareIcon />,
-      isActive: true,
-      items: [
-        {
-          title: "Miembros",
-          url: "members",
-        },
-        {
-          title: "Eventos",
-          url: "events",
-        },
-        {
-          title: "Familias",
-          url: "families",
-        },
-      ],
-    },
-    {
-      title: "Finanzas",
-      url: "#",
-      icon: <LucideGem />,
-      items: [
-        {
-          title: "Diario Entrada",
-          url: "journalEntry",
-        },
-        {
-          title: "Cuentas Por Pagar",
-          url: "#",
-        },
-        {
-          title: "Donaciones",
-          url: "donations",
-        },
-      ],
-    },
-    {
-      title: "Informes",
-      url: "#",
-      icon: <PieChartIcon />,
-      items: [
-        {
-          title: "Balance General",
-          url: "#",
-        },
-        {
-          title: "Estado de Resultados",
-          url: "#",
-        },
-        {
-          title: "Flujo de Efectivo",
-          url: "#",
-        },
-        {
-          title: "Estado Financiero",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Plan de cuentas",
-      url: "#",
-      icon: <LucideBook />,
-      items: [
-        {
-          title: "Cuentas del libro mayor",
-          url: "ledgerAccount",
-        },
-        // {
-        //   title: "Team",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Billing",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Limits",
-        //   url: "#",
-        // },
-      ],
-    },
-  ],
-  navSecondary: [],
-
-};
+  {
+    title: "Finanzas",
+    url: "#",
+    icon: <LucideGem />,
+    requiredRoles: ["1"],
+    items: [
+      { title: "Diario Entrada", url: "journalEntry" },
+      { title: "Cuentas Por Pagar", url: "#" },
+      { title: "Donaciones", url: "donations" },
+    ],
+  },
+  {
+    title: "Informes",
+    url: "#",
+    icon: <PieChartIcon />,
+    requiredRoles: ["1"],
+    items: [
+      { title: "Balance General", url: "#" },
+      { title: "Estado de Resultados", url: "#" },
+      { title: "Flujo de Efectivo", url: "#" },
+      { title: "Estado Financiero", url: "#" },
+    ],
+  },
+  {
+    title: "Plan de cuentas",
+    url: "#",
+    icon: <LucideBook />,
+    requiredRoles: ["1"],
+    items: [
+      { title: "Cuentas del libro mayor", url: "ledgerAccount" },
+    ],
+  },
+];
 
 export function AppSidebar({ ...props }) {
+  const { user } = useAuth();
+
+  const navMain = allNavMain.filter(
+    (item) => !item.requiredRoles || item.requiredRoles.includes(user?.rol)
+  );
+
+  const userData = {
+    name: user?.name ?? "",
+    email: user?.email ?? "",
+    avatar: "/avatars/shadcn.jpg",
+  };
 
   return (
     <Sidebar
@@ -151,12 +102,11 @@ export function AppSidebar({ ...props }) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavSecondary items={[]} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   );

@@ -49,6 +49,18 @@ CREATE TABLE "security"."userRoles" (
     CONSTRAINT fk_role FOREIGN KEY ("roleId") REFERENCES "security"."role"("roleId") ON DELETE CASCADE
 );
 
+CREATE TABLE "security"."refreshTokens" (
+    "id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "token" varchar(256) NOT NULL,
+    "userId" int NOT NULL REFERENCES "security"."user"("userId") ON DELETE CASCADE,
+    "expiresAt" timestamp NOT NULL,
+    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "isRevoked" boolean DEFAULT false NOT NULL
+);
+
+CREATE INDEX "IX_refreshTokens_token" ON "security"."refreshTokens" ("token");
+CREATE INDEX "IX_refreshTokens_userId" ON "security"."refreshTokens" ("userId");
+
 CREATE TABLE "security"."auditLog" (
     "logId" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "operation" varchar(50) NOT NULL,

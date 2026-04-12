@@ -23,5 +23,7 @@ public partial class User
 
     public virtual ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
 
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

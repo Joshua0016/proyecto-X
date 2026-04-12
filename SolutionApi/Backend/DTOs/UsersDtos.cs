@@ -11,9 +11,12 @@ public record LoginResponseDTO(
     int UserId,
     string Name,
     string Token,
+    string RefreshToken,
     string Email,
     string Rol
 );
+
+public record RefreshTokenRequestDto(string RefreshToken);
 
 public record RegisterRequestDto(
     [Required][StringLength(100, MinimumLength = 3)] string Name,

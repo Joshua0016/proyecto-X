@@ -18,17 +18,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import { ChevronsUpDownIcon, BadgeCheckIcon, LogOutIcon } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/hooks/useAuth"
 
-export function NavUser({
-  user
-}) {
+export function NavUser({ user }) {
   const navigate = useNavigate()
   const { isMobile } = useSidebar()
+  const { logout } = useAuth()
 
   return (
-    <SidebarMenu className="">
+    <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -54,39 +54,24 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={localStorage.getItem("name")} />
+                  <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">AD</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{localStorage.getItem("name")}</span>
+                  <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => navigate("profile")} className="cursor-pointer">
                 <BadgeCheckIcon />
                 Perfil de usuario
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem> */}
-              {/* <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("email"); navigate("/") }} className="cursor-pointer">
+            <DropdownMenuItem onClick={logout} className="cursor-pointer">
               <LogOutIcon />
               Desconectar
             </DropdownMenuItem>
@@ -94,5 +79,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  );
+  )
 }

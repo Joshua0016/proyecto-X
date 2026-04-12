@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using Backend.commons;
 using Backend.Models;
@@ -50,6 +50,8 @@ public partial class DbProyectoXContext : DbContext
     public virtual DbSet<MemberChurchRole> MemberChurchRoles { get; set; }
 
     public virtual DbSet<MemberSmallGroup> MemberSmallGroups { get; set; }
+
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
