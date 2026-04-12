@@ -53,8 +53,8 @@ CREATE TABLE "security"."refreshTokens" (
     "id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "token" varchar(256) NOT NULL,
     "userId" int NOT NULL REFERENCES "security"."user"("userId") ON DELETE CASCADE,
-    "expiresAt" timestamp NOT NULL,
-    "createdAt" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "expiresAt" timestamptz NOT NULL,
+    "createdAt" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "isRevoked" boolean DEFAULT false NOT NULL
 );
 

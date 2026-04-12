@@ -19,11 +19,11 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         entity.Property(e => e.Token).HasMaxLength(256).HasColumnName("token");
         entity.Property(e => e.UserId).HasColumnName("userId");
         entity.Property(e => e.ExpiresAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .HasColumnName("expiresAt");
         entity.Property(e => e.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .HasColumnName("createdAt");
         entity.Property(e => e.IsRevoked)
             .HasDefaultValue(false)

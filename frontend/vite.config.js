@@ -17,6 +17,7 @@ export default defineConfig({
     environment: 'node',
   },
   server: {
+    host: true,
     proxy: {
       "/api": {
         secure: false,
