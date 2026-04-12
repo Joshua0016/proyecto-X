@@ -18,10 +18,9 @@ import updateFamily from "@/apiServices/families/updateFamily";
 import deleteFamily from "@/apiServices/families/deleteFamily";
 import searchFamilies from "@/apiServices/families/searchFamilies";
 
+// La tabla family solo tiene: familyId, lastName, createdAt
 const familySchema = z.object({
-  lastName: z.string().min(2, "Mínimo 2 caracteres"),
-  sector: z.string().optional(),
-  address: z.string().optional(),
+  lastName: z.string().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres"),
 });
 
 export default function Family() {
@@ -47,7 +46,6 @@ export default function Family() {
     }
   }, []);
 
-  // Si FamilyDetails redirige con state.editFamily, abre el modal
   useEffect(() => {
     if (location.state?.editFamily) {
       openFamily(location.state.editFamily);
@@ -76,7 +74,7 @@ export default function Family() {
 
   const openFamily = (family = null) => {
     setFamilyModal({ open: true, family });
-    familyForm.reset(family ? { lastName: family.lastName, sector: family.sector ?? "", address: family.address ?? "" } : {});
+    familyForm.reset({ lastName: family?.lastName ?? "" });
   };
 
   const submitFamily = async (values) => {
@@ -108,7 +106,6 @@ export default function Family() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto text-gray-900 dark:text-gray-100">
-      {/* HEADER */}
       <div className="flex justify-between mb-6">
         <h1 className="text-3xl font-bold">Familias</h1>
         <div className="flex gap-2">
@@ -130,7 +127,6 @@ export default function Family() {
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
       {loading && <Loader2 className="animate-spin mx-auto my-4 h-8 w-8 text-blue-500" />}
 
-      {/* LISTA */}
       <div className="space-y-1">
         {families.map((family) => (
           <div
@@ -144,7 +140,6 @@ export default function Family() {
             >
               Familia {family.lastName}
             </Link>
-
             <div className="flex gap-1">
               <Button size="icon" variant="ghost" onClick={() => openFamily(family)}>
                 <Pencil className="h-4 w-4" />
@@ -161,16 +156,14 @@ export default function Family() {
         <p className="text-center text-gray-500 mt-8">No se encontraron familias.</p>
       )}
 
-      {/* MODAL FAMILIA */}
       <Dialog open={familyModal.open} onOpenChange={(open) => setFamilyModal((prev) => ({ ...prev, open }))}>
-        <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 max-w-md">
+        <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 max-w-sm">
           <DialogHeader>
             <DialogTitle>{familyModal.family ? "Editar Familia" : "Nueva Familia"}</DialogTitle>
             <DialogDescription>
-              {familyModal.family ? "Modifica los datos de la familia." : "Completa la información de la nueva familia."}
+              {familyModal.family ? "Modifica el apellido de la familia." : "Ingresa el apellido de la nueva familia."}
             </DialogDescription>
           </DialogHeader>
-
           <form onSubmit={familyForm.handleSubmit(submitFamily)} className="space-y-4 mt-2">
             <div className="space-y-1">
               <label className="text-sm font-medium">Apellido</label>
@@ -179,15 +172,6 @@ export default function Family() {
                 <p className="text-xs text-red-500">{familyForm.formState.errors.lastName.message}</p>
               )}
             </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Sector</label>
-              <Input placeholder="Ej: Villa Sombrero" {...familyForm.register("sector")} />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Dirección</label>
-              <Input placeholder="Ej: Calle 5, Baní" {...familyForm.register("address")} />
-            </div>
-
             <DialogFooter className="pt-2">
               <Button type="button" variant="outline" onClick={() => setFamilyModal({ open: false, family: null })}>
                 Cancelar
