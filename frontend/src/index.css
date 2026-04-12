@@ -1,6 +1,47 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------
+   Dark theme – extra overrides beyond App.css
+   (App.css already defines the core shadcn/ui dark
+    variables; add any app-wide dark tweaks here)
+   ------------------------------------------------ */
+.dark {
+    color-scheme: dark;
+}
 
+/* ------------------------------------------------
+   Compact density – reduced spacing / sizing
+   Applied via class on <html> by SettingsContext
+   ------------------------------------------------ */
+.density-compact {
+    --spacing-unit: 0.75;
+
+    /* Reduce component padding */
+    --compact-padding-x: 0.5rem;
+    --compact-padding-y: 0.25rem;
+    --compact-gap: 0.5rem;
+}
+
+.density-compact body {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+/* Tighten cards, dialogs, and section spacing */
+.density-compact .card,
+.density-compact [data-slot="card"] {
+    padding: 0.75rem;
+}
+
+.density-compact table th,
+.density-compact table td {
+    padding: 0.375rem 0.5rem;
+}
+
+.density-compact button {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
 
 h1 {
     font-family: "Inter", sans-serif;

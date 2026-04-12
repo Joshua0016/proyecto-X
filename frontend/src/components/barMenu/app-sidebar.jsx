@@ -17,6 +17,8 @@ import {
   TerminalIcon,
   LucideBook,
   LucideGem,
+  ShieldIcon,
+  SettingsIcon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -62,6 +64,24 @@ const allNavMain = [
     requiredRoles: ["1"],
     items: [
       { title: "Cuentas del libro mayor", url: "ledgerAccount" },
+    ],
+  },
+  {
+    title: "Administración",
+    url: "#",
+    icon: <ShieldIcon />,
+    requiredRoles: ["1"],
+    items: [
+      { title: "Usuarios", url: "admin/users" },
+      { title: "Auditoría", url: "admin/audit" },
+    ],
+  },
+  {
+    title: "Configuración",
+    url: "#",
+    icon: <SettingsIcon />,
+    items: [
+      { title: "Configuración", url: "settings" },
     ],
   },
 ];

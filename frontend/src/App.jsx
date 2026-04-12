@@ -17,6 +17,10 @@ import ProtectedRoute from './components/security/ProtectedRoute';
 import PublicRoute from './components/security/PublicRoute';
 import AccessDenied from './components/security/AccessDenied';
 import RegisterForm from './components/login/RegisterForm';
+import RoleGuard from './components/security/RoleGuard';
+import UserManagement from './components/security/UserManagement';
+import Settings from './components/settings/Settings';
+import AuditLog from './components/security/AuditLog';
 
 function App() {
   return (
@@ -37,6 +41,9 @@ function App() {
           <Route path="family/:id" element={<FamilyDetails />} />
           <Route path="member/:id" element={<MemberDetails />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="admin/users" element={<RoleGuard roles={["1"]}><UserManagement /></RoleGuard>} />
+          <Route path="admin/audit" element={<RoleGuard roles={["1"]}><AuditLog /></RoleGuard>} />
+          <Route path="settings" element={<Settings />} />
           <Route path="access-denied" element={<AccessDenied />} />
         </Route>
       </Routes>
