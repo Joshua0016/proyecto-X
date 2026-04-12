@@ -1,6 +1,8 @@
+import { getToken } from "../getToken";
+
 export default async function getAllFamilies() {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = getToken(); 
     const response = await fetch("/api/Family", {
       method: "GET",
       headers: {

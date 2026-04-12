@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 export default async function createAccount(data) {
     try {
         let response = await fetch("/api/LedgerAccount/Create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
         });

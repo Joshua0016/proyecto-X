@@ -1,3 +1,5 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/updateEvent.js
 export default async function updateEvent(id, dto) {
   try {
@@ -5,7 +7,7 @@ export default async function updateEvent(id, dto) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify(dto)
     });

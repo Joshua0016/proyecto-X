@@ -1,9 +1,11 @@
+import { getToken } from "../getToken";
+
 export default async function getFamilyById(id) {
   try {
     const response = await fetch(`/api/Family/${id}`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

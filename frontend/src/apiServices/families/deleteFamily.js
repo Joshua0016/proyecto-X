@@ -1,9 +1,11 @@
+import { getToken } from "../getToken";
+
 export default async function deleteFamily(id) {
   try {
     const response = await fetch(`/api/Family/${id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

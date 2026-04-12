@@ -1,3 +1,5 @@
+import { getToken } from "../getToken";
+
 export default async function searchFamilies(query) {
   try {
     const url = `/api/Family/search?query=${encodeURIComponent(query)}`;
@@ -5,7 +7,7 @@ export default async function searchFamilies(query) {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

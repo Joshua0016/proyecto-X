@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 export default async function createDonation(params) {
     try {
         let response = await fetch("/api/Donation", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(params)
         });

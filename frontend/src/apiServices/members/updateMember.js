@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 export default async function updateMember(id, dto) {
     try {
         let response = await fetch(`/api/Member/${id}`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(dto)
         })

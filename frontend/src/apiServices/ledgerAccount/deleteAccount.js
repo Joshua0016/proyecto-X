@@ -1,9 +1,11 @@
+import { getToken } from "../getToken";
+
 export default async function deleteAccount(data) {
     try {
         let response = await fetch(`/api/LedgerAccount/${data}`, {
             method: 'DELETE',
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             }
         });
         if (response.ok) {

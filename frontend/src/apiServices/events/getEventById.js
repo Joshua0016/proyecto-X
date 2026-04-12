@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/getEventById.js
 export default async function getEventById(id) {
   try {
     const response = await fetch(`/api/Event/${id}`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

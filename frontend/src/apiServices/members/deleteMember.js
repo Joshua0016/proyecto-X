@@ -1,9 +1,11 @@
+import { getToken } from "../getToken";
+
 export default async function deleteMember(id) {
     try {
         let response = await fetch(`/api/Member/${id}`, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             }
         });
         if (response.ok) {

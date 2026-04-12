@@ -1,8 +1,9 @@
-//Pendiente autenticacion del login
+import { getToken } from "../getToken";
+
 export default async function getAllMembers() {
 
     try {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         let response = await fetch("/api/Member/GetAll", {
             method: "GET",
             headers: {

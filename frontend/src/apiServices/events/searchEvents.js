@@ -1,3 +1,5 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/searchEvents.js
 export default async function searchEvents(query) {
   try {
@@ -6,7 +8,7 @@ export default async function searchEvents(query) {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

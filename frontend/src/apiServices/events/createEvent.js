@@ -1,3 +1,5 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/createEvent.js
 export default async function createEvent(dto) {
   try {
@@ -5,7 +7,7 @@ export default async function createEvent(dto) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify(dto)
     });

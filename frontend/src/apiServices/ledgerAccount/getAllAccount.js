@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 export default async function getAllAccounts() {
     try {
         let response = await fetch("/api/LedgerAccount/GetAll", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             }
         })
         if (response.ok) {

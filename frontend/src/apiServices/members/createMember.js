@@ -1,3 +1,5 @@
+import { getToken } from "../getToken";
+
 export default async function createMember(dto) {
 
     try {
@@ -6,7 +8,7 @@ export default async function createMember(dto) {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(dto)
         })

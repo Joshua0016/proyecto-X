@@ -46,6 +46,7 @@ import getAllAccounts from "@/apiServices/ledgerAccount/getAllAccount"
 import DataTable from "react-data-table-component"
 import journalEntry from "@/apiServices/journalEntry/journalEntryCreate"
 import dayjs from "dayjs"
+import { getSession } from "@/apiServices/authService/tokenStorage"
 
 
 const formSchema = z.object({
@@ -112,7 +113,7 @@ export default function JournalEntry() {
 
     function onSubmit(data) {
         const save = async () => {
-            const userId = parseInt(localStorage.getItem("userId"));
+            const userId = parseInt(getSession()?.userId ?? "0");
             let newData = { ...data, date: dayjs(data.date).toISOString(), recordedByUserId: userId }
             console.log(newData)
             let response = await journalEntry(newData);

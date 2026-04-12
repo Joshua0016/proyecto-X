@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/deleteEvent.js
 export default async function deleteEvent(id) {
   try {
     const response = await fetch(`/api/Event/${id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       }
     });
 

@@ -1,10 +1,12 @@
+import { getToken } from "../getToken";
+
 export default async function createFamily(dto) {
   try {
     const response = await fetch("/api/Family", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify(dto)
     });

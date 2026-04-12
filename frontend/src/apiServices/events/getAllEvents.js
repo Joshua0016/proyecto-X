@@ -1,7 +1,9 @@
+import { getToken } from "../getToken";
+
 // src/apiServices/events/getAllEvents.js
 export default async function getAllEvents() {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = getToken(); 
     const response = await fetch("/api/Event", {
       method: "GET",
       headers: {
