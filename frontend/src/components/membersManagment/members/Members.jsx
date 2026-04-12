@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import { Button } from "@/components/ui/button";
 import { LucidePencil, LucidePlus, LucideTrash } from "lucide-react";
 import FormRhfInput from "./formCreate/Form";
+import { Input } from "@/components/ui/input";
 
 //apiService
 import getAllMembers from "../../../apiServices/members/getAllMembers";
@@ -17,8 +18,10 @@ import dayjs from "dayjs";
 
 export default function FullFeaturedCridGrid() {
   const [rows, setRows] = useState([]);
+  const [originalList, setOriginalList] = useState([])
   const [formMember, setformMember] = useState(false);
   const [rowMember, setRowMember] = useState({});
+  const [searchFilter, setSearch] = useState("");
 
   const [viewCardAction, setViewCardAction] = useState(false)
   useEffect(() => {
@@ -26,8 +29,7 @@ export default function FullFeaturedCridGrid() {
     async function allMembers() {
       const rows = await getAllMembers();
       setRows(rows);
-      console.log(rows)
-
+      setOriginalList(rows);
 
     }
     allMembers();
@@ -130,11 +132,27 @@ export default function FullFeaturedCridGrid() {
       },
     },
   };
+  const handleSearch = (e) => {
+
+    const value = e.target.value;
+
+    setSearch(value);
+
+    if (value == "") {
+
+      setRows(originalList);
+
+    } else {
+      const newRows = rows.filter((data) => data.firstName.includes(e.target.value));
+      setRows(newRows);
+    }
+  }
 
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="flex justify-end w-full">
+        <div className="flex justify-between w-full">
+          <Input type="search" id="search" placeholder="Buscar" className="sm:max-w-sm" value={searchFilter} onChange={(e) => handleSearch(e)} />
           {/*add member*/}
           <Button
             className="bg-black cursor-pointer right-0"
@@ -170,7 +188,9 @@ export default function FullFeaturedCridGrid() {
             </CardActions>
           )}
         </div>
-      </div>
+
+
+      </div >
     </>
   );
 }
