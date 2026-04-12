@@ -41,6 +41,15 @@ public class EventRepository(DbProyectoXContext context) : IGenericRepository<Ev
         }
     }
 
+    public async Task DeleteAttendancesAsync(int eventId)
+    {
+        var attendances = await context.Attendances
+            .Where(a => a.EventId == eventId)
+            .ToListAsync();
+        context.Attendances.RemoveRange(attendances);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<Event>> SearchAsync(string query) =>
         await context.Events
             .Include(e => e.OrganizerUser)

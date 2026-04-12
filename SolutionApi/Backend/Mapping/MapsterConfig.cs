@@ -34,20 +34,36 @@ public static class MapsterConfig
             .Map(dest => dest.IsActive, src => true)
             .Map(dest => dest.CurrentBalance, src => 0m);
 
-        // Family → FamilyResponseDTO: includes mapped member list
+        // Family → FamilyResponseDTO / FamilyDetailDTO con miembros y relación
+        TypeAdapterConfig<FamilyMember, FamilyMemberResponseDTO>.NewConfig()
+            .Map(dest => dest.MemberId,       src => src.Member.MemberId)
+            .Map(dest => dest.FirstName,      src => src.Member.FirstName)
+            .Map(dest => dest.SecondName,     src => src.Member.SecondName)
+            .Map(dest => dest.LastName,       src => src.Member.LastName)
+            .Map(dest => dest.SecondLastName, src => src.Member.SecondLastName)
+            .Map(dest => dest.PhoneNumber,    src => src.Member.PhoneNumber)
+            .Map(dest => dest.Email,          src => src.Member.Email)
+            .Map(dest => dest.BirthDate,      src => src.Member.BirthDate)
+            .Map(dest => dest.Gender,         src => src.Member.Gender)
+            .Map(dest => dest.MaritalStatus,  src => src.Member.MaritalStatus)
+            .Map(dest => dest.PhotoUrl,       src => src.Member.PhotoUrl)
+            .Map(dest => dest.NationalId,     src => src.Member.NationalId)
+            .Map(dest => dest.BloodType,      src => src.Member.BloodType)
+            .Map(dest => dest.Address,        src => src.Member.Address)
+            .Map(dest => dest.MemberType,     src => src.Member.MemberType)
+            .Map(dest => dest.IsActive,       src => src.Member.IsActive)
+            .Map(dest => dest.Baptized,       src => src.Member.Baptized)
+            .Map(dest => dest.JoinDate,       src => src.Member.JoinDate)
+            .Map(dest => dest.Profession,     src => src.Member.Profession)
+            .Map(dest => dest.Occupation,     src => src.Member.Occupation)
+            .Map(dest => dest.AcademicLevel,  src => src.Member.AcademicLevel)
+            .Map(dest => dest.Relationship,   src => src.Relationship);
+
         TypeAdapterConfig<Family, FamilyResponseDTO>.NewConfig()
-            .Map(dest => dest.FamilyId, src => src.FamilyId)
-            .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.CreatedAt, src => src.CreatedAt);
-        // .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
+            .Map(dest => dest.Members, src => src.FamilyMembers.Adapt<IEnumerable<FamilyMemberResponseDTO>>());
 
-
-        // Family → FamilyDetailDTO: includes mapped member list
         TypeAdapterConfig<Family, FamilyDetailDTO>.NewConfig()
-            .Map(dest => dest.FamilyId, src => src.FamilyId)
-            .Map(dest => dest.LastName, src => src.LastName)
-            .Map(dest => dest.CreatedAt, src => src.CreatedAt);
-        // .Map(dest => dest.Members, src => src.Members.Adapt<IEnumerable<MemberResponseDTO>>());
+            .Map(dest => dest.Members, src => src.FamilyMembers.Adapt<IEnumerable<FamilyMemberResponseDTO>>());
 
         // Vendor → VendorResponseDTO (nombres coinciden, Mapster lo hace automático)
         TypeAdapterConfig<VendorCreateDto, Vendor>.NewConfig();

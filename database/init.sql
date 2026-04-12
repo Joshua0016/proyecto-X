@@ -666,3 +666,121 @@ VALUES
     (7, 7, 'Padre'),     -- Pedro Hernández -> Familia Hernández
     (1, 5, 'Cónyuge'),   -- José González también vinculado a Familia Romero (por matrimonio)
     (4, 2, 'Cónyuge');   -- Ana Nivar también vinculada a Familia Pérez (por matrimonio)
+
+
+-- ─── SEED: 5 MIEMBROS POR FAMILIA ────────────────────────────────────────────
+-- Familias: 1=Romero, 2=Morrobel, 3=Nivar, 4=Pérez, 5=González, 6=Martínez, 7=Hernández
+-- Miembros existentes: 1-7. Nuevos: 8-42.
+
+INSERT INTO "membership"."member" (
+    "firstName", "secondName", "lastName", "secondLastName",
+    "gender", "birthDate", "birthPlace", "nationality", "maritalStatus",
+    "phoneNumber", "email", "address", "sector",
+    "memberType", "isActive", "baptized", "baptismDate", "baptismPlace",
+    "academicLevel", "profession", "occupation",
+    "smallGroupId", "churchRoleId"
+)
+VALUES
+-- ── Familia Romero (familyId=1) ── 5 miembros nuevos (IDs 8-12)
+('Roberto',   'Carlos',   'Romero',   'Díaz',      'M', '1965-03-12', 'Baní',          'Dominicana', 'Casado',    '8291112233', 'roberto.romero@proyectox.com',   'Calle 5, Villa Sombrero',  1, 'Activos',      true,  true,  '1990-04-10', 'Iglesia Central Baní',  'Secundaria', 'Agricultor',  'Empleado',   2, 7),
+('Lucía',     'Isabel',   'Romero',   'Díaz',      'F', '1968-07-25', 'Baní',          'Dominicana', 'Casado',    '8291112244', 'lucia.romero@proyectox.com',     'Calle 5, Villa Sombrero',  1, 'Activos',      true,  true,  '1992-06-20', 'Iglesia Central Baní',  'Primaria',   NULL,          'Ama de casa',2, 5),
+('Miguel',    'Ángel',    'Romero',   'Díaz',      'M', '1996-11-08', 'Baní',          'Dominicana', 'Soltero',   '8291112255', 'miguel.romero@proyectox.com',    'Calle 5, Villa Sombrero',  1, 'Comunion',     true,  true,  '2014-03-15', 'Iglesia Central Baní',  'Grado',      'Técnico',     'Empleado',   3, 3),
+('Sofía',     'Paola',    'Romero',   'Díaz',      'F', '1999-02-14', 'Baní',          'Dominicana', 'Soltero',   '8291112266', 'sofia.romero@proyectox.com',     'Calle 5, Villa Sombrero',  1, 'Catecumenos',  true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 4, 2),
+('Andrés',    'Felipe',   'Romero',   'Díaz',      'M', '2003-09-30', 'Baní',          'Dominicana', 'Soltero',   '8291112277', NULL,                             'Calle 5, Villa Sombrero',  1, 'Visitantes',   true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia Morrobel (familyId=2) ── 5 miembros nuevos (IDs 13-17)
+('Ramón',     'Antonio',  'Morrobel', 'Reyes',     'M', '1960-05-18', 'Baní',          'Dominicana', 'Casado',    '8093334455', 'ramon.morrobel@proyectox.com',   'Calle 12, Florentino',     2, 'Activos',      true,  true,  '1985-08-22', 'Iglesia Florentino',    'Primaria',   'Agricultor',  'Empleado',   1, 7),
+('Elena',     'Rosa',     'Morrobel', 'Reyes',     'F', '1963-09-04', 'Baní',          'Dominicana', 'Casado',    '8093334466', 'elena.morrobel@proyectox.com',   'Calle 12, Florentino',     2, 'Activos',      true,  true,  '1988-11-10', 'Iglesia Florentino',    'Primaria',   NULL,          'Ama de casa',2, 5),
+('Josué',     'David',    'Morrobel', 'Reyes',     'M', '1992-04-22', 'Baní',          'Dominicana', 'Soltero',   '8093334477', 'josue.morrobel@proyectox.com',   'Calle 12, Florentino',     2, 'Activos',      true,  true,  '2010-07-05', 'Iglesia Florentino',    'Grado',      'Maestro',     'Empleado',   3, 1),
+('Rebeca',    'Luz',      'Morrobel', 'Reyes',     'F', '1995-12-01', 'Baní',          'Dominicana', 'Soltero',   '8093334488', 'rebeca.morrobel@proyectox.com',  'Calle 12, Florentino',     2, 'Comunion',     true,  true,  '2013-05-18', 'Iglesia Florentino',    'Grado',      'Enfermera',   'Empleado',   4, 2),
+('Samuel',    'Elías',    'Morrobel', 'Reyes',     'M', '2001-06-15', 'Baní',          'Dominicana', 'Soltero',   '8093334499', NULL,                             'Calle 12, Florentino',     2, 'Catecumenos',  true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia Nivar (familyId=3) ── 5 miembros nuevos (IDs 18-22)
+('Domingo',   'Rafael',   'Nivar',    'Santos',    'M', '1958-01-30', 'Azua',          'Dominicana', 'Casado',    '8295556677', 'domingo.nivar@proyectox.com',    'Av. Principal, La Cuca',   3, 'Ministeriales',true,  true,  '1980-03-14', 'Iglesia Central Baní',  'Secundaria', 'Pastor',      'Ministerio', 1, 6),
+('Rosa',      'María',    'Nivar',    'Santos',    'F', '1961-08-17', 'Azua',          'Dominicana', 'Casado',    '8295556688', 'rosa.nivar@proyectox.com',       'Av. Principal, La Cuca',   3, 'Activos',      true,  true,  '1983-09-25', 'Iglesia Central Baní',  'Primaria',   NULL,          'Ama de casa',2, 5),
+('Jonathan',  'Isaías',   'Nivar',    'Santos',    'M', '1988-04-05', 'Azua',          'Dominicana', 'Casado',    '8295556699', 'jonathan.nivar@proyectox.com',   'Av. Principal, La Cuca',   3, 'Activos',      true,  true,  '2006-06-11', 'Iglesia Central Baní',  'Grado',      'Abogado',     'Empleado',   3, 6),
+('Esther',    'Gracia',   'Nivar',    'Santos',    'F', '1991-10-20', 'Azua',          'Dominicana', 'Soltero',   '8295556700', 'esther.nivar@proyectox.com',     'Av. Principal, La Cuca',   3, 'Activos',      true,  true,  '2009-04-03', 'Iglesia Central Baní',  'Grado',      'Psicóloga',   'Empleado',   4, 2),
+('Natanael',  'José',     'Nivar',    'Santos',    'M', '2005-03-11', 'Azua',          'Dominicana', 'Soltero',   '8295556711', NULL,                             'Av. Principal, La Cuca',   3, 'Visitantes',   true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia Pérez (familyId=4) ── 5 miembros nuevos (IDs 23-27)
+('Ernesto',   'Manuel',   'Pérez',    'Vargas',    'M', '1955-06-09', 'San Cristóbal', 'Dominicana', 'Casado',    '8094447788', 'ernesto.perez@proyectox.com',    'Calle 3, Los Cacaos',      4, 'Pasivos',      true,  true,  '1978-12-01', 'Iglesia Sombrero',      'Secundaria', NULL,          'Jubilado',   2, 7),
+('Gloria',    'Esperanza','Pérez',    'Vargas',    'F', '1958-11-23', 'San Cristóbal', 'Dominicana', 'Casado',    '8094447799', 'gloria.perez@proyectox.com',     'Calle 3, Los Cacaos',      4, 'Activos',      true,  true,  '1981-07-19', 'Iglesia Sombrero',      'Primaria',   NULL,          'Ama de casa',1, 5),
+('Daniel',    'Esteban',  'Pérez',    'Vargas',    'M', '1983-02-28', 'San Cristóbal', 'Dominicana', 'Casado',    '8094447800', 'daniel.perez@proyectox.com',     'Calle 3, Los Cacaos',      4, 'Activos',      true,  true,  '2001-08-14', 'Iglesia Sombrero',      'Postgrado',  'Médico',      'Empleado',   3, 6),
+('Miriam',    'Celeste',  'Pérez',    'Vargas',    'F', '1987-07-14', 'San Cristóbal', 'Dominicana', 'Soltero',   '8094447811', 'miriam.perez@proyectox.com',     'Calle 3, Los Cacaos',      4, 'Activos',      true,  true,  '2005-10-30', 'Iglesia Sombrero',      'Grado',      'Contadora',   'Empleado',   4, 2),
+('Isaías',    'Benjamín', 'Pérez',    'Vargas',    'M', '2002-12-05', 'San Cristóbal', 'Dominicana', 'Soltero',   '8094447822', NULL,                             'Calle 3, Los Cacaos',      4, 'Catecumenos',  true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia González (familyId=5) ── 5 miembros nuevos (IDs 28-32)
+('Héctor',    'Ramón',    'González', 'Marte',     'M', '1962-04-16', 'Baní',          'Dominicana', 'Casado',    '8097778899', 'hector.gonzalez@proyectox.com',  'Av. Duarte, El Limón',     5, 'Activos',      true,  true,  '1987-05-20', 'Iglesia Central Baní',  'Secundaria', 'Comerciante', 'Empleado',   1, 7),
+('Patricia',  'Altagracia','González','Marte',     'F', '1965-09-02', 'Baní',          'Dominicana', 'Casado',    '8097778900', 'patricia.gonzalez@proyectox.com','Av. Duarte, El Limón',     5, 'Activos',      true,  true,  '1990-02-14', 'Iglesia Central Baní',  'Primaria',   NULL,          'Ama de casa',2, 5),
+('Marcos',    'Aurelio',  'González', 'Marte',     'M', '1989-01-19', 'Baní',          'Dominicana', 'Casado',    '8097778911', 'marcos.gonzalez@proyectox.com',  'Av. Duarte, El Limón',     5, 'Activos',      true,  true,  '2007-09-08', 'Iglesia Central Baní',  'Grado',      'Ingeniero',   'Empleado',   3, 1),
+('Verónica',  'Gracia',   'González', 'Marte',     'F', '1993-05-27', 'Baní',          'Dominicana', 'Soltero',   '8097778922', 'veronica.gonzalez@proyectox.com','Av. Duarte, El Limón',     5, 'Comunion',     true,  true,  '2011-11-22', 'Iglesia Central Baní',  'Grado',      'Diseñadora',  'Empleado',   4, 2),
+('Ezequiel',  'Noel',     'González', 'Marte',     'M', '2004-08-13', 'Baní',          'Dominicana', 'Soltero',   '8097778933', NULL,                             'Av. Duarte, El Limón',     5, 'Visitantes',   true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia Martínez (familyId=6) ── 5 miembros nuevos (IDs 33-37)
+('Félix',     'Antonio',  'Martínez', 'Feliz',     'M', '1970-02-07', 'Peravia',       'Dominicana', 'Casado',    '8299990011', 'felix.martinez@proyectox.com',   'Calle 8, Barrio Nuevo',    6, 'Activos',      true,  true,  '1995-06-30', 'Iglesia Central Baní',  'Secundaria', 'Electricista','Empleado',   1, 7),
+('Dolores',   'Esperanza','Martínez', 'Feliz',     'F', '1973-06-19', 'Peravia',       'Dominicana', 'Casado',    '8299990022', 'dolores.martinez@proyectox.com', 'Calle 8, Barrio Nuevo',    6, 'Activos',      true,  true,  '1998-04-12', 'Iglesia Central Baní',  'Primaria',   NULL,          'Ama de casa',2, 5),
+('Elías',     'Samuel',   'Martínez', 'Feliz',     'M', '1997-10-03', 'Peravia',       'Dominicana', 'Soltero',   '8299990033', 'elias.martinez@proyectox.com',   'Calle 8, Barrio Nuevo',    6, 'Activos',      true,  true,  '2015-09-27', 'Iglesia Central Baní',  'Grado',      'Programador', 'Empleado',   3, 1),
+('Abigail',   'Ruth',     'Martínez', 'Feliz',     'F', '2001-04-25', 'Peravia',       'Dominicana', 'Soltero',   '8299990044', 'abigail.martinez@proyectox.com', 'Calle 8, Barrio Nuevo',    6, 'Comunion',     true,  true,  '2019-03-16', 'Iglesia Central Baní',  'Secundaria', 'Estudiante',  'Estudiante', 4, 2),
+('Josías',    'Caleb',    'Martínez', 'Feliz',     'M', '2006-12-18', 'Peravia',       'Dominicana', 'Soltero',   '8299990055', NULL,                             'Calle 8, Barrio Nuevo',    6, 'Visitantes',   true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4),
+
+-- ── Familia Hernández (familyId=7) ── 5 miembros nuevos (IDs 38-42)
+('Simón',     'Pedro',    'Hernández','Cruz',      'M', '1950-08-14', 'Baní',          'Dominicana', 'Viudo',     '8094441122', 'simon.hernandez@proyectox.com',  'Calle 1, Villa Sombrero',  1, 'Pasivos',      true,  true,  '1972-10-05', 'Iglesia Central Baní',  'Primaria',   NULL,          'Jubilado',   2, 7),
+('Marta',     'Luisa',    'Hernández','Cruz',      'F', '1975-03-22', 'Baní',          'Dominicana', 'Casado',    '8094441133', 'marta.hernandez@proyectox.com',  'Calle 1, Villa Sombrero',  1, 'Activos',      true,  true,  '1993-07-18', 'Iglesia Central Baní',  'Secundaria', 'Secretaria',  'Empleado',   1, 5),
+('Felipe',    'Andrés',   'Hernández','Cruz',      'M', '1980-11-09', 'Baní',          'Dominicana', 'Casado',    '8094441144', 'felipe.hernandez@proyectox.com', 'Calle 1, Villa Sombrero',  1, 'Activos',      true,  true,  '1998-12-03', 'Iglesia Central Baní',  'Grado',      'Arquitecto',  'Empleado',   3, 6),
+('Raquel',    'Noemi',    'Hernández','Cruz',      'F', '1985-06-30', 'Baní',          'Dominicana', 'Soltero',   '8094441155', 'raquel.hernandez@proyectox.com', 'Calle 1, Villa Sombrero',  1, 'Activos',      true,  true,  '2003-05-25', 'Iglesia Central Baní',  'Grado',      'Farmacéutica','Empleado',   4, 2),
+('Timoteo',   'Josué',    'Hernández','Cruz',      'M', '2000-01-15', 'Baní',          'Dominicana', 'Soltero',   '8094441166', NULL,                             'Calle 1, Villa Sombrero',  1, 'Catecumenos',  true,  false, NULL,         NULL,                    'Secundaria', 'Estudiante',  'Estudiante', 5, 4)
+ON CONFLICT DO NOTHING;
+
+
+-- VÍNCULOS familyMember para los 35 miembros nuevos
+
+INSERT INTO "membership"."familyMember" ("familyId", "memberId", "relationship")
+VALUES
+    -- Familia Romero (familyId=1): padre, madre, hijo, hija, hijo
+    (1,  8, 'Padre'),    -- Roberto Romero
+    (1,  9, 'Madre'),    -- Lucía Romero
+    (1, 10, 'Hijo'),     -- Miguel Romero
+    (1, 11, 'Hija'),     -- Sofía Romero
+    (1, 12, 'Hijo'),     -- Andrés Romero
+
+    -- Familia Morrobel (familyId=2): padre, madre, hijo, hija, hijo
+    (2, 13, 'Padre'),    -- Ramón Morrobel
+    (2, 14, 'Madre'),    -- Elena Morrobel
+    (2, 15, 'Hijo'),     -- Josué Morrobel
+    (2, 16, 'Hija'),     -- Rebeca Morrobel
+    (2, 17, 'Hijo'),     -- Samuel Morrobel
+
+    -- Familia Nivar (familyId=3): abuelo, abuela, hijo, hija, nieto
+    (3, 18, 'Abuelo'),   -- Domingo Nivar
+    (3, 19, 'Abuela'),   -- Rosa Nivar
+    (3, 20, 'Hijo'),     -- Jonathan Nivar
+    (3, 21, 'Hija'),     -- Esther Nivar
+    (3, 22, 'Nieto'),    -- Natanael Nivar
+
+    -- Familia Pérez (familyId=4): abuelo, abuela, hijo, hija, nieto
+    (4, 23, 'Abuelo'),   -- Ernesto Pérez
+    (4, 24, 'Abuela'),   -- Gloria Pérez
+    (4, 25, 'Hijo'),     -- Daniel Pérez
+    (4, 26, 'Hija'),     -- Miriam Pérez
+    (4, 27, 'Nieto'),    -- Isaías Pérez
+
+    -- Familia González (familyId=5): padre, madre, hijo, hija, hijo
+    (5, 28, 'Padre'),    -- Héctor González
+    (5, 29, 'Madre'),    -- Patricia González
+    (5, 30, 'Hijo'),     -- Marcos González
+    (5, 31, 'Hija'),     -- Verónica González
+    (5, 32, 'Hijo'),     -- Ezequiel González
+
+    -- Familia Martínez (familyId=6): padre, madre, hijo, hija, hijo
+    (6, 33, 'Padre'),    -- Félix Martínez
+    (6, 34, 'Madre'),    -- Dolores Martínez
+    (6, 35, 'Hijo'),     -- Elías Martínez
+    (6, 36, 'Hija'),     -- Abigail Martínez
+    (6, 37, 'Hijo'),     -- Josías Martínez
+
+    -- Familia Hernández (familyId=7): abuelo, hija, hijo, nieta, nieto
+    (7, 38, 'Abuelo'),   -- Simón Hernández
+    (7, 39, 'Hija'),     -- Marta Hernández
+    (7, 40, 'Hijo'),     -- Felipe Hernández
+    (7, 41, 'Nieta'),    -- Raquel Hernández
+    (7, 42, 'Nieto');    -- Timoteo Hernández

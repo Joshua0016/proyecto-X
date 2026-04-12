@@ -48,8 +48,9 @@ public class EventService(EventRepository repo) : IEventService
         var ev = await repo.GetByIdAsync(id)
             ?? throw new KeyNotFoundException("Evento no encontrado");
 
+        // Eliminar asistencias asociadas antes de borrar el evento
         if (ev.Attendances.Any())
-            throw new InvalidOperationException("No se puede eliminar un evento con asistencias registradas");
+            await repo.DeleteAttendancesAsync(ev.EventId);
 
         await repo.DeleteAsync(ev.EventId);
     }
