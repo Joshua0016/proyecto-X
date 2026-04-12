@@ -74,7 +74,7 @@ public partial class Member
 
     public MemberType? MemberType { get; set; }
 
-    public bool? IsActive { get; set; } = null!; // Nuevo
+    public bool IsActive { get; set; } = true; // Nuevo
 
     public DateTime? JoinDate { get; set; }
 

@@ -69,7 +69,18 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
         entity.Property(e => e.Profession).HasMaxLength(100).HasColumnName("profession");
         entity.Property(e => e.Occupation).HasMaxLength(100).HasColumnName("occupation");
         entity.Property(e => e.MemberCourses).HasColumnName("memberCourses");
-
+        //churRoleId
+        entity.Property(e => e.ChurchRoleId).HasColumnName("churchRoleId");
+        //isActive
+        entity.Property(e => e.IsActive).HasColumnName("isActive").IsRequired().HasDefaultValue(true);
+        //sector
+        entity.Property(e => e.SectorId).HasColumnName("sector");
+        //smallGroup
+        entity.Property(e => e.SmallGroupId).HasColumnName("smallGroupId");
+        //transferDate
+        entity.Property(e => e.TransferDate).HasColumnName("transferDate");
+        //transferDestination
+        entity.Property(e => e.TransferDestination).HasColumnName("transferDestination");
         // Timestamps
         entity.Property(e => e.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -95,12 +106,12 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
         //     .IsRequired(false);
 
         // FK relationship: Sector
-        entity.HasOne(d => d.Sector)
-            .WithMany()
-            .HasForeignKey(d => d.SectorId)
-            .OnDelete(DeleteBehavior.SetNull)
-            .HasConstraintName("member_sector_fkey")
-            .IsRequired(false);
+        //entity.HasOne(d => d.Sector)
+        //    .WithMany()
+        //    .HasForeignKey(d => d.SectorId)
+        //    .OnDelete(DeleteBehavior.SetNull)
+        //    .HasConstraintName("member_sector_fkey")
+        //    .IsRequired(false);
 
         // FK relationship: SmallGroup
         entity.HasOne(d => d.SmallGroup)
