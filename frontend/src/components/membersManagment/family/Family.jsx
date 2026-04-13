@@ -138,7 +138,7 @@ export default function Family() {
               state={{ family }}
               className="flex-1 font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
             >
-              Familia {family.lastName}
+              {family.lastName}
             </Link>
             <div className="flex gap-1">
               <Button size="icon" variant="ghost" onClick={() => openFamily(family)}>

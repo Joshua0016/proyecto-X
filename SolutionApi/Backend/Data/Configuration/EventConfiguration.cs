@@ -17,7 +17,7 @@ namespace Backend.Data.Configuration
             entity.Property(e => e.IsOrdinary).HasColumnName("isOrdinary");
             entity.Property(e => e.Location).HasColumnName("location");
             entity.Property(e => e.Capacity).HasColumnName("capacity");
-            entity.Property(e => e.Status).HasConversion<string>().HasColumnName("status");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.IsRecurring).HasColumnName("isRecurring");
             entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
             entity.Property(e => e.EndDate).HasColumnName("endDate");

@@ -11,9 +11,16 @@ export default async function deleteEvent(id) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error(error.message);
-      alert(error.message || "Error al eliminar el evento");
+      const text = await response.text();
+      let message = "Error al eliminar el evento";
+      try {
+        const error = JSON.parse(text);
+        message = error.message || message;
+      } catch {
+        if (text) message = text;
+      }
+      // 422 = tiene donaciones, el componente maneja el flujo con diálogo
+      if (response.status !== 422) alert(message);
       return false;
     }
 

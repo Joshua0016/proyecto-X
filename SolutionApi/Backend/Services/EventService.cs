@@ -48,9 +48,9 @@ public class EventService(EventRepository repo) : IEventService
         var ev = await repo.GetByIdAsync(id)
             ?? throw new KeyNotFoundException("Evento no encontrado");
 
-        // Eliminar asistencias asociadas antes de borrar el evento
-        if (ev.Attendances.Any())
-            await repo.DeleteAttendancesAsync(ev.EventId);
+        if (ev.Donations.Any())
+            throw new InvalidOperationException(
+                "No se puede eliminar el evento porque tiene donaciones registradas. Puedes cancelarlo en su lugar.");
 
         await repo.DeleteAsync(ev.EventId);
     }

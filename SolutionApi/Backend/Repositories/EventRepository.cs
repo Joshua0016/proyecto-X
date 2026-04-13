@@ -17,6 +17,7 @@ public class EventRepository(DbProyectoXContext context) : IGenericRepository<Ev
         await context.Events
             .Include(e => e.OrganizerUser)
             .Include(e => e.Attendances)
+            .Include(e => e.Donations)
             .FirstOrDefaultAsync(e => e.EventId == id);
 
     public async Task AddAsync(Event entity)
@@ -54,7 +55,7 @@ public class EventRepository(DbProyectoXContext context) : IGenericRepository<Ev
         await context.Events
             .Include(e => e.OrganizerUser)
             .Include(e => e.Attendances)
-            .Where(e => e.Title.Contains(query) || e.Type.Contains(query))
+            .Where(e => EF.Functions.ILike(e.Title, $"%{query}%") || EF.Functions.ILike(e.Type, $"%{query}%"))
             .ToListAsync();
 
     public Task<bool> ExistsAsync(string value) => Task.FromResult(false);

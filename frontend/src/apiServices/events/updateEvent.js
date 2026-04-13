@@ -13,9 +13,16 @@ export default async function updateEvent(id, dto) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error(error.message);
-      alert(error.message || "Error al actualizar el evento");
+      const text = await response.text();
+      let message = "Error al actualizar el evento";
+      try {
+        const error = JSON.parse(text);
+        message = error.message || message;
+      } catch {
+        if (text) message = text;
+      }
+      console.error(message);
+      alert(message);
       return false;
     }
 

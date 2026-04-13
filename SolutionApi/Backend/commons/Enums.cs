@@ -92,6 +92,7 @@ public enum CaseStatus
 public enum EventStatus
 {
     Programado,
+    [PgName("En curso")]
     EnCurso,
     Finalizado,
     Cancelado

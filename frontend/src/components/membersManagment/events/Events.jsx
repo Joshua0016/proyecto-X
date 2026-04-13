@@ -153,15 +153,45 @@ export default function Events() {
     }
   };
 
+  const [cancelConfirm, setCancelConfirm] = useState({ open: false, event: null });
+
   const removeEvent = async (id) => {
     if (!window.confirm("¿Eliminar este evento? También se eliminarán las asistencias registradas.")) return;
     try {
-      await deleteEvent(id);
-      await fetchEvents();
+      const ok = await deleteEvent(id);
+      if (ok) {
+        await fetchEvents();
+      } else {
+        // deleteEvent retorna false cuando el backend responde con error
+        // Si tiene donaciones, el backend devuelve 422 — ofrecemos cancelar
+        const ev = events.find((e) => e.eventId === id);
+        if (ev) setCancelConfirm({ open: true, event: ev });
+      }
     } catch (err) {
       console.error("Error deleting event:", err);
       setError("No se pudo eliminar el evento.");
     }
+  };
+
+  const cancelEvent = async () => {
+    const ev = cancelConfirm.event;
+    if (!ev) return;
+    const payload = {
+      title: ev.title,
+      type: ev.type,
+      description: ev.description ?? "",
+      location: ev.location ?? "",
+      capacity: ev.capacity ?? null,
+      isOrdinary: ev.isOrdinary,
+      isRecurring: ev.isRecurring,
+      status: "Cancelado",
+      startDate: ev.startDate,
+      endDate: ev.endDate,
+      organizerUserId: ev.organizerUserId ?? null,
+    };
+    const ok = await updateEvent(ev.eventId, payload);
+    if (ok) await fetchEvents();
+    setCancelConfirm({ open: false, event: null });
   };
 
   return (
@@ -326,6 +356,26 @@ export default function Events() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+      {/* MODAL CANCELAR EVENTO */}
+      <Dialog open={cancelConfirm.open} onOpenChange={(open) => setCancelConfirm((prev) => ({ ...prev, open }))}>
+        <DialogContent className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 max-w-md">
+          <DialogHeader>
+            <DialogTitle>No se puede eliminar</DialogTitle>
+            <DialogDescription>
+              Este evento tiene donaciones registradas y no puede eliminarse para preservar la integridad contable.
+              ¿Deseas <span className="font-semibold text-red-500">cancelar el evento</span> en su lugar?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-2">
+            <Button variant="outline" onClick={() => setCancelConfirm({ open: false, event: null })}>
+              Cerrar
+            </Button>
+            <Button variant="destructive" onClick={cancelEvent}>
+              Cancelar evento
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

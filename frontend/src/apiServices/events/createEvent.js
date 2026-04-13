@@ -13,9 +13,16 @@ export default async function createEvent(dto) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error(error.message);
-      alert(error.message || "Error al crear el evento");
+      const text = await response.text();
+      let message = "Error al crear el evento";
+      try {
+        const error = JSON.parse(text);
+        message = error.message || message;
+      } catch {
+        if (text) message = text;
+      }
+      console.error(message);
+      alert(message);
       return null;
     }
 
