@@ -12,4 +12,5 @@ public interface IService
     Task UpdateAsync(int id, UserUpdateDto request);
     Task ChangePasswordAsync(int id, ChangePasswordDto request);
     Task DeactivateAsync(int id);
+    Task ActivateAsync(int id);
 }

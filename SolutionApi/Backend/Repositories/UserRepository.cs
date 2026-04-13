@@ -11,11 +11,6 @@ namespace Backend.Repositories
     {
         private readonly DbProyectoXContext _context = context;
 
-        // public UserRepository(Backend.Data.ApplicationDbContext context)
-        // {
-        //     _context = context;
-        // }
-
         public async Task<IEnumerable<User>> GetAllAsync() =>
             await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .ToListAsync();
@@ -50,7 +45,9 @@ namespace Backend.Repositories
         public async Task UpdateAsync(User usuario)
         {
             if (usuario == null) throw new ArgumentNullException(nameof(usuario));
-            _context.Users.Update(usuario);
+            // No llamar _context.Users.Update() porque la entidad ya está tracked
+            // (fue cargada con GetByIdAsync). Update() marca todas las propiedades
+            // como Modified, incluyendo UserId que es GENERATED ALWAYS en PostgreSQL.
             await _context.SaveChangesAsync();
         }
 

@@ -1,51 +1,345 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------
-   Dark theme – extra overrides beyond App.css
-   (App.css already defines the core shadcn/ui dark
-    variables; add any app-wide dark tweaks here)
-   ------------------------------------------------ */
+/* ═══════════════════════════════════════════════
+   Google Drive Dashboard – Global Styles
+   ═══════════════════════════════════════════════ */
+
+/* ── Dark mode helper ── */
 .dark {
     color-scheme: dark;
 }
 
-/* ------------------------------------------------
-   Compact density – reduced spacing / sizing
-   Applied via class on <html> by SettingsContext
-   ------------------------------------------------ */
+/* ── Compact density ── */
 .density-compact {
     --spacing-unit: 0.75;
-
-    /* Reduce component padding */
     --compact-padding-x: 0.5rem;
     --compact-padding-y: 0.25rem;
     --compact-gap: 0.5rem;
 }
-
 .density-compact body {
     font-size: 0.875rem;
     line-height: 1.25rem;
 }
-
-/* Tighten cards, dialogs, and section spacing */
-.density-compact .card,
 .density-compact [data-slot="card"] {
     padding: 0.75rem;
 }
-
 .density-compact table th,
 .density-compact table td {
     padding: 0.375rem 0.5rem;
 }
-
 .density-compact button {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
 
+/* ── Typography ── */
 h1 {
-    font-family: "Inter", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: weight;
-    font-style: normal;
+    font-family: "Geist Variable", "Inter", sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ═══════════════════════════════════════════════
+   Sidebar – Blue gradient with rounded feel
+   ═══════════════════════════════════════════════ */
+
+[data-slot="sidebar"] {
+    background: linear-gradient(180deg, #1E3A8A 0%, #1E40AF 30%, #2563EB 70%, #1D4ED8 100%) !important;
+    border-right: none !important;
+    border-radius: 0 1.25rem 1.25rem 0;
+}
+
+.dark [data-slot="sidebar"] {
+    background: linear-gradient(180deg, #0D1526 0%, #111B2E 40%, #162240 100%) !important;
+    border-radius: 0 1.25rem 1.25rem 0;
+}
+
+/* Sidebar menu items */
+[data-slot="sidebar"] [data-slot="sidebar-menu-button"] {
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+    padding: 0.625rem 0.875rem;
+    margin: 0.125rem 0;
+}
+
+[data-slot="sidebar"] [data-slot="sidebar-menu-button"]:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+}
+
+[data-slot="sidebar"] [data-slot="sidebar-menu-button"][data-active="true"] {
+    background: rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark [data-slot="sidebar"] [data-slot="sidebar-menu-button"] {
+    color: rgba(241, 245, 249, 0.7);
+}
+.dark [data-slot="sidebar"] [data-slot="sidebar-menu-button"]:hover {
+    background: rgba(96, 165, 250, 0.12);
+    color: #F1F5F9;
+}
+.dark [data-slot="sidebar"] [data-slot="sidebar-menu-button"][data-active="true"] {
+    background: rgba(96, 165, 250, 0.2);
+    color: #F1F5F9;
+}
+
+/* Sidebar separator */
+[data-slot="sidebar"] [data-slot="separator"] {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   Tables – Floating row cards
+   ═══════════════════════════════════════════════ */
+
+[data-slot="table"] {
+    border-spacing: 0 0.5rem;
+    border-collapse: separate;
+}
+
+[data-slot="table-header"] tr {
+    border-bottom: none !important;
+    background: transparent;
+}
+
+[data-slot="table-header"] th {
+    color: var(--muted-foreground);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border-bottom: none;
+}
+
+[data-slot="table-body"] tr {
+    border-bottom: none !important;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+}
+
+[data-slot="table-body"] tr:hover {
+    box-shadow: 0 4px 16px rgba(45, 108, 223, 0.1), 0 2px 4px rgba(0, 0, 0, 0.04);
+    transform: translateY(-1px);
+}
+
+[data-slot="table-body"] td {
+    padding: 0.875rem 1rem;
+    border-bottom: none;
+}
+
+[data-slot="table-body"] td:first-child {
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+[data-slot="table-body"] td:last-child {
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ═══════════════════════════════════════════════
+   Cards – Soft shadow, generous radius
+   ═══════════════════════════════════════════════ */
+
+[data-slot="card"] {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    transition: box-shadow 0.25s ease;
+}
+
+[data-slot="card"]:hover {
+    box-shadow: 0 4px 16px rgba(45, 108, 223, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ═══════════════════════════════════════════════
+   Buttons – Smooth transitions
+   ═══════════════════════════════════════════════ */
+
+button,
+[role="button"] {
+    transition: all 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   Inputs – Rounded, clean focus
+   ═══════════════════════════════════════════════ */
+
+input,
+[data-slot="input"] {
+    border-radius: 0.625rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+[data-slot="input"]:focus {
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   Dialogs – Generous radius
+   ═══════════════════════════════════════════════ */
+
+[data-slot="dialog-content"] {
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ═══════════════════════════════════════════════
+   Header bar – Clean separator
+   ═══════════════════════════════════════════════ */
+
+header {
+    backdrop-filter: blur(12px);
+    background: rgba(245, 247, 251, 0.85) !important;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark header {
+    background: rgba(15, 23, 42, 0.85) !important;
+}
+
+/* ═══════════════════════════════════════════════
+   Badges – Pill shape
+   ═══════════════════════════════════════════════ */
+
+.inline-flex.items-center.rounded-full {
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   Scrollbar – Minimal
+   ═══════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   Dark mode – Enhanced overrides
+   ═══════════════════════════════════════════════ */
+
+/* Tables in dark mode */
+.dark [data-slot="table-body"] tr {
+    background: #151D2E;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.dark [data-slot="table-body"] tr:hover {
+    background: #1C2D4A;
+    box-shadow: 0 4px 16px rgba(91, 156, 246, 0.08), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark [data-slot="table-header"] th {
+    color: #8B9AB5;
+}
+
+/* Cards in dark mode */
+.dark [data-slot="card"] {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.12);
+    border-color: #1E2D42;
+}
+
+.dark [data-slot="card"]:hover {
+    box-shadow: 0 4px 16px rgba(91, 156, 246, 0.06), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Header in dark mode */
+.dark header {
+    background: rgba(11, 17, 32, 0.9) !important;
+    border-bottom-color: #1E2D42;
+}
+
+/* Inputs in dark mode */
+.dark input:focus,
+.dark [data-slot="input"]:focus {
+    box-shadow: 0 0 0 3px rgba(91, 156, 246, 0.2);
+}
+
+/* Dialogs in dark mode */
+.dark [data-slot="dialog-content"] {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* react-data-table-component dark overrides */
+.dark .rdt_Table {
+    background: transparent !important;
+}
+
+.dark .rdt_TableHead {
+    background: transparent !important;
+}
+
+.dark .rdt_TableHeadRow {
+    background: transparent !important;
+    border-bottom-color: #1E2D42 !important;
+}
+
+.dark .rdt_TableCol {
+    color: #8B9AB5 !important;
+}
+
+.dark .rdt_TableRow {
+    background: #151D2E !important;
+    color: #E2E8F0 !important;
+    border-bottom: none !important;
+}
+
+.dark .rdt_TableRow:hover {
+    background: #1C2D4A !important;
+}
+
+.dark .rdt_TableCell {
+    color: #E2E8F0 !important;
+}
+
+.dark .rdt_Pagination {
+    background: transparent !important;
+    color: #8B9AB5 !important;
+    border-top-color: #1E2D42 !important;
+}
+
+.dark .rdt_Pagination button {
+    color: #5B9CF6 !important;
+    fill: #5B9CF6 !important;
+}
+
+.dark .rdt_Pagination button:disabled {
+    color: #2A3A52 !important;
+    fill: #2A3A52 !important;
+}
+
+.dark .rdt_Pagination select {
+    background: #151D2E !important;
+    color: #E2E8F0 !important;
+    border-color: #1E2D42 !important;
 }

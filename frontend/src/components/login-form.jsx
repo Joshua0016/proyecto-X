@@ -2,14 +2,6 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -18,6 +10,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
+import { MailIcon, LockIcon, LogInIcon } from "lucide-react"
 
 const loginSchema = z.object({
   email: z.email("Email inválido"),
@@ -59,47 +52,80 @@ export function LoginForm({ className, ...props }) {
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Field>
-                <div className="flex gap-3">
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
-                  <div className="flex">
-                    <Checkbox checked={rememberMe} onCheckedChange={(checked) => setRemember(checked)} />
-                    <Label htmlFor="remember-checkbox">Remember</Label>
-                  </div>
-                </div>
-                <Input id="email" type="email" placeholder="m@example.com" {...register("email")} />
-                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" {...register("password")} />
-                {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
-              </Field>
-              <Field>
-                <Button type="submit" className="cursor-pointer" disabled={isSubmitting}>
-                  {isSubmitting ? "Cargando..." : "Login"}
-                </Button>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+    <div className={cn("flex flex-col", className)} {...props}>
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-foreground tracking-tight">Bienvenido</h2>
+        <p className="text-muted-foreground mt-2">
+          Ingresa tus credenciales para continuar
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-sm font-medium">Correo electrónico</Label>
+          <div className="relative">
+            <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="correo@ejemplo.com"
+              className="h-12 pl-10 rounded-xl"
+              {...register("email")}
+            />
+          </div>
+          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>}
+        </div>
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-sm font-medium">Contraseña</Label>
+            <a href="#" className="text-xs text-primary hover:underline">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+          <div className="relative">
+            <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              className="h-12 pl-10 rounded-xl"
+              {...register("password")}
+            />
+          </div>
+          {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="remember"
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRemember(checked)}
+          />
+          <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+            Recordar mi correo
+          </Label>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full h-12 cursor-pointer text-sm font-semibold rounded-xl gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300"
+          disabled={isSubmitting}
+          style={{ background: "linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)" }}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Ingresando...
+            </span>
+          ) : (
+            <>
+              <LogInIcon className="size-4" />
+              Iniciar sesión
+            </>
+          )}
+        </Button>
+      </form>
     </div>
   )
 }

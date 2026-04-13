@@ -10,17 +10,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   TerminalSquareIcon,
   PieChartIcon,
-  TerminalIcon,
   LucideBook,
   LucideGem,
   ShieldIcon,
-  SettingsIcon,
+  MenuIcon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "@/assets/logo.svg";
 
 const allNavMain = [
   {
@@ -76,18 +77,11 @@ const allNavMain = [
       { title: "Auditoría", url: "admin/audit" },
     ],
   },
-  {
-    title: "Configuración",
-    url: "#",
-    icon: <SettingsIcon />,
-    items: [
-      { title: "Configuración", url: "settings" },
-    ],
-  },
 ];
 
 export function AppSidebar({ ...props }) {
   const { user } = useAuth();
+  const { toggleSidebar } = useSidebar();
 
   const navMain = allNavMain.filter(
     (item) => !item.requiredRoles || item.requiredRoles.includes(user?.rol)
@@ -104,30 +98,12 @@ export function AppSidebar({ ...props }) {
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
       {...props}
     >
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <TerminalIcon className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Casa de oración</span>
-                  <span className="truncate text-xs">Bani</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+      <SidebarHeader />
       <SidebarContent>
         <NavMain items={navMain} />
         <NavSecondary items={[]} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={userData} />
-      </SidebarFooter>
+      <SidebarFooter />
     </Sidebar>
   );
 }

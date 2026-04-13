@@ -45,6 +45,7 @@ import DataTable from "react-data-table-component";
 import dayjs from "dayjs"
 
 import createDonation from "@/apiServices/donations/createDonations"
+import { dataTableStyles, paginationOptions } from "@/components/shared/dataTableStyles"
 
 const type = [
 
@@ -144,45 +145,7 @@ export default function Donations() {
         }
     ]
     //styles
-    const customStyles = {
-        header: {
-            style: {
-                minHeight: "56px",
-            },
-        },
-        headRow: {
-            style: {
-                borderTopStyle: "solid",
-                borderTopWidth: "1px",
-                borderTopColor: "#e5e7eb",
-                backgroundColor: "#f9fafb",
-            },
-        },
-        headCells: {
-            style: {
-                fontWeight: "bold",
-                fontSize: "14px",
-                color: "#374151",
-            },
-        },
-        cells: {
-            style: {
-                fontSize: "14px",
-                paddingLeft: "16px",
-                paddingRight: "16px",
-            },
-        },
-        rows: {
-            style: {
-                minHeight: "64px", // Filas más altas para que respiren
-                "&:not(:last-of-type)": {
-                    borderBottomStyle: "solid",
-                    borderBottomWidth: "1px",
-                    borderBottomColor: "#e5e7eb",
-                },
-            },
-        },
-    };
+    const customStyles = dataTableStyles;
     function onSubmit(data) {
         async function Save() {
             if (selectMember) {
@@ -452,7 +415,9 @@ export default function Donations() {
                     selectableRows
                     selectableRowsSingle
                     paginationRowsPerPageOptions={[3, 5, 10]}
+                    paginationComponentOptions={paginationOptions}
                     onSelectedRowsChange={({ selectedRows }) => setSelectMember(selectedRows)}
+                    highlightOnHover
                 />
 
             </Card>

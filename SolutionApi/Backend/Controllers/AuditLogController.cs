@@ -1,4 +1,5 @@
 using Backend.interfaces;
+using Backend.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
@@ -14,7 +15,22 @@ public class AuditLogController(IAuditLogService auditLogService) : ControllerBa
     public async Task<IActionResult> GetAuditLogs()
     {
         var logs = await _auditLogService.GetAllAsync();
-        return Ok(logs);
+        var result = logs.Select(l => new AuditLogResponseDTO(
+            l.LogId,
+            l.Operation,
+            l.AffectedTable,
+            l.EntityId,
+            l.OldValues,
+            l.NewValues,
+            l.HttpMethod,
+            l.Endpoint,
+            l.Detail,
+            l.SourceIp,
+            l.Timestamp,
+            l.UserId,
+            l.User?.Name ?? ""
+        ));
+        return Ok(result);
     }
 }
 

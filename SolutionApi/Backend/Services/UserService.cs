@@ -1,4 +1,4 @@
-﻿using Backend.DTOs;
+using Backend.DTOs;
 using Backend.interfaces;
 using Backend.Models;
 using Mapster;
@@ -72,15 +72,11 @@ public class UserService(IGenericRepository<User> userRepository, IGenericReposi
 
         user.Name    = request.Name;
         user.Email   = request.Email;
-        // Validate role exists
         _ = await roleRepository.GetByIdAsync(request.IdRol)
             ?? throw new ArgumentException($"El rol con ID {request.IdRol} no existe");
-        // Update role via UserRoles junction table
-        var existingRole = user.UserRoles.FirstOrDefault();
-        if (existingRole != null)
-            existingRole.RoleId = request.IdRol;
-        else
-            user.UserRoles.Add(new UserRole { RoleId = request.IdRol });
+        // borra el rol del primary ey y agrega uno nuevo
+        user.UserRoles.Clear();
+        user.UserRoles.Add(new UserRole { UserId = id, RoleId = request.IdRol });
         await userRepository.UpdateAsync(user);
     }
 
@@ -103,6 +99,15 @@ public class UserService(IGenericRepository<User> userRepository, IGenericReposi
             ?? throw new KeyNotFoundException("Usuario no encontrado");
 
         user.Active = false;
+        await userRepository.UpdateAsync(user);
+    }
+
+    public async Task ActivateAsync(int id)
+    {
+        var user = await userRepository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException("Usuario no encontrado");
+
+        user.Active = true;
         await userRepository.UpdateAsync(user);
     }
 }

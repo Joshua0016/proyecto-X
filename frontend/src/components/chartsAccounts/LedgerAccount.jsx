@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { LucideTrash } from "lucide-react";
 import CardActions from "./cardActions/CardActions";
 import { Card, CardTitle } from "../ui/card";
+import { dataTableStyles, paginationOptions } from "@/components/shared/dataTableStyles";
 export default function LedgerAccount() {
     const [rows, setRows] = useState();
     const [rowAccount, setRowAccount] = useState();
@@ -46,45 +47,7 @@ export default function LedgerAccount() {
         }
     ];
 
-    const customStyles = {
-        header: {
-            style: {
-                minHeight: "56px",
-            },
-        },
-        headRow: {
-            style: {
-                borderTopStyle: "solid",
-                borderTopWidth: "1px",
-                borderTopColor: "#e5e7eb",
-                backgroundColor: "#f9fafb",
-            },
-        },
-        headCells: {
-            style: {
-                fontWeight: "bold",
-                fontSize: "14px",
-                color: "#374151",
-            },
-        },
-        cells: {
-            style: {
-                fontSize: "14px",
-                paddingLeft: "16px",
-                paddingRight: "16px",
-            },
-        },
-        rows: {
-            style: {
-                minHeight: "64px", // Filas más altas para que respiren
-                "&:not(:last-of-type)": {
-                    borderBottomStyle: "solid",
-                    borderBottomWidth: "1px",
-                    borderBottomColor: "#e5e7eb",
-                },
-            },
-        },
-    };
+    const customStyles = dataTableStyles;
     return (
         <>
             <FormAccount setRows={setRows}></FormAccount>
@@ -93,7 +56,7 @@ export default function LedgerAccount() {
                 <CardTitle>
                     Cuentas
                 </CardTitle>
-                <DataTable columns={columns} data={rows} customStyles={customStyles} pagination />
+                <DataTable columns={columns} data={rows} customStyles={customStyles} pagination paginationComponentOptions={paginationOptions} highlightOnHover />
             </Card>
 
             {viewCardAction && (

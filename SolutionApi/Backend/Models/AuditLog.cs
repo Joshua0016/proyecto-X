@@ -21,9 +21,9 @@ public partial class AuditLog
 
     public string? Endpoint { get; set; }
 
-    public string Detail { get; set; } = null!;
+    public string? Detail { get; set; }
 
-    public string SourceIp { get; set; } = null!;
+    public string? SourceIp { get; set; }
 
     public DateTime? Timestamp { get; set; }
 

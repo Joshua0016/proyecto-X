@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LucidePencil, LucidePlus, LucideTrash } from "lucide-react";
 import FormRhfInput from "./formCreate/Form";
 import { Input } from "@/components/ui/input";
+import { dataTableStyles, paginationOptions } from "@/components/shared/dataTableStyles";
 
 //apiService
 import getAllMembers from "../../../apiServices/members/getAllMembers";
@@ -90,45 +91,7 @@ export default function FullFeaturedCridGrid() {
       )
     }
   ];
-  const customStyles = {
-    header: {
-      style: {
-        minHeight: "56px",
-      },
-    },
-    headRow: {
-      style: {
-        borderTopStyle: "solid",
-        borderTopWidth: "1px",
-        borderTopColor: "#e5e7eb",
-        backgroundColor: "#f9fafb",
-      },
-    },
-    headCells: {
-      style: {
-        fontWeight: "bold",
-        fontSize: "14px",
-        color: "#374151",
-      },
-    },
-    cells: {
-      style: {
-        fontSize: "14px",
-        paddingLeft: "16px",
-        paddingRight: "16px",
-      },
-    },
-    rows: {
-      style: {
-        minHeight: "64px", // Filas más altas para que respiren
-        "&:not(:last-of-type)": {
-          borderBottomStyle: "solid",
-          borderBottomWidth: "1px",
-          borderBottomColor: "#e5e7eb",
-        },
-      },
-    },
-  };
+  const customStyles = dataTableStyles;
   const handleSearch = async (e) => {
 
     const value = e.target.value;
@@ -171,6 +134,16 @@ export default function FullFeaturedCridGrid() {
             data={rows}
             customStyles={customStyles}
             pagination
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50]}
+            paginationComponentOptions={paginationOptions}
+            noDataComponent={
+              <div className="py-12 text-center text-muted-foreground text-sm">
+                No hay miembros registrados.
+              </div>
+            }
+            highlightOnHover
+            pointerOnHover
           />
 
           {formMember && (

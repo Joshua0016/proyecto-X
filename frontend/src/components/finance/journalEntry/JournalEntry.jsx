@@ -47,6 +47,7 @@ import DataTable from "react-data-table-component"
 import journalEntry from "@/apiServices/journalEntry/journalEntryCreate"
 import dayjs from "dayjs"
 import { getSession } from "@/apiServices/authService/tokenStorage"
+import { dataTableStyles, paginationOptions } from "@/components/shared/dataTableStyles"
 
 
 const formSchema = z.object({
@@ -377,45 +378,7 @@ function AccountCode() {
             selector: (row) => row.name,
         }
     ];
-    const customStyles = {
-        header: {
-            style: {
-                minHeight: "56px",
-            },
-        },
-        headRow: {
-            style: {
-                borderTopStyle: "solid",
-                borderTopWidth: "1px",
-                borderTopColor: "#e5e7eb",
-                backgroundColor: "#f9fafb",
-            },
-        },
-        headCells: {
-            style: {
-                fontWeight: "bold",
-                fontSize: "14px",
-                color: "#374151",
-            },
-        },
-        cells: {
-            style: {
-                fontSize: "14px",
-                paddingLeft: "16px",
-                paddingRight: "16px",
-            },
-        },
-        rows: {
-            style: {
-                minHeight: "64px", // Filas más altas para que respiren
-                "&:not(:last-of-type)": {
-                    borderBottomStyle: "solid",
-                    borderBottomWidth: "1px",
-                    borderBottomColor: "#e5e7eb",
-                },
-            },
-        },
-    };
+    const customStyles = dataTableStyles;
 
     return (
         <>
@@ -425,7 +388,7 @@ function AccountCode() {
                 </CardTitle>
 
                 <CardContent>
-                    <DataTable columns={columns} data={code} customStyles={customStyles} pagination paginationPerPage={3} paginationRowsPerPageOptions={[3, 5, 10]} />
+                    <DataTable columns={columns} data={code} customStyles={customStyles} pagination paginationPerPage={3} paginationRowsPerPageOptions={[3, 5, 10]} paginationComponentOptions={paginationOptions} highlightOnHover />
                 </CardContent>
             </Card>
         </>

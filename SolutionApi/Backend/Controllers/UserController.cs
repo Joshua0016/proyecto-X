@@ -139,6 +139,7 @@ public class UserController(IService userService, IJwtService jwtService, DbProy
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
     [HttpPut("{id}/change-password")]
@@ -162,6 +163,18 @@ public class UserController(IService userService, IJwtService jwtService, DbProy
         try
         {
             await userService.DeactivateAsync(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
+
+    [HttpPut("{id}/activate")]
+    [Authorize(Roles = "1")]
+    public async Task<IActionResult> Activate(int id)
+    {
+        try
+        {
+            await userService.ActivateAsync(id);
             return NoContent();
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
