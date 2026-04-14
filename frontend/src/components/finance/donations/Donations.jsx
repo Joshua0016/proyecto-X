@@ -96,8 +96,10 @@ const formSchema = z.object({
 
 
 export default function Donations() {
-    const [members, setMembers] = useState();
+    const [members, setMembers] = useState([]);
     const [selectMember, setSelectMember] = useState(null);
+    const [filters, setFilters] = useState([])
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         async function getMembers() {
@@ -106,6 +108,7 @@ export default function Donations() {
                 if (members) {
 
                     setMembers(members);
+                    setFilters(members);
                 }
             } catch (error) {
                 console.log("Error al traer los miembros ---> " + error);
@@ -115,6 +118,19 @@ export default function Donations() {
         getMembers();
 
     }, []);
+
+    const handleSearch = async (e) => {
+        let value = e.target.value;
+        setSearch(value);
+
+        if (value != "") {
+            const filter = members.filter((data) => data.firstName.includes(value));
+            setFilters(filter);
+        }
+        else {
+            setFilters(members);
+        }
+    }
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -129,20 +145,11 @@ export default function Donations() {
 
     const columns = [
         {
-            name: "ID",
-            selector: (row) => row.memberId,
-            sortable: true,
-        },
-        {
             name: "Nombre",
-            selector: (row) => row.firstName,
+            selector: (row) => `${row.firstName} ${row.lastName}`,
             sortable: true,
         },
-        {
-            name: "Apellido",
-            selector: (row) => row.lastName,
-            sortable: true,
-        }
+
     ]
     //styles
     const customStyles = dataTableStyles;
@@ -170,7 +177,7 @@ export default function Donations() {
     return (
         <>
 
-            <Card className="w-full mx-auto sm:max-w-4xl xl:max-w-6xl flex">
+            <Card className="w-full mx-auto sm:max-w-2xl xl:max-w-6xl flex">
                 <CardHeader>
                     <CardTitle>Configuración de cuenta</CardTitle>
                     <CardDescription>
@@ -402,14 +409,15 @@ export default function Donations() {
             </Card>
 
 
-            <Card className="p-4 lg:w-[70%] mx-auto mt-5">
+            <Card className="p-4 lg:w-[20%] mx-auto mt-5">
                 <CardTitle>
                     Seleccion de miembros
                 </CardTitle>
+                <Input type="search" className="sm:w-[40%]" placeholder="Buscar" value={search} onChange={(e) => handleSearch(e)}></Input>
                 <DataTable
                     customStyles={customStyles}
                     columns={columns}
-                    data={members}
+                    data={filters}
                     pagination
                     paginationPerPage={3}
                     selectableRows

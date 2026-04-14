@@ -10,15 +10,21 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-export default function CardActions({ setRows, setViewCardAction, rowMember }) {
+export default function CardActions({ setRows, setViewCardAction, rowMember, setFilters, setSearch }) {
     const handleDelete = async (row) => {
 
         try {
 
             const response = await deleteMember(row.memberId);
             if (response) {
-                setRows(await getAllMembers());
-                setViewCardAction(false);
+                let membersUpdate = await getAllMembers();
+                if (membersUpdate) {
+                    setRows(membersUpdate);
+                    setViewCardAction(false);
+                    setFilters(membersUpdate);
+                    setSearch("");
+                }
+
             }
         } catch (error) {
             console.log("Error en CardDelete.jsx try cath al intentar eliminar --->  " + error);
