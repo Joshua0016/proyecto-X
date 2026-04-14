@@ -66,6 +66,14 @@ public class MemberService(IGenericRepository<Member> repo, IGenericRepository<F
 
     }
 
+    public async Task IsActive(int memberId){
+        var member = await repo.GetByIdAsync(memberId)
+            ?? throw new KeyNotFoundException(" Miembro no encontrado")
+
+        member.IsActive = true;
+        repo.UpdateAsync(member);
+    }
+
 
 
 
