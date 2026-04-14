@@ -76,7 +76,7 @@ export default function FullFeaturedCridGrid() {
       cell: (row) => (
         <div className="flex gap-2">
           {/*Update*/}
-          <Button className="cursor-pointer bg-gray-600" onClick={() => { setformMember(true); setRowMember({ ...row, isUpdate: true }) }}>
+          <Button className="cursor-pointer bg-primary hover:bg-primary/90" onClick={() => { setformMember(true); setRowMember({ ...row, isUpdate: true }) }}>
             <LucidePencil></LucidePencil>
           </Button>
           {/*Eliminate*/}
@@ -119,7 +119,7 @@ export default function FullFeaturedCridGrid() {
           <Input type="search" id="search" placeholder="Buscar" className="sm:max-w-sm" value={searchFilter} onChange={(e) => handleSearch(e)} />
           {/*add member*/}
           <Button
-            className="bg-black cursor-pointer right-0"
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
             onClick={() => { setformMember(true); setRowMember(null) }}
           >
             <LucidePlus></LucidePlus>

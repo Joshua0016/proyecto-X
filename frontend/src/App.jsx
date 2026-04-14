@@ -2,6 +2,7 @@ import './App.css'
 import { Routes, Route } from "react-router-dom";
 import Login from './components/login/Login'
 import Home from './components/home/Home'
+import Dashboard from './components/home/Dashboard'
 import Members from './components/membersManagment/members/Members';
 import Events from './components/membersManagment/events/Events';
 import EventDetails from './components/membersManagment/events/EventDetails';
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><RegisterForm /></PublicRoute>} />
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>}>
+          <Route index element={<Dashboard />} />
           <Route path="donations" element={<Donations />} />
           <Route path="members" element={<Members />} />
           <Route path="events" element={<Events />} />

@@ -40,6 +40,60 @@ h1 {
 }
 
 /* ═══════════════════════════════════════════════
+   Global Button Transitions
+   ═══════════════════════════════════════════════ */
+
+button,
+[role="button"],
+a[class*="btn"],
+[data-slot="button"] {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover:not(:disabled),
+[role="button"]:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ═══════════════════════════════════════════════
+   Global Form Improvements
+   ═══════════════════════════════════════════════ */
+
+/* Better looking selects */
+select,
+[data-slot="select-trigger"] {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Smooth dialog animations */
+[data-slot="dialog-overlay"] {
+    transition: opacity 0.2s ease;
+}
+
+/* Page titles */
+h1, h2, h3 {
+    font-family: "Geist Variable", "Inter", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Smooth page content transitions */
+.space-y-4,
+.space-y-6,
+.flex.flex-col {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
    Sidebar – Blue gradient with rounded feel
    ═══════════════════════════════════════════════ */
 
@@ -342,4 +396,167 @@ header {
     background: #151D2E !important;
     color: #E2E8F0 !important;
     border-color: #1E2D42 !important;
+}
+
+
+/* ═══════════════════════════════════════════════
+   Enhanced Component Styles
+   Events, Families, Donations, Journal, Ledger
+   ═══════════════════════════════════════════════ */
+
+/* ── Native selects (used in Events, etc.) ── */
+select {
+    border-radius: 0.625rem;
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--card);
+    color: var(--foreground);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+select:focus {
+    border-color: #2D6CDF;
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.15);
+}
+
+.dark select {
+    background: #151D2E;
+    border-color: #1E2D42;
+    color: #E2E8F0;
+}
+
+.dark select:focus {
+    border-color: #5B9CF6;
+    box-shadow: 0 0 0 3px rgba(91, 156, 246, 0.2);
+}
+
+/* ── Native checkboxes ── */
+input[type="checkbox"] {
+    accent-color: #2D6CDF;
+    border-radius: 4px;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* ── List items (Events list, etc.) ── */
+.space-y-1 > div[class*="border-b"],
+.space-y-1 > div[class*="flex justify-between"] {
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+/* ── Status badges ── */
+.rounded-full[class*="bg-blue-100"],
+.rounded-full[class*="bg-green-100"],
+.rounded-full[class*="bg-gray-200"],
+.rounded-full[class*="bg-red-100"],
+.rounded-full[class*="bg-emerald-100"],
+.rounded-full[class*="bg-amber-100"],
+.rounded-full[class*="bg-violet-100"] {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+}
+
+/* ── Textarea ── */
+textarea,
+[data-slot="textarea"] {
+    border-radius: 0.625rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+textarea:focus,
+[data-slot="textarea"]:focus {
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.15);
+}
+
+.dark textarea:focus,
+.dark [data-slot="textarea"]:focus {
+    box-shadow: 0 0 0 3px rgba(91, 156, 246, 0.2);
+}
+
+/* ── Page containers (max-w-5xl, etc.) ── */
+.max-w-5xl,
+.max-w-4xl,
+.max-w-3xl {
+    animation: fadeIn 0.3s ease;
+}
+
+/* ── Card-like containers used in Donations, Journal, Ledger ── */
+.mx-auto[class*="p-8"],
+.mx-auto[class*="p-6"] {
+    border-radius: 1rem;
+}
+
+/* ── Ghost buttons with icons (edit/delete) ── */
+button[class*="ghost"] {
+    border-radius: 0.5rem;
+}
+
+button[class*="ghost"]:hover {
+    background: var(--accent);
+}
+
+/* ── Destructive buttons ── */
+button[class*="destructive"],
+.bg-red-600 {
+    transition: all 0.25s ease;
+}
+
+button[class*="destructive"]:hover,
+.bg-red-600:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ── Primary action buttons ── */
+.bg-black,
+button[class*="bg-primary"],
+button[style*="gradient"] {
+    transition: all 0.25s ease;
+}
+
+.bg-black:hover,
+button[class*="bg-primary"]:hover {
+    box-shadow: 0 4px 12px rgba(45, 108, 223, 0.25);
+}
+
+/* ── Links in lists ── */
+a[class*="font-semibold"]:hover {
+    color: #2D6CDF;
+    transition: color 0.2s ease;
+}
+
+.dark a[class*="font-semibold"]:hover {
+    color: #5B9CF6;
+}
+
+/* ── Empty states ── */
+.text-center.text-gray-500,
+.text-center.text-muted-foreground {
+    padding: 2rem 0;
+    font-style: italic;
+}
+
+/* ── Form grids (grid-cols-2) ── */
+.grid.grid-cols-2 {
+    gap: 0.75rem;
+}
+
+/* ── Dialog improvements ── */
+[data-slot="dialog-content"] form {
+    animation: fadeIn 0.2s ease;
+}
+
+/* ── Loader spinner ── */
+.animate-spin {
+    color: #2D6CDF;
+}
+
+.dark .animate-spin {
+    color: #5B9CF6;
 }
