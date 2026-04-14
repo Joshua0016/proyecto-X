@@ -72,8 +72,8 @@ const formSchema = z.object({
 
     PhoneNumber: z
         .string()
-        .min(10, "phone number must be at least 10 digits")
-        .max(10, "Phone number must be at most 10 digits.")
+        .min(10, "El número de telefono debe contener 10 digitos")
+        .max(10, "El número de telefono debe contener 10 digitos")
         .regex(
             /^(809|829|849)\d{7}$/,
             "El número de teléfono debe comenzar con: 829/809/849 seguido de 7 digitos"
@@ -347,10 +347,10 @@ export default function FormRhfMember({ setformMember, setRows, rowMember }) {
                 </CardContent>
 
                 <CardFooter className="bg-zinc-50/80 border-t border-zinc-100 p-8 flex justify-between items-center">
-                    <button type="button" onClick={() => setformMember(false)} className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 hover:text-red-500 transition-colors">
+                    <button type="button" onClick={() => setformMember(false)} variant="" className="cursor-pointer text-[12px] font-bold uppercase tracking-[0.2em] text-zinc-400 hover:text-red-500 transition-colors">
                         Descartar
                     </button>
-                    <Button type="submit" form="member-form" className="bg-zinc-900 text-white hover:bg-black h-12 px-12 rounded-none text-[11px] font-bold uppercase tracking-[0.2em] shadow-2xl shadow-zinc-200 transition-all active:scale-[0.98]">
+                    <Button type="submit" form="member-form" className="cursor-pointer bg-zinc-900 text-white hover:bg-black h-12 px-12 rounded-none text-[11px] font-bold uppercase tracking-[0.2em] shadow-2xl shadow-zinc-200 transition-all active:scale-[0.98]">
                         {rowMember?.isUpdate ? 'Guardar Cambios' : 'Registrar Miembro'}
                     </Button>
                 </CardFooter>

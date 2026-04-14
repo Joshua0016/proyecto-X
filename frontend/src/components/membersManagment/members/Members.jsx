@@ -21,7 +21,8 @@ export default function FullFeaturedCridGrid() {
   const [rows, setRows] = useState([]);
   const [formMember, setformMember] = useState(false);
   const [rowMember, setRowMember] = useState({});
-  const [searchFilter, setSearch] = useState("");
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState([])
 
   const [viewCardAction, setViewCardAction] = useState(false)
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function FullFeaturedCridGrid() {
     async function allMembers() {
       const rows = await getAllMembers();
       setRows(rows);
-      console.log(rows)
+      setFilters(rows);
 
 
     }
@@ -98,17 +99,14 @@ export default function FullFeaturedCridGrid() {
 
     setSearch(value);
 
-    if (value == "") {
+    if (value != "") {
+      const newRows = rows.filter((data) => data.firstName.includes(e.target.value));
+      setFilters(newRows);
 
-      const updateRows = await getAllMembers();
-      if (updateRows) {
-        setRows(updateRows);
 
-      }
 
     } else {
-      const newRows = rows.filter((data) => data.firstName.includes(e.target.value));
-      setRows(newRows);
+      setFilters(rows);
     }
   }
 
@@ -116,7 +114,7 @@ export default function FullFeaturedCridGrid() {
     <>
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full">
-          <Input type="search" id="search" placeholder="Buscar" className="sm:max-w-sm" value={searchFilter} onChange={(e) => handleSearch(e)} />
+          <Input type="search" id="search" placeholder="Buscar" className="sm:max-w-sm" value={search} onChange={(e) => handleSearch(e)} />
           {/*add member*/}
           <Button
             className="bg-primary hover:bg-primary/90 cursor-pointer"
@@ -131,7 +129,7 @@ export default function FullFeaturedCridGrid() {
 
           <DataTable
             columns={columns}
-            data={rows}
+            data={filters}
             customStyles={customStyles}
             pagination
             paginationPerPage={10}
@@ -158,7 +156,10 @@ export default function FullFeaturedCridGrid() {
             <CardActions
               setRows={setRows}
               setViewCardAction={setViewCardAction}
-              rowMember={rowMember}>
+              rowMember={rowMember}
+              setFilters={setFilters}
+              setSearch={setSearch}>
+
             </CardActions>
           )}
         </div>

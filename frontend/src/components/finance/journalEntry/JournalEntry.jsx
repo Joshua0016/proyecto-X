@@ -51,8 +51,7 @@ import { dataTableStyles, paginationOptions } from "@/components/shared/dataTabl
 
 
 const formSchema = z.object({
-    date: z.coerce
-        .date("fecha requerida"),
+
     memo: z
         .string()
         .min(1, "La descripción es obligatoira")
@@ -77,8 +76,8 @@ const formSchema = z.object({
                 .min(4, "El codigo de cuenta debe contener un mínimo de 4 caracteres")
                 .max(20, "El código de cuenta debe contener un máximo de 20 caracteres.")
                 .regex(
-                    /^[a-zA-Z0-9\s]+$/,
-                    "El código de cuetna solo puede contener letras y números"
+                    /^[a-zA-Z0-9-\s]+$/,
+                    "El código de cuetna solo puede contener letras,números y guión"
                 ),
             debit: z.coerce.number(),
             credit: z.coerce.number(),
@@ -115,7 +114,7 @@ export default function JournalEntry() {
     function onSubmit(data) {
         const save = async () => {
             const userId = parseInt(getSession()?.userId ?? "0");
-            let newData = { ...data, date: dayjs(data.date).toISOString(), recordedByUserId: userId }
+            let newData = { ...data, date: dayjs().format(), recordedByUserId: userId }
             console.log(newData)
             let response = await journalEntry(newData);
             if (response) {
@@ -140,31 +139,7 @@ export default function JournalEntry() {
                             <div className="lg:w-full xl:w-[80%] xl:p-8 mx-auto flex justify-between">
 
                                 <div className="flex flex-col w-[25%] gap-8 top-0 bottom-0 my-auto">
-                                    <Controller
-                                        name="date"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field data-invalid={fieldState.invalid}>
-                                                <FieldLabel htmlFor="form-rhf-input-date">
-                                                    Fecha
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    id="form-rhf-input-date"
-                                                    type="date"
-                                                    aria-invalid={fieldState.invalid}
-                                                    placeholder="yyyy-MM-DD"
-                                                    autoComplete="fecha"
-                                                />
-                                                <FieldDescription>
-                                                    Periodo a que pertenece el movimiento
-                                                </FieldDescription>
-                                                {fieldState.invalid && (
-                                                    <FieldError errors={[fieldState.error]} />
-                                                )}
-                                            </Field>
-                                        )}
-                                    />
+
                                     <Controller
 
                                         name="memo"
