@@ -11,7 +11,8 @@ public class MemberRepository(DbProyectoXContext context) : IGenericRepository<M
     private readonly DbProyectoXContext _context = context;
 
 
-    public async Task<IEnumerable<Member>> GetAllAsync() {
+    public async Task<IEnumerable<Member>> GetAllAsync()
+    {
 
         return await _context.Members
         .where(u => u.IsActive)
