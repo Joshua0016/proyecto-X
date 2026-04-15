@@ -10,8 +10,8 @@ public interface IMemberService
     Task Persist(MemberCreateDTO request);
     Task Update(int memberId, MemberUpdateDTO request);
     Task Delete(int memberId);
-    Task isActive(int memberId);
-    Task IsDeactive(int memberId);
+    Task Active(int memberId);
+    Task Deactive(int memberId);
 }
 
 

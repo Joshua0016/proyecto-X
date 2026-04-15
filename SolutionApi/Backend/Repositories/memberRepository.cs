@@ -3,6 +3,8 @@ using Backend.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Backend.interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Backend.Repositories;
 
@@ -15,7 +17,7 @@ public class MemberRepository(DbProyectoXContext context) : IGenericRepository<M
     {
 
         return await _context.Members
-        .where(u => u.IsActive)
+        .Where(u => u.IsActive)
         .ToListAsync();
 
     }
