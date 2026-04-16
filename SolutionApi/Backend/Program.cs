@@ -106,6 +106,11 @@ namespace Backend
             builder.Services.AddScoped<ExpenseInvoiceRepository>();
             builder.Services.AddScoped<IExpenseInvoiceService, ExpenseInvoiceService>();
 
+            builder.Services.AddScoped<IFinancialReportService, FinancialReportService>();
+
+            builder.Services.AddScoped<DonationItemTypeRepository>();
+            builder.Services.AddScoped<IDonationItemTypeService, DonationItemTypeService>();
+
 
 
 

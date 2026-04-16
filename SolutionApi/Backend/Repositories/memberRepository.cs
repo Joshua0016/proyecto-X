@@ -22,7 +22,10 @@ public class MemberRepository(DbProyectoXContext context) : IGenericRepository<M
 
     }
 
-    public async Task<Member?> GetByIdAsync(int id) => await _context.Members.FindAsync(id);
+    public async Task<Member?> GetByIdAsync(int id) =>
+        await _context.Members
+            .Include(m => m.Attendances)
+            .FirstOrDefaultAsync(m => m.MemberId == id);
 
     public async Task AddAsync(Member miembro)
     {

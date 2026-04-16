@@ -50,10 +50,16 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "1")] // Admin only
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Delete(int id)
         {
-            await service.Delete(id); return Ok("Borrado");
+            try
+            {
+                await service.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+            catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
         }
 
     }

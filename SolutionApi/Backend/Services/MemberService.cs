@@ -12,6 +12,8 @@ public class MemberService(IGenericRepository<Member> repo, IGenericRepository<F
 
     // use Mapster
     public async Task<IEnumerable<MemberResponseDTO>> ListAll() => (
+
+
         await repo.GetAllAsync())
         .Adapt<IEnumerable<MemberResponseDTO>>();
 
@@ -53,17 +55,15 @@ public class MemberService(IGenericRepository<Member> repo, IGenericRepository<F
 
     public async Task Delete(int memberId)
     {
-        try
-        {
-            await repo.DeleteAsync(memberId);
-        }
-        catch (System.Exception ex)
-        {
-            throw new Exception(ex.Message);
+        var member = await repo.GetByIdAsync(memberId)
+            ?? throw new KeyNotFoundException("Miembro no encontrado");
 
-        }
+        // Verificar si tiene asistencias registradas
+        if (member.Attendances != null && member.Attendances.Any())
+            throw new InvalidOperationException(
+                "No se puede eliminar este miembro porque tiene registros de asistencia. Considere desactivarlo en su lugar.");
 
-
+        await repo.DeleteAsync(memberId);
     }
 
     public async Task Active(int memberId)

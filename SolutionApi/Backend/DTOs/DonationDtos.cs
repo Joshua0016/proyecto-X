@@ -50,3 +50,16 @@ public record DonationUpdateDTO(
     [Required] DateTime Date,
     string? Observation
 );
+
+public record DonationItemTypeCreateDTO(
+[Required] string Name,
+CategoryItem Category,
+DateTime? CreatedAt
+);
+
+public record DonationItemTypeResponseDTO(
+    int DonationItemTypeId,
+    string Name,
+    CategoryItem Category,
+    DateTime? CreatedAt
+);
