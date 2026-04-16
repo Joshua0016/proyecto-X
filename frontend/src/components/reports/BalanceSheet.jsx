@@ -26,7 +26,7 @@ function SummaryCard({ label, value, color }) {
     )
 }
 
-export default function BalanceGeneral() {
+export default function BalanceSheet() {
     const [accounts, setAccounts] = useState([])
     const [loading, setLoading] = useState(true)
 

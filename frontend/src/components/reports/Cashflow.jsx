@@ -16,7 +16,7 @@ function SummaryCard({ label, value, color }) {
     )
 }
 
-export default function FlujoCaja() {
+export default function CashFlow() {
     const [accounts, setAccounts] = useState([])
     const [donations, setDonations] = useState([])
     const [loading, setLoading] = useState(true)

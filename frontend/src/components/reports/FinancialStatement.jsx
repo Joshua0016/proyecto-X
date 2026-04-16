@@ -32,7 +32,7 @@ function ProgressBar({ label, value, max, color }) {
     )
 }
 
-export default function EstadoFinanciero() {
+export default function FinancialStatement() {
     const [accounts, setAccounts] = useState([])
     const [donations, setDonations] = useState([])
     const [loading, setLoading] = useState(true)

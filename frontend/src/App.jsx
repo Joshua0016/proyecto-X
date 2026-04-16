@@ -23,10 +23,10 @@ import UserManagement from './components/security/UserManagement';
 import Settings from './components/settings/Settings';
 import AuditLog from './components/security/AuditLog';
 import ExpenseInvoice from './components/finance/expenseInvoice/ExpenseInvoice';
-import BalanceGeneral from './components/reports/BalanceGeneral';
-import EstadoResultados from './components/reports/EstadoResultados';
-import FlujoCaja from './components/reports/FlujoCaja';
-import EstadoFinanciero from './components/reports/EstadoFinanciero';
+import BalanceSheet from './components/reports/BalanceSheet';
+import StatementResults from './components/reports/StatementResults';
+import CashFlow from './components/reports/CashFlow';
+import FinancialStatement from './components/reports/FinancialStatement';
 
 function App() {
   return (
@@ -51,10 +51,10 @@ function App() {
           <Route path="admin/users" element={<RoleGuard roles={["1"]}><UserManagement /></RoleGuard>} />
           <Route path="admin/audit" element={<RoleGuard roles={["1"]}><AuditLog /></RoleGuard>} />
           <Route path="expenseInvoice" element={<ExpenseInvoice />} />
-          <Route path="reports/balanceGeneral" element={<BalanceGeneral />} />
-          <Route path="reports/estadoResultados" element={<EstadoResultados />} />
-          <Route path="reports/flujoCaja" element={<FlujoCaja />} />
-          <Route path="reports/estadoFinanciero" element={<EstadoFinanciero />} />
+          <Route path="reports/BalanceSheet" element={<BalanceSheet />} />
+          <Route path="reports/StatementResults" element={<StatementResults />} />
+          <Route path="reports/CashFlow" element={<CashFlow />} />
+          <Route path="reports/FinancialStatement" element={<FinancialStatement />} />
           <Route path="settings" element={<Settings />} />
           <Route path="access-denied" element={<AccessDenied />} />
         </Route>
