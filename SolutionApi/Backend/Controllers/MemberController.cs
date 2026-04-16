@@ -62,6 +62,34 @@ namespace Backend.Controllers
             catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
         }
 
+        [HttpPost("Active/{id}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> Active(int id)
+        {
+            try
+            {
+                await service.Active(id);
+                return Ok(new { message = "Miembro activado" });
+            }
+            catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+            catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
+        }
+
+        [HttpPost("Deactivate/{id}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> Deactivate(int id)
+        {
+            try
+            {
+                await service.Deactive(id);
+                return Ok(new { message = "Miembro desactivado" });
+            }
+            catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+            catch (InvalidOperationException ex) { return UnprocessableEntity(new { message = ex.Message }); }
+        }
+
+
+
     }
 }
 
