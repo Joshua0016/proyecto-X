@@ -52,10 +52,10 @@ const allNavMain = [
     icon: <PieChartIcon />,
     requiredRoles: ["1"],
     items: [
-      { title: "Balance General", url: "#" },
-      { title: "Estado de Resultados", url: "#" },
-      { title: "Flujo de Efectivo", url: "#" },
-      { title: "Estado Financiero", url: "#" },
+      { title: "Balance General", url: "reports/balanceGeneral" },
+      { title: "Estado de Resultados", url: "reports/estadoResultados" },
+      { title: "Flujo de Efectivo", url: "reports/flujoCaja" },
+      { title: "Estado Financiero", url: "reports/estadoFinanciero" },
     ],
   },
   {
