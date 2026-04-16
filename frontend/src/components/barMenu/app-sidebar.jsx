@@ -42,7 +42,7 @@ const allNavMain = [
     requiredRoles: ["1"],
     items: [
       { title: "Diario Entrada", url: "journalEntry" },
-      { title: "Cuentas Por Pagar", url: "#" },
+      { title: "Cuentas Por Pagar", url: "ExpenseInvoice" },
       { title: "Donaciones", url: "donations" },
     ],
   },

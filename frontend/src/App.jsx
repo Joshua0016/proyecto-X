@@ -22,6 +22,7 @@ import RoleGuard from './components/security/RoleGuard';
 import UserManagement from './components/security/UserManagement';
 import Settings from './components/settings/Settings';
 import AuditLog from './components/security/AuditLog';
+import ExpenseInvoice from './components/finance/expenseInvoice/ExpenseInvoice';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="admin/users" element={<RoleGuard roles={["1"]}><UserManagement /></RoleGuard>} />
           <Route path="admin/audit" element={<RoleGuard roles={["1"]}><AuditLog /></RoleGuard>} />
+          <Route path="expenseInvoice" element={<ExpenseInvoice />} />
           <Route path="settings" element={<Settings />} />
           <Route path="access-denied" element={<AccessDenied />} />
         </Route>
