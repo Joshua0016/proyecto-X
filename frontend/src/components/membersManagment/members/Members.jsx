@@ -100,7 +100,7 @@ export default function FullFeaturedCridGrid() {
     setSearch(value);
 
     if (value != "") {
-      const newRows = rows.filter((data) => data.firstName.includes(e.target.value));
+      const newRows = rows.filter((data) => data.firstName.toLowerCase().includes(value.toLowerCase()));
       setFilters(newRows);
 
 

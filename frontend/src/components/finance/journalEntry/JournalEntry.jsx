@@ -165,7 +165,7 @@ export default function JournalEntry() {
                                                     </InputGroupAddon>
                                                 </InputGroup>
                                                 <FieldDescription>
-                                                    Esta es tu Descripcion de cuenta
+                                                    Esta es tu Descripcion
                                                 </FieldDescription>
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />

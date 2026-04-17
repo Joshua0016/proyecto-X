@@ -1,8 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
-
+import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -14,422 +13,194 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import {
-    Field,
-    FieldDescription,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-    FieldContent
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import { FieldLabel } from "@/components/ui/field"
 
 import {
-    InputGroup,
-    InputGroupTextarea,
-    InputGroupAddon,
-    InputGroupText
-} from "@/components/ui/input-group"
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+} from "@/components/ui/popover"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectSeparator,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import getAllMembers from "@/apiServices/members/getAllMembers"
+    Command,
+    CommandInput,
+    CommandList,
+    CommandEmpty,
+    CommandGroup,
+    CommandItem,
+} from "@/components/ui/command"
 
-import { useEffect, useState } from "react"
-import DataTable from "react-data-table-component";
 import dayjs from "dayjs"
+import { useEffect, useState } from "react"
 
+import getAllMembers from "@/apiServices/members/getAllMembers"
+import getAllEvents from "@/apiServices/events/getAllEvents"
 import createDonation from "@/apiServices/donations/createDonations"
-import { dataTableStyles, paginationOptions } from "@/components/shared/dataTableStyles"
-
-const type = [
-
-    { label: "Diezmo", value: "0" },
-    { label: "Ofrenda", value: "1" },
-    { label: "Campaña", value: "2" },
-    { label: "Especial", value: "4" },
-];
-const paymentMethod = [
-    { label: "Efectivo", value: "0" },
-    { label: "Transferencia", value: "1" },
-    { label: "Cheque", value: "2" },
-    { label: "Tarjeta de crédito", value: "3" },
-    { lavel: "Tajerta de débito", value: "4" }
-];
-const status = [
-    { label: "Completado", value: "0" },
-    { label: "Pendiente", value: "1" },
-    { label: "Cancelado", value: "3" },
-]
-
+import getAllDonationType from "@/apiServices/donations/getAllDonationType"
 
 const formSchema = z.object({
-    date: z.coerce
-        .date("Fecha requerida"),
-
-    amount: z
-        .coerce.number()
-        .gt(0, "Debe ingresar un monto mayor que cero")
-    ,
-
-    type: z
-        .coerce.number("Seleccionar las opciones requeridas")
-        .min(0, "Por favor seleccione el tipo")
-
-    ,
-
-    paymentMethod: z
-        .coerce.number("Seleccionar las opciones requeridas")
-
-    ,
-    status: z
-        .coerce.number("Seleccioanar las opciones requeridas")
-
-
-
+    observation: z
+        .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ-\s]*$/, "La descripcion solo puede contener letra"),
 })
 
-
 export default function Donations() {
-    const [members, setMembers] = useState([]);
-    const [selectMember, setSelectMember] = useState(null);
-    const [filters, setFilters] = useState([])
-    const [search, setSearch] = useState("");
+    const [members, setMembers] = useState([])
+    const [events, setEvents] = useState([])
+
+    const [selectMember, setSelectMember] = useState(null)
+    const [selectEvent, setSelectEvent] = useState(null)
+
+    const [donationType, setDonationType] = useState([]);
 
     useEffect(() => {
-        async function getMembers() {
+        async function getData() {
             try {
-                const members = await getAllMembers();
-                if (members) {
+                const membersData = await getAllMembers();
+                if (membersData) setMembers(membersData);
 
-                    setMembers(members);
-                    setFilters(members);
-                }
+                const eventsData = await getAllEvents();
+                if (eventsData) setEvents(eventsData);
+
+                const donatioTypeData = await getAllDonationType();
+                if (donatioTypeData) setDonationType(donatioTypeData);
+
+
+
             } catch (error) {
-                console.log("Error al traer los miembros ---> " + error);
+                console.log("Error al traer los datos ---> " + error)
             }
-
         }
-        getMembers();
+        getData();
 
-    }, []);
+    }, [])
 
-    const handleSearch = async (e) => {
-        let value = e.target.value;
-        setSearch(value);
 
-        if (value != "") {
-            const filter = members.filter((data) => data.firstName.includes(value));
-            setFilters(filter);
-        }
-        else {
-            setFilters(members);
-        }
-    }
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            date: "",
-            amount: "",
-            type: "select",
-            paymentMethod: "select",
-            status: "select"
+            observation: "",
         },
     })
 
-    const columns = [
-        {
-            name: "Nombre",
-            selector: (row) => `${row.firstName} ${row.lastName}`,
-            sortable: true,
-        },
-
-    ]
-    //styles
-    const customStyles = dataTableStyles;
     function onSubmit(data) {
         async function Save() {
-            if (selectMember) {
+            if (selectMember && selectEvent) {
                 try {
-                    const newData = { ...data, date: dayjs(data.date).toISOString(), memberId: selectMember[0].memberId }
-                    let response = await createDonation(newData);
-                    if (response) {
-                        form.reset();
+                    const newData = {
+                        ...data,
+                        date: dayjs().format(),
+                        memberId: selectMember,
+                        eventId: selectEvent,
                     }
-
+                    let response = await createDonation(newData)
+                    if (response) form.reset()
                 } catch (error) {
                     console.log("Error al enviar los datos --->> " + error)
                 }
-            }
-            else {
-                alert("Seleccionar miemrbo");
+            } else {
+                alert("Seleccionar miembro y evento")
             }
         }
-        Save();
-
+        Save()
     }
-    return (
-        <>
 
-            <Card className="w-full mx-auto sm:max-w-2xl xl:max-w-6xl flex">
+    return (
+        <div className="w-full flex flex-col items-center gap-6 p-6 bg-gray-50 min-h-screen">
+            <Card className="w-full lg:w-[90%] shadow-lg rounded-lg">
                 <CardHeader>
-                    <CardTitle>Configuración de cuenta</CardTitle>
-                    <CardDescription>
-                        Ingresa la información de tu cuenta a continuación
+                    <CardTitle className="text-2xl font-bold text-gray-800">Donaciones</CardTitle>
+                    <CardDescription className="text-gray-600">
+                        Ingresa la información requerida a continuación
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="">
-                    <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup>
-                            <div className="md:w-full  xl:w-[80%] mx-auto flex justify-between gap-7 p-8 ">
-                                <div className="w-[30%] flex flex-col gap-8 ">
-                                    <Controller
-                                        name="date"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field data-invalid={fieldState.invalid}>
-                                                <FieldLabel htmlFor="form-rhf-input-date">
-                                                    Fecha
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    id="form-rhf-input-date"
-                                                    type="date"
-                                                    aria-invalid={fieldState.invalid}
-                                                    placeholder="Fecha"
-                                                    autoComplete="fecha"
+                <CardContent>
+                    <form id="form-rhf-input" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-[50%]">
 
-                                                />
-                                                <FieldDescription>
-                                                    Selección de fecha
-                                                </FieldDescription>
-                                                {fieldState.invalid && (
-                                                    <FieldError errors={[fieldState.error]} />
-                                                )}
-                                            </Field>
-                                        )}
-                                    />
-                                    <Controller
-                                        name="amount"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field data-invalid={fieldState.invalid}>
-                                                <FieldLabel htmlFor="form-rhf-input-amount">
-                                                    Monto
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    id="form-rhf-input-date"
-                                                    type="number"
-                                                    aria-invalid={fieldState.invalid}
-                                                    placeholder="0"
-                                                    autoComplete="Monto"
-                                                />
-                                                <FieldDescription>
-                                                    Monto total
-                                                </FieldDescription>
-                                                {fieldState.invalid && (
-                                                    <FieldError errors={[fieldState.error]} />
-                                                )}
-                                            </Field>
-                                        )}
-
-                                    />
-                                </div>
-
-                                {/*Select form*/}
-                                <div className="w-[45%] flex flex-col gap-8">
-                                    <Controller
-                                        name="type"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field
-                                                orientation="responsive"
-                                                data-invalid={fieldState.invalid}
-                                            >
-                                                <FieldContent>
-                                                    <FieldLabel htmlFor="form-rhf-select-type">
-                                                        Tipo
-                                                    </FieldLabel>
-                                                    <FieldDescription>
-                                                        Selecciona el tipo de categoria
-                                                    </FieldDescription>
-                                                    {fieldState.invalid && (
-                                                        <FieldError errors={[fieldState.error]} />
-                                                    )}
-                                                </FieldContent>
-
-                                                <Select
-                                                    name={field.name}
-                                                    value={field.value}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger
-                                                        id="form-rhf-select-type"
-                                                        aria-invalid={fieldState.invalid}
-                                                        className="min-w-[80px]"
-                                                    >
-                                                        <SelectValue placeholder="Select" />
-                                                    </SelectTrigger>
-                                                    <SelectContent position="item-aligned">
-                                                        <SelectItem value="select">Select</SelectItem>
-                                                        <SelectSeparator />
-                                                        {type.map((element) => (
-                                                            <SelectItem key={element.value} value={element.value}>
-                                                                {element.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-
-
-                                            </Field>
-                                        )}
-                                    />
-                                    <Controller
-                                        name="paymentMethod"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field
-                                                orientation="responsive"
-                                                data-invalid={fieldState.invalid}
-                                            >
-                                                <FieldContent>
-                                                    <FieldLabel htmlFor="form-rhf-select-paymentMethod">
-                                                        Método
-                                                    </FieldLabel>
-                                                    <FieldDescription>
-                                                        Selecciona el método de categoria
-                                                    </FieldDescription>
-                                                    {fieldState.invalid && (
-                                                        <FieldError errors={[fieldState.error]} />
-                                                    )}
-                                                </FieldContent>
-
-                                                <Select
-                                                    name={field.name}
-                                                    value={field.value}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger
-                                                        id="form-rhf-select-paymentMethod"
-                                                        aria-invalid={fieldState.invalid}
-                                                        className="min-w-[80px]"
-                                                    >
-                                                        <SelectValue placeholder="Select" />
-                                                    </SelectTrigger>
-                                                    <SelectContent position="popper">
-                                                        <SelectItem value="select">Select</SelectItem>
-                                                        <SelectSeparator />
-                                                        {paymentMethod.map((element) => (
-                                                            <SelectItem key={element.value} value={element.value}>
-                                                                {element.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-
-
-                                            </Field>
-                                        )}
-                                    />
-                                </div>
-                                <div>
-                                    <Controller
-                                        name="status"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field
-                                                orientation="responsive"
-                                                data-invalid={fieldState.invalid}
-                                            >
-                                                <FieldContent>
-                                                    <FieldLabel htmlFor="form-rhf-select-status">
-                                                        Estado
-                                                    </FieldLabel>
-                                                    <FieldDescription>
-                                                        Selecciona el estado de categoria
-                                                    </FieldDescription>
-                                                    {fieldState.invalid && (
-                                                        <FieldError errors={[fieldState.error]} />
-                                                    )}
-                                                </FieldContent>
-
-                                                <Select
-                                                    name={field.name}
-                                                    value={field.value}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger
-                                                        id="form-rhf-select-status"
-                                                        aria-invalid={fieldState.invalid}
-                                                        className="min-w-[80px]"
-                                                    >
-                                                        <SelectValue placeholder="Select" />
-                                                    </SelectTrigger>
-                                                    <SelectContent position="popper">
-                                                        <SelectItem value="select">Select</SelectItem>
-                                                        <SelectSeparator />
-                                                        {status.map((element) => (
-                                                            <SelectItem key={element.value} value={element.value}>
-                                                                {element.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-
-
-                                            </Field>
-                                        )}
-                                    />
-                                </div>
-
+                            {/* Miembros */}
+                            <div className="bg-white p-4 rounded-lg shadow-md">
+                                <FieldLabel className="font-semibold text-gray-700 mb-2">Seleccionar miembro</FieldLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full justify-between"
+                                        >
+                                            {selectMember
+                                                ? members.find((m) => m.memberId === selectMember)?.firstName
+                                                : "Buscar miembro..."}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Buscar miembro..." />
+                                            <CommandList>
+                                                <CommandEmpty>No se encontró</CommandEmpty>
+                                                <CommandGroup>
+                                                    {members.map((member) => (
+                                                        <CommandItem
+                                                            key={member.memberId}
+                                                            onSelect={() => setSelectMember(member.memberId)}
+                                                        >
+                                                            {member.firstName} {member.lastName}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                             </div>
 
-                        </FieldGroup>
+                            {/* Eventos */}
+                            <div className="bg-white p-4 rounded-lg shadow-md">
+                                <FieldLabel className="font-semibold text-gray-700 mb-2">Seleccionar evento</FieldLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full justify-between"
+                                        >
+                                            {selectEvent
+                                                ? events.find((e) => e.eventId === selectEvent)?.title
+                                                : "Buscar evento..."}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Buscar evento..." />
+                                            <CommandList>
+                                                <CommandEmpty>No se encontró</CommandEmpty>
+                                                <CommandGroup>
+                                                    {events.map((event) => (
+                                                        <CommandItem
+                                                            key={event.eventId}
+                                                            onSelect={() => setSelectEvent(event.eventId)}
+                                                        >
+                                                            {event.title}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+
+                        </div>
                     </form>
                 </CardContent>
-                <CardFooter>
-                    <Field orientation="horizontal">
-                        <Button type="button" variant="outline" onClick={() => form.reset()} className="cursor-pointer">
-                            Restablecer
-                        </Button>
-                        <Button type="submit" form="form-rhf-input" className="cursor-pointer">
-                            Guardar
-                        </Button>
-                    </Field>
-
+                <CardFooter className="flex justify-end gap-4">
+                    <Button type="button" variant="outline" onClick={() => form.reset()} className="cursor-pointer">
+                        Restablecer
+                    </Button>
+                    <Button type="submit" form="form-rhf-input" className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white">
+                        Guardar
+                    </Button>
                 </CardFooter>
             </Card>
+            {console.log(donationType)}
+        </div>
 
-
-            <Card className="p-4 lg:w-[20%] mx-auto mt-5">
-                <CardTitle>
-                    Seleccion de miembros
-                </CardTitle>
-                <Input type="search" className="sm:w-[40%]" placeholder="Buscar" value={search} onChange={(e) => handleSearch(e)}></Input>
-                <DataTable
-                    customStyles={customStyles}
-                    columns={columns}
-                    data={filters}
-                    pagination
-                    paginationPerPage={3}
-                    selectableRows
-                    selectableRowsSingle
-                    paginationRowsPerPageOptions={[3, 5, 10]}
-                    paginationComponentOptions={paginationOptions}
-                    onSelectedRowsChange={({ selectedRows }) => setSelectMember(selectedRows)}
-                    highlightOnHover
-                />
-
-            </Card>
-
-        </>
     )
 }
