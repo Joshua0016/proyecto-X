@@ -44,6 +44,7 @@ const allNavMain = [
       { title: "Diario Entrada", url: "journalEntry" },
       { title: "Cuentas Por Pagar", url: "ExpenseInvoice" },
       { title: "Donaciones", url: "donations" },
+      { title: "Cuentas del libro mayor", url: "ledgerAccount" }
     ],
   },
   {
@@ -58,15 +59,7 @@ const allNavMain = [
       { title: "Estado Financiero", url: "reports/financialStatement" },
     ],
   },
-  {
-    title: "Plan de cuentas",
-    url: "#",
-    icon: <LucideBook />,
-    requiredRoles: ["1"],
-    items: [
-      { title: "Cuentas del libro mayor", url: "ledgerAccount" },
-    ],
-  },
+
   {
     title: "Administración",
     url: "#",
