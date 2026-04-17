@@ -12,12 +12,14 @@ import { dataTableStyles, paginationOptions } from "@/components/shared/dataTabl
 import getAllMembers from "../../../apiServices/members/getAllMembers";
 import CardActions from "./cardActions/CardActions";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 
 export default function FullFeaturedCridGrid() {
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [formMember, setformMember] = useState(false);
   const [rowMember, setRowMember] = useState({});
@@ -142,6 +144,7 @@ export default function FullFeaturedCridGrid() {
             }
             highlightOnHover
             pointerOnHover
+            onRowClicked={(row) => navigate(`/home/member/${row.id}`, { state: { member: row } })}
           />
 
           {formMember && (

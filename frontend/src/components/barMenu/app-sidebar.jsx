@@ -42,7 +42,7 @@ const allNavMain = [
     requiredRoles: ["1"],
     items: [
       { title: "Diario Entrada", url: "journalEntry" },
-      { title: "Cuentas Por Pagar", url: "#" },
+      { title: "Cuentas Por Pagar", url: "ExpenseInvoice" },
       { title: "Donaciones", url: "donations" },
     ],
   },
@@ -52,10 +52,10 @@ const allNavMain = [
     icon: <PieChartIcon />,
     requiredRoles: ["1"],
     items: [
-      { title: "Balance General", url: "#" },
-      { title: "Estado de Resultados", url: "#" },
-      { title: "Flujo de Efectivo", url: "#" },
-      { title: "Estado Financiero", url: "#" },
+      { title: "Balance General", url: "reports/balanceSheet" },
+      { title: "Estado de Resultados", url: "reports/statementResults" },
+      { title: "Flujo de Efectivo", url: "reports/cashflow" },
+      { title: "Estado Financiero", url: "reports/financialStatement" },
     ],
   },
   {

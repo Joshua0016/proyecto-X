@@ -22,6 +22,11 @@ import RoleGuard from './components/security/RoleGuard';
 import UserManagement from './components/security/UserManagement';
 import Settings from './components/settings/Settings';
 import AuditLog from './components/security/AuditLog';
+import ExpenseInvoice from './components/finance/expenseInvoice/ExpenseInvoice';
+import BalanceSheet from './components/reports/BalanceSheet';
+import StatementResults from './components/reports/StatementResults';
+import CashFlow from './components/reports/CashFlow';
+import FinancialStatement from './components/reports/FinancialStatement';
 
 function App() {
   return (
@@ -45,6 +50,11 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="admin/users" element={<RoleGuard roles={["1"]}><UserManagement /></RoleGuard>} />
           <Route path="admin/audit" element={<RoleGuard roles={["1"]}><AuditLog /></RoleGuard>} />
+          <Route path="expenseInvoice" element={<ExpenseInvoice />} />
+          <Route path="reports/BalanceSheet" element={<BalanceSheet />} />
+          <Route path="reports/StatementResults" element={<StatementResults />} />
+          <Route path="reports/CashFlow" element={<CashFlow />} />
+          <Route path="reports/FinancialStatement" element={<FinancialStatement />} />
           <Route path="settings" element={<Settings />} />
           <Route path="access-denied" element={<AccessDenied />} />
         </Route>
