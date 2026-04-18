@@ -225,10 +225,10 @@ export default function FamilyDetails() {
       <div className="w-full max-w-3xl space-y-4">
 
         <button
-          className="text-sm text-white bg-gray-900 hover:bg-gray-700 py-1 px-4 rounded-lg transition"
+          className="text-sm text-white bg-blue-900 hover:bg-blue-800 py-1 px-4 rounded-lg transition"
           onClick={() => navigate(-1)}
         >
-          ← Volver
+          ⇐ Volver
         </button>
 
         {error && (
@@ -239,7 +239,7 @@ export default function FamilyDetails() {
 
         {/* CARD FAMILIA */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-gray-900 to-gray-700 p-6">
+          <div className="bg-gradient-to-r from-blue-900 to-gray-700 p-6">
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-2xl font-bold text-white">Familia {family.lastName}</h1>
@@ -312,12 +312,7 @@ export default function FamilyDetails() {
                             </span>
                           )}
                         </div>
-                        <div className="grid grid-cols-2 gap-x-4 mt-2 text-xs text-gray-500">
-                          {member.phoneNumber && <span>📞 {member.phoneNumber}</span>}
-                          {member.email && <span className="truncate">✉️ {member.email}</span>}
-                          {member.birthDate && <span>🎂 {fmt(member.birthDate)}</span>}
-                          {member.gender && <span>{member.gender === "M" ? "♂ Masculino" : "♀ Femenino"}</span>}
-                        </div>
+                          
                       </div>
                     </Link>
                     <div className="flex gap-1 ml-2 shrink-0">

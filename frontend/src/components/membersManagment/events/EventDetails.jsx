@@ -174,10 +174,10 @@ export default function EventDetails() {
 
         {/* BACK */}
         <button
-          className="text-sm text-white bg-gray-900 hover:bg-gray-700 py-1 px-4 rounded-lg transition"
+          className="text-sm text-white bg-blue-900 hover:bg-gray-700 py-1 px-4 rounded-lg transition"
           onClick={() => navigate(-1)}
         >
-          ← Volver
+          ⇐ Volver
         </button>
 
         {error && (
@@ -190,7 +190,7 @@ export default function EventDetails() {
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
 
           {/* HEADER con color según estado */}
-          <div className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-800 dark:to-gray-900 p-6">
+          <div className="bg-gradient-to-r from-blue-900 to-gray-900 dark:from-gray-800 dark:to-gray-900 p-6">
             <div className="flex justify-between items-start">
               <div className="flex-1 min-w-0 pr-4">
                 <h1 className="text-2xl font-bold text-white leading-tight">{event.title}</h1>
