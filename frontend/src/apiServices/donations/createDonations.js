@@ -1,6 +1,6 @@
 import { getToken } from "../getToken";
 
-export default async function createDonation(params) {
+export default async function createDonation(dto) {
     try {
         let response = await fetch("/api/Donation", {
             method: "POST",
@@ -8,7 +8,7 @@ export default async function createDonation(params) {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${getToken()}`
             },
-            body: JSON.stringify(params)
+            body: JSON.stringify(dto)
         });
         if (response.ok) {
             let result = await response.json();
@@ -23,6 +23,6 @@ export default async function createDonation(params) {
 
         }
     } catch (error) {
-        console.log("Errror try catch ------> " + error);
+        console.log("Errror try catch ------> " + error.message);
     }
 }
