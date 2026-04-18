@@ -1,5 +1,9 @@
-# Usamos una imagen muy pequeña de Linux
-FROM alpine
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5173
 
-# Mensaje de bienvenida al encender
-CMD ["echo", "Contenedor de Frontend (Joshua) listo y esperando código..."]
+#--host para que Docker pueda acceder
+CMD ["npm", "run", "dev", "--", "--host"]

@@ -1,0 +1,23 @@
+# 🔹 Build
+bin/
+obj/
+
+# 🔹 Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.db
+*.opendb
+*.kiro
+
+# 🔹 Rider / VS Code
+.idea/
+.vscode/
+
+# 🔹 Logs
+*.log
+
+# 🔹 Archivos del sistema
+.DS_Store
+Thumbs.db

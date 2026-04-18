@@ -1,7 +1,29 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    }
+  },
+  test: {
+    globals: true,
+    environment: 'node',
+  },
+  server: {
+    host: true,
+    proxy: {
+      "/api": {
+        secure: false,
+        target: process.env.API_PROXY_TARGET || "http://localhost:8080",
+        changeOrigin: true
+      }
+    }
+  }
 })
